@@ -31,9 +31,13 @@ export const TweetsUserLiked: FC = () => {
         <div className='text-center text-red-500'>Hubo un error</div>
       ) : tweets ? (
         <div>
-          {tweets.map(tweet => (
-            <TweetItem key={tweet.id} {...tweet} />
-          ))}
+          {tweets.length === 0 ? (
+            <h6 className='text-center mt-4 font-bold text-lg'>
+              No hay ningun Tweet
+            </h6>
+          ) : (
+            tweets.map(tweet => <TweetItem key={tweet.id} {...tweet} />)
+          )}
         </div>
       ) : null}
     </>
