@@ -5,18 +5,20 @@ import { AuthLayout } from '../components/layouts/AuthLayout'
 
 import { ErrorPage } from '../pages/ErrorPage'
 
+import { useIsAuth } from '../hooks/useIsAuth'
+import { useProtectRoute } from '../hooks/useProtectRoute'
+
 import { SignInPage } from '../pages/SignIn'
 import { SignUpPage } from '../pages/SignUp'
 
 import { HomePage } from '../pages/HomePage'
 import { ExplorePage } from '../pages/ExplorePage'
 import { ProfilePage } from '../pages/ProfilePage'
+import { TrendsPage } from '../pages/TrendsPage'
+
 import { UserTweets } from '../components/UserTweets'
 import { TweetsUserLiked } from '../components/TweetsUserLiked'
 import { MediaTweets } from '../components/MediaTweets'
-import { TrendsPage } from '../pages/TrendsPage'
-import { useAuthStore } from '../store/authStore'
-import { useIsAuth } from '../hooks/useIsAuth'
 
 export const router = createBrowserRouter([
   {
@@ -33,16 +35,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'home',
-        loader: () => {
-          const isAuth = useAuthStore.getState().isAuth
-
-          if (!isAuth) {
-            redirect('/explore')
-            return null
-          }
-
-          return null
-        },
+        loader: useProtectRoute,
         element: <HomePage />,
       },
       {
