@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, redirect } from 'react-router-dom'
 
 import { MainLayout } from '../components/layouts/MainLayout'
 import { AuthLayout } from '../components/layouts/AuthLayout'
@@ -15,15 +15,34 @@ import { UserTweets } from '../components/UserTweets'
 import { TweetsUserLiked } from '../components/TweetsUserLiked'
 import { MediaTweets } from '../components/MediaTweets'
 import { TrendsPage } from '../pages/TrendsPage'
+import { useAuthStore } from '../store/authStore'
+import { useIsAuth } from '../hooks/useIsAuth'
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
+    loader: useIsAuth,
     errorElement: <ErrorPage />,
     children: [
       {
+        index: true,
+        loader: () => {
+          return redirect('/explore')
+        },
+      },
+      {
         path: 'home',
+        loader: () => {
+          const isAuth = useAuthStore.getState().isAuth
+
+          if (!isAuth) {
+            redirect('/explore')
+            return null
+          }
+
+          return null
+        },
         element: <HomePage />,
       },
       {
