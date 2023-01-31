@@ -2,10 +2,15 @@ import { FC } from 'react'
 
 import { Outlet } from 'react-router-dom'
 
+import { useAuthStore } from '../../store/authStore'
+import { BarAuthOptions } from '../BarAuthOptions'
+
 import VerticalNavbar from '../VerticalNavbar'
 import VerticalSearchTweets from '../VerticalSearchTweets'
 
 export const MainLayout: FC = () => {
+  const isAuth = useAuthStore(state => state.isAuth)
+
   return (
     <div className='bg-black'>
       <div className='container mx-auto sm:px-0 md:px-0 lg:px-10 xl:px-30 2xl:px-40 w-full'>
@@ -17,6 +22,7 @@ export const MainLayout: FC = () => {
           <VerticalSearchTweets />
         </main>
       </div>
+      {!isAuth && <BarAuthOptions />}
     </div>
   )
 }
