@@ -72,3 +72,10 @@ export const getTrendTweetsList = async (): Promise<TrendTweet[]> => {
   const result = await tweetsApi.get<{ trends: TrendTweet[] }>('/trends')
   return result.data.trends
 }
+
+export const getTrendTweetsLargeList = async (): Promise<TrendTweet[]> => {
+  const result = await tweetsApi.get<{ trends: TrendTweet[] }>(
+    '/trends?limit=20'
+  )
+  return result.data.trends
+}
