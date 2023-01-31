@@ -53,11 +53,8 @@ export const SignInPage: FC = () => {
           { setSubmitting }: FormikHelpers<LoginData>
         ) => {
           signInMutation(signInData, {
-            onSuccess(data) {
-              window.localStorage.setItem(
-                'accessToken_twitter',
-                data.accessToken
-              )
+            onSuccess({ accessToken }) {
+              localStorage.setItem('accessToken_twitter', accessToken)
               setSubmitting(false)
               redirect('/home')
             },
