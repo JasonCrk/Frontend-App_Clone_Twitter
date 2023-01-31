@@ -42,7 +42,7 @@ const VerticalNavbar: FC = () => {
 
             {isAuth && (
               <LinkNavbar
-                path='/'
+                path='/home'
                 name='Home'
                 IconOutline={RiHome7Line}
                 IconFill={RiHome7Fill}
