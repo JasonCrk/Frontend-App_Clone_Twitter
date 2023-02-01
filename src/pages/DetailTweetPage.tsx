@@ -29,13 +29,8 @@ import { AxiosError } from 'axios'
 export const DetailTweetPage: FC = () => {
   const { tweetId } = useParams()
 
-  const { data: tweet, isLoading } = useQuery<Tweet, AxiosError>(
-    'tweet',
-    () => getTweetById(tweetId as string),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
+  const { data: tweet, isLoading } = useQuery<Tweet, AxiosError>('tweet', () =>
+    getTweetById(tweetId as string)
   )
 
   const queryClient = useQueryClient()
