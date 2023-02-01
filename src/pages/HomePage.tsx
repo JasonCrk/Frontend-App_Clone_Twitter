@@ -7,8 +7,8 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { TweetInitialValue } from '../interfaces/Tweet'
 import { createTweet, getAllTweets } from '../services/tweetService'
 
-import Bar from '../components/Bar'
-import TweetForm from '../components/TweetForm'
+import { Bar } from '../components/Bar'
+import { TweetForm } from '../components/TweetForm'
 import TweetItem from '../components/TweetItem'
 import Spinner from '../components/Spinner'
 

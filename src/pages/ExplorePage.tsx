@@ -3,7 +3,7 @@ import type { FC } from 'react'
 import TrendTweetsList from '../components/TrendTweetsList'
 import TweetItem from '../components/TweetItem'
 import Spinner from '../components/Spinner'
-import Bar from '../components/Bar'
+import { Bar } from '../components/Bar'
 
 import { BsSearch } from 'react-icons/bs'
 import { Tweet } from '../interfaces/Tweet'

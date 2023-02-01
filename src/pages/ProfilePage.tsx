@@ -11,7 +11,7 @@ import { getProfileByUsername } from '../services/accountService'
 
 import { Tab } from '@headlessui/react'
 
-import Bar from '../components/Bar'
+import { Bar } from '../components/Bar'
 import Spinner from '../components/Spinner'
 
 import { AiOutlineArrowLeft, AiOutlineLink } from 'react-icons/ai'
