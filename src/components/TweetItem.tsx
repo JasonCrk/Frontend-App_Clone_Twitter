@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { Link, redirect } from 'react-router-dom'
+import { Link, redirect, useNavigate } from 'react-router-dom'
 
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -30,6 +30,8 @@ const TweetItem: FC<Tweet> = ({
 
   const queryClient = useQueryClient()
 
+  const navigate = useNavigate()
+
   const { mutate: likeTweetMutation } = useMutation({
     mutationFn: likeTweet,
     onSuccess: () => {
@@ -43,7 +45,7 @@ const TweetItem: FC<Tweet> = ({
       return
     }
 
-    redirect('/auth/signIn')
+    return redirect('/auth/signIn')
   }
 
   const likeCheck = (): boolean => {
@@ -63,7 +65,7 @@ const TweetItem: FC<Tweet> = ({
       <div>
         <div
           className='cursor-pointer'
-          onClick={() => redirect(`/tweets/${id}`)}
+          onClick={() => navigate(`/tweets/${id}`)}
         >
           <Link
             to={`/${user.username}`}
