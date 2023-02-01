@@ -44,7 +44,6 @@ export const ProfilePage: FC = () => {
     'profile',
     () => getProfileByUsername(username as string),
     {
-      refetchOnMount: false,
       refetchOnWindowFocus: false,
     }
   )
