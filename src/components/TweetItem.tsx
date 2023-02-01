@@ -1,4 +1,4 @@
-import { FC, Fragment } from 'react'
+import { FC } from 'react'
 
 import { Link, redirect, useNavigate } from 'react-router-dom'
 
@@ -7,17 +7,14 @@ import { useMutation, useQueryClient } from 'react-query'
 import { useAuthStore } from '../store/authStore'
 
 import { Tweet } from '../interfaces/Tweet'
-import { deleteTweet, likeTweet } from '../services/tweetService'
-
-import MenuOption from './MenuOption'
-import { Menu, Transition } from '@headlessui/react'
+import { likeTweet } from '../services/tweetService'
 
 import { formatTimezone } from '../utils/formatDate'
 
-import { BsFillPatchCheckFill, BsFillTrashFill } from 'react-icons/bs'
-import { SlOptions } from 'react-icons/sl'
+import { BsFillPatchCheckFill } from 'react-icons/bs'
 
 import { AiFillHeart, AiOutlineHeart, AiOutlineComment } from 'react-icons/ai'
+import { TweetMenu } from './TweetMenu'
 
 const TweetItem: FC<Tweet> = ({
   id,
@@ -44,13 +41,6 @@ const TweetItem: FC<Tweet> = ({
     },
   })
 
-  const { mutate: deleteTweetMutation } = useMutation({
-    mutationFn: deleteTweet,
-    onSuccess: () => {
-      queryClient.invalidateQueries('tweets')
-    },
-  })
-
   const likeCheck = (): boolean => {
     const userLike = likes.find(user => user.id === userAuth?.id)
     return Boolean(userLike)
@@ -63,43 +53,16 @@ const TweetItem: FC<Tweet> = ({
   }
 
   const handleDeleteTweet = () => {
-    if (!isAuth || user.username !== userAuth?.username)
-      return redirect('/auth/signIn')
-
-    deleteTweetMutation({ tweetId: id, accessToken: token! })
+    queryClient.invalidateQueries('tweets')
   }
 
   return (
     <div className='p-4 grid grid-cols-tweet gap-4 border-y-[1px] border-gray-600 relative'>
-      <Menu as='div' className='absolute top-2 right-2'>
-        <Transition
-          as={Fragment}
-          enter='transition ease-out duration-100'
-          enterFrom='transform opacity-0 scale-95'
-          enterTo='transform opacity-100 scale-100'
-          leave='transition ease-in duration-75'
-          leaveFrom='transform opacity-100 scale-100'
-          leaveTo='transform opacity-0 scale-95'
-        >
-          <Menu.Items
-            className={
-              'absolute top-10 right-2 overflow-hidden shadow-white shadow-border py-1.5 z-10 w-fit rounded-md bg-black'
-            }
-          >
-            {isAuth && user.username === userAuth?.username && (
-              <MenuOption
-                Icon={BsFillTrashFill}
-                onClick={() => handleDeleteTweet()}
-              >
-                Eliminar
-              </MenuOption>
-            )}
-          </Menu.Items>
-        </Transition>
-        <Menu.Button className='p-2.5 hover:bg-blue-500/20 transition-colors rounded-full'>
-          <SlOptions />
-        </Menu.Button>
-      </Menu>
+      <TweetMenu
+        username={user.username}
+        tweetId={id}
+        actionDeleteTweet={handleDeleteTweet}
+      />
       <Link to={`/${user.username}`} className='h-fit'>
         <img
           src={user.account.avatar}

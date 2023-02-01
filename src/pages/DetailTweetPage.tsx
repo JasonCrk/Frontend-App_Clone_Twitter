@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import { redirect, Link, useParams } from 'react-router-dom'
+import { redirect, Link, useParams, useNavigate } from 'react-router-dom'
 
 import { useQueryClient, useMutation, useQuery } from 'react-query'
 
@@ -9,8 +9,10 @@ import { useAuthStore } from '../store/authStore'
 import { Tweet, TweetInitialValue } from '../interfaces/Tweet'
 import { getTweetById, likeTweet } from '../services/tweetService'
 
-import Bar from '../components/Bar'
-import TweetForm from '../components/TweetForm'
+import { Bar } from '../components/Bar'
+import { TweetForm } from '../components/TweetForm'
+import { TweetMenu } from '../components/TweetMenu'
+
 import Spinner from '../components/Spinner'
 
 import { BsFillPatchCheckFill } from 'react-icons/bs'
@@ -24,10 +26,12 @@ import {
 import { formatDateTime } from '../utils/formatDate'
 
 import { FormikHelpers } from 'formik'
+
 import { AxiosError } from 'axios'
 
 export const DetailTweetPage: FC = () => {
   const { tweetId } = useParams()
+  const navigate = useNavigate()
 
   const { data: tweet, isLoading } = useQuery<Tweet, AxiosError>('tweet', () =>
     getTweetById(tweetId as string)
@@ -60,12 +64,13 @@ export const DetailTweetPage: FC = () => {
   }
 
   const handleLikeTweet = () => {
-    if (isAuth) {
-      likeTweetMutation({ tweetId: tweet!.id, accessToken: token! })
-      return
-    }
+    if (isAuth) return redirect('/auth/signIn')
 
-    redirect('/auth/signIn')
+    likeTweetMutation({ tweetId: tweet!.id, accessToken: token! })
+  }
+
+  const handleDeleteTweet = () => {
+    navigate('/home')
   }
 
   if (isLoading)
@@ -97,7 +102,12 @@ export const DetailTweetPage: FC = () => {
         </Link>
         <p className='font-bold'>Tweet</p>
       </Bar>
-      <div className='p-4'>
+      <div className='p-4 relative'>
+        <TweetMenu
+          username={tweet!.user.username}
+          tweetId={tweet!.id}
+          actionDeleteTweet={handleDeleteTweet}
+        />
         <Link to={`/${tweet?.user.username}`} className='flex gap-3 mb-4 w-fit'>
           <img
             src={tweet!.user.account.avatar}
