@@ -24,7 +24,7 @@ interface TweetFormProps {
   handleSubmit: (value: any, actions: any) => void
 }
 
-const TweetForm: FC<TweetFormProps> = ({
+export const TweetForm: FC<TweetFormProps> = ({
   avatar,
   isHomeForm,
   placeholder,
@@ -130,5 +130,3 @@ const TweetForm: FC<TweetFormProps> = ({
     </div>
   )
 }
-
-export default TweetForm

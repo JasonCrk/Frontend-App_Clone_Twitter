@@ -5,7 +5,7 @@ interface BarProps {
   styles: string
 }
 
-const Bar: FC<BarProps> = ({ children, styles }) => {
+export const Bar: FC<BarProps> = ({ children, styles }) => {
   return (
     <div
       className={`sticky top-0 w-full bg-black bg-opacity-10 backdrop-blur-md z-20 ${styles}`}
@@ -14,5 +14,3 @@ const Bar: FC<BarProps> = ({ children, styles }) => {
     </div>
   )
 }
-
-export default Bar
