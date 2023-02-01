@@ -79,3 +79,18 @@ export const getTrendTweetsLargeList = async (): Promise<TrendTweet[]> => {
   )
   return result.data.trends
 }
+
+export const deleteTweet = async ({
+  tweetId,
+  accessToken,
+}: {
+  tweetId: string
+  accessToken: string
+}): Promise<{ message: string }> => {
+  const result = await tweetsApi.delete<{ message: string }>(`/${tweetId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  return result.data
+}
