@@ -14,6 +14,8 @@ import Spinner from '../components/Spinner'
 
 import { FormikHelpers } from 'formik'
 
+import { toast } from 'react-toastify'
+
 export const HomePage: FC = () => {
   const queryClient = useQueryClient()
 
@@ -23,9 +25,18 @@ export const HomePage: FC = () => {
 
   const { data: tweets, isLoading, error } = useQuery('tweets', getAllTweets)
 
+  const showAlertError = (message: string) => {
+    toast.error(message)
+  }
+
   const { mutate: createTweetMutation } = useMutation({
     mutationFn: createTweet,
-    onSuccess: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries('tweets')
+    },
+    onError: () => {
+      showAlertError('Hubo un error al intentar publicar el Tweet')
+    },
   })
 
   const sendTweet = (
@@ -41,7 +52,6 @@ export const HomePage: FC = () => {
     }
 
     createTweetMutation({ tweetData: formTweet, accessToken: token })
-    queryClient.invalidateQueries('tweets')
 
     actions.setSubmitting(false)
   }
