@@ -19,6 +19,7 @@ import { TrendsPage } from '../pages/TrendsPage'
 import { UserTweets } from '../components/UserTweets'
 import { TweetsUserLiked } from '../components/TweetsUserLiked'
 import { MediaTweets } from '../components/MediaTweets'
+import { DetailTweetPage } from '../pages/DetailTweetPage'
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
       {
         path: 'trends',
         element: <TrendsPage />,
+      },
+      {
+        path: 'tweets/:tweetId',
+        element: <DetailTweetPage />,
       },
       {
         path: ':username',
