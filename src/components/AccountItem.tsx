@@ -8,7 +8,7 @@ import { useAuthStore } from '../store/authStore'
 const AccountItem: FC<AccountInItem> = ({ avatar, user }) => {
   const authUser = useAuthStore(state => state.user)
 
-  const isMyAccount = user.username === authUser?.username
+  const isMyAccount = user.username !== authUser?.username
 
   return (
     <NavLink to={`/${user.username}`}>
