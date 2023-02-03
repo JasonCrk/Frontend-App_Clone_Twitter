@@ -44,7 +44,7 @@ const UserOptions: FC<UserOptionsProps> = ({ user }) => {
           }
         >
           <MenuOption Icon={HiOutlineLogout} onClick={() => handleLogOut()}>
-            Log out @JasonCrk
+            Log out @{user.username}
           </MenuOption>
         </Menu.Items>
       </Transition>
@@ -56,7 +56,7 @@ const UserOptions: FC<UserOptionsProps> = ({ user }) => {
             alt='avatar'
           />
           <div className='flex flex-col items-start justify-center max-lg:hidden'>
-            <p className='font-bold text-[1.2rem] leading-4'>{user.username}</p>
+            <p className='font-bold text-lg leading-4'>{user.firstName}</p>
             <p className='opacity-40'>@{user.username}</p>
           </div>
           <div className='flex items-center max-lg:hidden'>
