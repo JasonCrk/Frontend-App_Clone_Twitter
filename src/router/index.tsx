@@ -6,7 +6,6 @@ import { AuthLayout } from '../components/layouts/AuthLayout'
 import { ErrorPage } from '../pages/ErrorPage'
 
 import { useIsAuth } from '../hooks/useIsAuth'
-import { useProtectRoute } from '../hooks/useProtectRoute'
 
 import { SignInPage } from '../pages/SignIn'
 import { SignUpPage } from '../pages/SignUp'
