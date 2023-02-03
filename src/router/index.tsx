@@ -14,11 +14,12 @@ import { HomePage } from '../pages/HomePage'
 import { ExplorePage } from '../pages/ExplorePage'
 import { ProfilePage } from '../pages/ProfilePage'
 import { TrendsPage } from '../pages/TrendsPage'
+import { DetailTweetPage } from '../pages/DetailTweetPage'
+import { SearchPage } from '../pages/SearchPage'
 
 import { UserTweets } from '../components/UserTweets'
 import { TweetsUserLiked } from '../components/TweetsUserLiked'
 import { MediaTweets } from '../components/MediaTweets'
-import { DetailTweetPage } from '../pages/DetailTweetPage'
 
 export const router = createBrowserRouter([
   {
@@ -38,16 +39,20 @@ export const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
+        path: 'tweets/:tweetId',
+        element: <DetailTweetPage />,
+      },
+      {
         path: 'explore',
         element: <ExplorePage />,
       },
       {
-        path: 'trends',
-        element: <TrendsPage />,
+        path: 'search',
+        element: <SearchPage />,
       },
       {
-        path: 'tweets/:tweetId',
-        element: <DetailTweetPage />,
+        path: 'trends',
+        element: <TrendsPage />,
       },
       {
         path: ':username',
