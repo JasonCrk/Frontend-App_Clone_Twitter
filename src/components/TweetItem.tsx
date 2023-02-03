@@ -15,6 +15,7 @@ import { BsFillPatchCheckFill } from 'react-icons/bs'
 
 import { AiFillHeart, AiOutlineHeart, AiOutlineComment } from 'react-icons/ai'
 import { TweetMenu } from './TweetMenu'
+import { FilterTag } from './FilterTag'
 
 const TweetItem: FC<Tweet> = ({
   id,
@@ -24,14 +25,16 @@ const TweetItem: FC<Tweet> = ({
   createdAt,
   likes,
   comments,
+  hashtags,
 }) => {
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+
   const userAuth = useAuthStore(state => state.user)
   const isAuth = useAuthStore(state => state.isAuth)
   const token = useAuthStore(state => state.token)
 
-  const queryClient = useQueryClient()
-
-  const navigate = useNavigate()
+  const tweetHashtags = hashtags?.split(',')
 
   const { mutate: likeTweetMutation } = useMutation({
     mutationFn: likeTweet,
@@ -88,7 +91,17 @@ const TweetItem: FC<Tweet> = ({
               {formatTimezone(createdAt)}
             </span>
           </Link>
+
           <p className='mb-2'>{content}</p>
+
+          {tweetHashtags && (
+            <div className='flex flex-wrap mb-2'>
+              {tweetHashtags.map(hashtag => (
+                <FilterTag key={hashtag} tag={hashtag.trim()} />
+              ))}
+            </div>
+          )}
+
           {images.length === 1 ? (
             <img
               src={images[0].imageUrl}
