@@ -40,7 +40,7 @@ const UserOptions: FC<UserOptionsProps> = ({ user }) => {
       >
         <Menu.Items
           className={
-            'absolute bottom-24 left-2 rounded-md max-lg:rounded-2xl overflow-hidden shadow-white shadow-border max-lg:w-16 bg-black py-1.5 z-10 w-fit'
+            'absolute bottom-24 rounded-md max-lg:rounded-2xl overflow-hidden shadow-white shadow-border max-lg:w-16 bg-black py-1.5 z-10'
           }
         >
           <MenuOption Icon={HiOutlineLogout} onClick={() => handleLogOut()}>
@@ -56,7 +56,12 @@ const UserOptions: FC<UserOptionsProps> = ({ user }) => {
             alt='avatar'
           />
           <div className='flex flex-col items-start justify-center max-lg:hidden'>
-            <p className='font-bold text-lg leading-4'>{user.firstName}</p>
+            <p
+              className='font-bold text-lg leading-4 truncate w-32'
+              title={user.firstName}
+            >
+              {user.firstName}
+            </p>
             <p className='opacity-40'>@{user.username}</p>
           </div>
           <div className='flex items-center max-lg:hidden'>
