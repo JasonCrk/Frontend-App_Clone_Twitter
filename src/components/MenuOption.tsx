@@ -15,7 +15,7 @@ const MenuOption: FC<MenuOptionProps> = ({ Icon, children, ...others }) => {
     <Menu.Item>
       {({ active }) => (
         <button
-          className={`px-5 py-3 w-fit group flex items-center justify-start max-lg:justify-center transition-[background] lg:gap-2 font-bol font-bold ${
+          className={`px-4 py-2 group flex items-center truncate justify-start max-lg:justify-center max-lg:px-5 transition-[background] lg:gap-1 font-bold ${
             active ? 'bg-gray-900' : 'bg-black'
           }`}
           {...others}
