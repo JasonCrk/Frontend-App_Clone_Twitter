@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 
 import { Menu } from '@headlessui/react'
 
@@ -6,7 +6,7 @@ import { IconType } from 'react-icons'
 
 interface MenuOptionProps {
   Icon: IconType
-  children: string
+  children: ReactNode
   [property: string]: any
 }
 
