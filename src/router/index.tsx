@@ -36,7 +36,6 @@ export const router = createBrowserRouter([
       },
       {
         path: 'home',
-        loader: useProtectRoute,
         element: <HomePage />,
       },
       {
