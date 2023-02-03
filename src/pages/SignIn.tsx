@@ -1,17 +1,19 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect } from 'react'
 
-import { redirect } from 'react-router-dom'
+import { Link, redirect, useNavigate } from 'react-router-dom'
 
 import { useMutation } from 'react-query'
+
+import { useAuthStore } from '../store/authStore'
 
 import { LoginData } from '../interfaces/Auth'
 import { signIn } from '../services/authService'
 
-import { Formik, Form, Field, FormikHelpers } from 'formik'
+import { Formik, Form, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
 
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
-import { useAuthStore } from '../store/authStore'
+import { CustomField } from '../components/form/CustomField'
+import { PasswordField } from '../components/form/PasswordField'
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Is required'),
@@ -19,15 +21,15 @@ const SignInSchema = Yup.object().shape({
 })
 
 export const SignInPage: FC = () => {
-  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const navigate = useNavigate()
+
+  const isAuth = useAuthStore(state => state.isAuth)
+  const token = useAuthStore(state => state.token)
 
   const { mutate: signInMutation } = useMutation({
     mutationKey: 'signIn',
     mutationFn: signIn,
   })
-
-  const isAuth = useAuthStore(state => state.isAuth)
-  const token = useAuthStore(state => state.token)
 
   useEffect(() => {
     if (!isAuth || !token) {
@@ -41,10 +43,8 @@ export const SignInPage: FC = () => {
   }
 
   return (
-    <>
-      <h1 className='text-3xl font-bold text-center mb-4 font-title'>
-        Sign in to Twitter
-      </h1>
+    <div className='flex flex-col gap-4'>
+      <h1 className='text-3xl font-bold text-center'>Sign in to Twitter</h1>
       <Formik
         initialValues={initialValues}
         validationSchema={SignInSchema}
@@ -56,7 +56,7 @@ export const SignInPage: FC = () => {
             onSuccess({ accessToken }) {
               localStorage.setItem('accessToken_twitter', accessToken)
               setSubmitting(false)
-              redirect('/home')
+              navigate('/home')
             },
             onError(error) {
               console.log(error)
@@ -65,62 +65,21 @@ export const SignInPage: FC = () => {
           })
         }}
       >
-        {({ errors, touched, isSubmitting }) => (
-          <Form className='font-paragraph'>
-            <div className='w-96 mb-4'>
-              <label
-                htmlFor='email'
-                className={`${errors.email && 'text-red-500'} block mb-1`}
-              >
-                Email
-              </label>
-              <Field
-                id='email'
-                type='email'
-                name='email'
-                className={`${
-                  errors.email
-                    ? 'border-red-500 placeholder-red-500'
-                    : 'border-gray-400'
-                } relative block w-full appearance-none rounded-md border-2 transition-[border-color] px-3 py-2 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-indigo-500 bg-black text-white text-lg mb-1`}
-                placeholder='Enter your email'
-              />
-              {errors.email && touched.email && (
-                <div className='text-red-500'>{errors.email}</div>
-              )}
-            </div>
+        {({ errors, isSubmitting }) => (
+          <Form className='flex flex-col gap-4 w-96'>
+            <CustomField
+              placeholder='Enter your email'
+              label='Email'
+              error={errors.email}
+              name='email'
+              type='email'
+            />
 
-            <div className='w-full mb-4 relative'>
-              <label
-                htmlFor='password'
-                className={`${errors.password && 'text-red-500'} block mb-1`}
-              >
-                Password
-              </label>
-              <Field
-                id='id'
-                type={showPassword ? 'text' : 'password'}
-                name='password'
-                className={`${
-                  errors.password
-                    ? 'placeholder-red-500 border-red-500'
-                    : 'border-gray-400'
-                } relative block w-full appearance-none rounded-md border-2 transition-[border-color] px-3 py-2 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-indigo-500 bg-black text-white text-lg pr-11 mb-1`}
-                placeholder='Enter your password'
-              />
-              {errors.password && touched.password && (
-                <div className='text-red-500'>{errors.password}</div>
-              )}
-              <button
-                className={`${
-                  errors.password && 'text-red-500'
-                } absolute top-9 right-1.5 p-2 text-lg hover:bg-opacity-10 hover:bg-white transition-[background] rounded-full`}
-                type='button'
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
-              </button>
-            </div>
+            <PasswordField
+              error={errors.password}
+              name='password'
+              label='Password'
+            />
 
             <button
               type='submit'
@@ -132,6 +91,12 @@ export const SignInPage: FC = () => {
           </Form>
         )}
       </Formik>
-    </>
+      <Link
+        to='/auth/signUp'
+        className='self-center text-lg text-blue-500 hover:underline hover:underline-offset-2 hover:text-blue-400 transition-colors'
+      >
+        Create account
+      </Link>
+    </div>
   )
 }
