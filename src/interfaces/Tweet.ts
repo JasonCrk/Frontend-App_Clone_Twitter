@@ -28,6 +28,7 @@ export interface ITweetResponse {
 
 export interface TweetInitialValue {
   content: string
+  hashtags: string
   images: any[]
 }
 
