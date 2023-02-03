@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom'
 import { AccountInItem } from '../interfaces/Account'
 import { useAuthStore } from '../store/authStore'
 
-const AccountItem: FC<AccountInItem> = ({ avatar, user }) => {
+const AccountItem: FC<AccountInItem> = ({ avatar, user, bibliography }) => {
   const authUser = useAuthStore(state => state.user)
 
   const isMyAccount = user.username !== authUser?.username
@@ -22,6 +22,7 @@ const AccountItem: FC<AccountInItem> = ({ avatar, user }) => {
             <p className='text-sm text-neutral-400 max-lg:w-20 max-xl:w-24 truncate'>
               @{user.username}
             </p>
+            {bibliography && <p className=''>{bibliography}</p>}
           </div>
         </div>
         {isMyAccount && (
