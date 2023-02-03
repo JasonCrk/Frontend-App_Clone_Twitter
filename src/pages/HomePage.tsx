@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 
 import { useAuthStore } from '../store/authStore'
 
@@ -15,19 +15,26 @@ import Spinner from '../components/Spinner'
 import { FormikHelpers } from 'formik'
 
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 export const HomePage: FC = () => {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
-  const user = useAuthStore(state => state.user)
-  const isLoadingAuth = useAuthStore(state => state.loading)
-  const token = useAuthStore(state => state.token!)
+  const { user, isLoadingAuth, token, isAuth } = useAuthStore(state => ({
+    user: state.user,
+    isLoadingAuth: state.loading,
+    token: state.token,
+    isAuth: state.isAuth,
+  }))
+
+  useEffect(() => {
+    if (!isAuth || !token) {
+      navigate('/explore')
+    }
+  }, [])
 
   const { data: tweets, isLoading, error } = useQuery('tweets', getAllTweets)
-
-  const showAlertError = (message: string) => {
-    toast.error(message)
-  }
 
   const { mutate: createTweetMutation } = useMutation({
     mutationFn: createTweet,
@@ -35,7 +42,7 @@ export const HomePage: FC = () => {
       queryClient.invalidateQueries('tweets')
     },
     onError: () => {
-      showAlertError('Hubo un error al intentar publicar el Tweet')
+      toast.error('There was an error trying to create the tweet')
     },
   })
 
@@ -47,13 +54,18 @@ export const HomePage: FC = () => {
 
     formTweet.append('content', value.content)
 
+    if (value.hashtags) {
+      formTweet.append('hashtags', value.hashtags)
+    }
+
     for (const image of value.images) {
       formTweet.append('images', image)
     }
 
-    createTweetMutation({ tweetData: formTweet, accessToken: token })
+    createTweetMutation({ tweetData: formTweet, accessToken: token! })
 
     actions.setSubmitting(false)
+    actions.resetForm()
   }
 
   return (
