@@ -60,7 +60,7 @@ const TweetItem: FC<Tweet> = ({
   }
 
   return (
-    <div className='p-4 grid grid-cols-tweet gap-4 border-y-[1px] border-gray-600 relative'>
+    <div className='p-4 grid grid-cols-tweet gap-4 border-neutral-500 relative'>
       <TweetMenu
         username={user.username}
         tweetId={id}
@@ -94,14 +94,6 @@ const TweetItem: FC<Tweet> = ({
 
           <p className='mb-2'>{content}</p>
 
-          {tweetHashtags && (
-            <div className='flex flex-wrap mb-2'>
-              {tweetHashtags.map(hashtag => (
-                <FilterTag key={hashtag} tag={hashtag.trim()} />
-              ))}
-            </div>
-          )}
-
           {images.length === 1 ? (
             <img
               src={images[0].imageUrl}
@@ -122,6 +114,15 @@ const TweetItem: FC<Tweet> = ({
             </div>
           ) : null}
         </div>
+
+        {tweetHashtags && (
+          <div className='flex flex-wrap mb-2'>
+            {tweetHashtags.map(hashtag => (
+              <FilterTag key={hashtag} tag={hashtag.trim()} />
+            ))}
+          </div>
+        )}
+
         <div className='flex justify-start gap-8'>
           <button
             className={`${
