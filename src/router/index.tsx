@@ -48,6 +48,12 @@ export const router = createBrowserRouter([
       },
       {
         path: 'search',
+        loader: ({ request }) => {
+          const url = new URL(request.url)
+          const query = url.searchParams.get('q')
+          const find = url.searchParams.get('f')
+          return { query, find }
+        },
         element: <SearchPage />,
       },
       {
