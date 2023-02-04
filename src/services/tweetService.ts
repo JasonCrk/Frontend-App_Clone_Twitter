@@ -1,6 +1,8 @@
 import axios from 'axios'
+import { AccountInItem } from '../interfaces/Account'
 
 import {
+  ISearchTweetsParams,
   ITweetResponse,
   ITweetsResponse,
   TrendTweet,
@@ -74,10 +76,29 @@ export const getTrendTweetsList = async (): Promise<TrendTweet[]> => {
 }
 
 export const getTrendTweetsLargeList = async (): Promise<TrendTweet[]> => {
-  const result = await tweetsApi.get<{ trends: TrendTweet[] }>(
-    '/trends?limit=20'
-  )
+  const result = await tweetsApi.get<{ trends: TrendTweet[] }>('/trends', {
+    params: {
+      limit: 20,
+    },
+  })
   return result.data.trends
+}
+
+export const searchTweetsOrAccounts = async ({
+  query,
+  find,
+}: ISearchTweetsParams): Promise<Tweet[] | AccountInItem[]> => {
+  const result = await tweetsApi.get<{ data: Tweet[] | AccountInItem[] }>(
+    '/search',
+    {
+      params: {
+        find,
+        query,
+      },
+    }
+  )
+
+  return result.data.data
 }
 
 export const deleteTweet = async ({

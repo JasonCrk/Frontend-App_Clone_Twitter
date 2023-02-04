@@ -26,6 +26,11 @@ export interface ITweetResponse {
   post: Tweet
 }
 
+export interface ISearchTweetsParams {
+  query: string
+  find: string | undefined
+}
+
 export interface TweetInitialValue {
   content: string
   hashtags: string
