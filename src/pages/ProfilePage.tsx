@@ -48,9 +48,8 @@ export const ProfilePage: FC = () => {
     }
   )
 
-  const tabSelected = (path: string): boolean => {
-    return location.pathname === `/${username + path}`
-  }
+  const tabSelected = (path: string): boolean =>
+    location.pathname === `/${username + path}`
 
   return (
     <>
