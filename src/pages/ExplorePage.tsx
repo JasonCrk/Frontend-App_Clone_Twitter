@@ -39,7 +39,11 @@ export const ExplorePage: FC = () => {
           <Spinner />
         </div>
       ) : tweets ? (
-        tweets.map(tweet => <TweetItem key={tweet.id} {...tweet} />)
+        <div className='divide-y divide-neutral-500 border-t border-neutral-500'>
+          {tweets.map(tweet => (
+            <TweetItem key={tweet.id} {...tweet} />
+          ))}
+        </div>
       ) : null}
     </>
   )
