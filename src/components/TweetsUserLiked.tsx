@@ -17,7 +17,7 @@ export const TweetsUserLiked: FC = () => {
     data: tweets,
     isLoading,
     error,
-  } = useQuery<Tweet[], AxiosError>('userLikedTweets', () =>
+  } = useQuery<Tweet[], AxiosError>(['userLikedTweets', username], () =>
     getLikedTweets(username!)
   )
 
