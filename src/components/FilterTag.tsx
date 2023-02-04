@@ -9,7 +9,7 @@ interface FilterTagProps {
 export const FilterTag: FC<FilterTagProps> = ({ tag }) => {
   return (
     <Link
-      to={`/search?hashtag=${tag}`}
+      to={`/search?q=${tag}`}
       className='hover:bg-blue-500 hover:text-white text-blue-500 rounded-md px-2 py-1 text-sm transition-colors'
     >
       #{tag}

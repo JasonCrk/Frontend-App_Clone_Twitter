@@ -5,7 +5,7 @@ import { TrendTweet } from '../interfaces/Tweet'
 
 const TrendTweetsItem: FC<TrendTweet> = ({ hashtag, countTweets }) => {
   return (
-    <Link to={'/'}>
+    <Link to={`/search?q=${hashtag}`}>
       <div className='py-3 px-4 w-full hover:bg-white/5 hover:transition-colors'>
         <p className='text-xs text-neutral-500'>Trending</p>
         <p className='font-bold'>{hashtag}</p>
