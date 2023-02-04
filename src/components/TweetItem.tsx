@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { Link, redirect, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -50,7 +50,7 @@ const TweetItem: FC<Tweet> = ({
   }
 
   const handleLikeTweet = () => {
-    if (!isAuth) return redirect('/auth/signIn')
+    if (!isAuth) return navigate('/auth/signIn')
 
     likeTweetMutation({ tweetId: id, accessToken: token! })
   }
