@@ -41,11 +41,8 @@ export const ProfilePage: FC = () => {
   const location = useLocation()
 
   const { data: profile, isLoading } = useQuery<AccountInProfile, AxiosError>(
-    'profile',
-    () => getProfileByUsername(username as string),
-    {
-      refetchOnWindowFocus: false,
-    }
+    ['profile', username],
+    () => getProfileByUsername(username!)
   )
 
   const tabSelected = (path: string): boolean =>
