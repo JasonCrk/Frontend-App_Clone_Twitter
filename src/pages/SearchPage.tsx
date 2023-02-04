@@ -37,8 +37,12 @@ export const SearchPage: FC = () => {
   const queries = useLoaderData() as ISearchTweetsParams
   const location = useLocation()
 
+  const locationSearch = `?q=${queries.query}${
+    queries.find ? '&f=' + queries.find : ''
+  }`
+
   const filterSelected = (path: string): boolean =>
-    location.pathname + location.search === path
+    location.pathname + locationSearch === path
 
   const { data, isLoading, error } = useQuery<
     Tweet[] | AccountInItem[],
@@ -51,7 +55,7 @@ export const SearchPage: FC = () => {
 
   return (
     <>
-      <Bar styles=''>
+      <Bar styles='border-b border-neutral-500'>
         <div className='px-4 py-2'>
           <label className='relative'>
             <input
@@ -96,7 +100,7 @@ export const SearchPage: FC = () => {
       ) : error ? (
         <div className='text-red-500 text-center mt-4'>Hubo un error</div>
       ) : data?.length === 0 ? (
-        <div className='text-center text-lg font-bold pt-4 border-t border-neutral-500'>
+        <div className='text-center text-lg font-bold pt-4'>
           No hay resultados
         </div>
       ) : (
