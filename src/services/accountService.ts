@@ -5,6 +5,7 @@ import {
   IProfileResponse,
   IAccountsListResponse,
   AccountInProfile,
+  Account,
 } from '../interfaces/Account'
 
 const API_TWITTER_ACCOUNT_BASE = 'http://localhost:4000/api/account'
@@ -36,4 +37,25 @@ export const getMostFollowedUsers = async (
     `/most_followed${limit ? '?limit=' + limit : ''}`
   )
   return response.data.accounts
+}
+
+export const followAccount = async ({
+  userFollowId,
+  accessToken,
+}: {
+  userFollowId: string
+  accessToken: string
+}): Promise<Account> => {
+  const response = await accountApi.post<{ account: Account }>(
+    '/follow',
+    {
+      userFollowId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  )
+  return response.data.account
 }
