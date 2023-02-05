@@ -7,9 +7,10 @@ module.exports = {
         imagePost: '32rem',
       },
       gridTemplateColumns: {
-        md: 'auto 2fr 1.5fr',
         sm: 'auto 1fr',
-        lg: '1fr 2.4fr 1.6fr',
+        md: 'auto 2fr 1.5fr',
+        lg: '0.9fr 2.1fr 1.4fr',
+        xl: '1fr 2.4fr 1.6fr',
         tweet: 'auto 1fr',
       },
       boxShadow: {
