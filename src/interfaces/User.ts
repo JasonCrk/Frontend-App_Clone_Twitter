@@ -18,6 +18,7 @@ export interface UserInTweet {
 
 export interface UserAuth extends Omit<User, 'password' | 'account'> {
   account: {
+    id: string
     avatar: string
   }
 }
