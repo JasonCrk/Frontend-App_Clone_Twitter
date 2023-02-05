@@ -170,7 +170,9 @@ export const ProfilePage: FC = () => {
                 ))}
               </Tab.List>
             </Tab.Group>
-            <Outlet />
+            <div className='border-t border-neutral-500'>
+              <Outlet />
+            </div>
           </div>
         </>
       ) : null}
