@@ -19,6 +19,8 @@ export interface AccountInItem {
   verify: boolean
   bibliography?: string
   user: {
+    followers: Array<{ id: string }>
+    id: string
     username: string
     firstName: string
   }
