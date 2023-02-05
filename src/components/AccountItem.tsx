@@ -1,37 +1,101 @@
 import { FC } from 'react'
 
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
-import { AccountInItem } from '../interfaces/Account'
 import { useAuthStore } from '../store/authStore'
 
-const AccountItem: FC<AccountInItem> = ({ avatar, user, bibliography }) => {
-  const authUser = useAuthStore(state => state.user)
+import { useMutation, useQueryClient } from 'react-query'
 
-  const isMyAccount = user.username !== authUser?.username
+import { AccountInItem } from '../interfaces/Account'
+import { followAccount } from '../services/accountService'
+
+const AccountItem: FC<AccountInItem> = ({ avatar, user, bibliography }) => {
+  const userAuth = useAuthStore(state => state.user)
+  const isAuth = useAuthStore(state => state.isAuth)
+  const token = useAuthStore(state => state.token!)
+
+  const queryClient = useQueryClient()
+
+  const navigate = useNavigate()
+
+  const isNotMyAccount = user.username !== userAuth?.username
+
+  const isFollowingAccount = (): boolean => {
+    const userFollowing = user.followers.find(
+      follower => follower.id === userAuth?.account.id
+    )
+    return Boolean(userFollowing)
+  }
+
+  const { mutate: followAccountMutation } = useMutation({
+    mutationFn: followAccount,
+    onSuccess: () => {
+      queryClient.invalidateQueries('mostFollowed')
+      queryClient.invalidateQueries('profile')
+    },
+    onError: error => {
+      console.log(error)
+    },
+  })
+
+  const handleFollow = () => {
+    if (!isAuth) return navigate('/auth/signIn')
+
+    followAccountMutation({ userFollowId: user.id, accessToken: token })
+  }
 
   return (
-    <NavLink to={`/${user.username}`}>
-      <div className='py-3 px-4 w-full hover:bg-white/5 hover:transition-colors flex flex-row items-center justify-between'>
+    <div className='relative'>
+      <NavLink
+        to={`/${user.username}`}
+        className='py-3 px-4 w-full hover:bg-white/5 hover:transition-colors flex flex-row items-center justify-between'
+      >
         <div className='flex items-center gap-2'>
           <img src={avatar} alt='' className='w-12 rounded-full' />
           <div>
-            <p className='font-bold hover:underline max-lg:w-20 max-xl:w-24 truncate'>
+            <p
+              className={`font-bold hover:underline truncate ${
+                isNotMyAccount && 'max-lg:w-14 max-xl:w-20'
+              }`}
+              title={user.firstName}
+            >
               {user.firstName}
             </p>
-            <p className='text-sm text-neutral-400 max-lg:w-20 max-xl:w-24 truncate'>
+            <p
+              className={`text-sm text-neutral-400 truncate ${
+                isNotMyAccount && 'max-lg:w-14 max-xl:w-20'
+              }`}
+              title={user.username}
+            >
               @{user.username}
             </p>
             {bibliography && <p className=''>{bibliography}</p>}
           </div>
         </div>
-        {isMyAccount && (
-          <button className='text-black bg-white py-2 px-5 rounded-full text-sm font-bold hover:bg-neutral-100'>
-            Follow
-          </button>
-        )}
-      </div>
-    </NavLink>
+      </NavLink>
+
+      {isNotMyAccount && (
+        <button
+          className={`absolute top-5 right-4 py-2 px-5 rounded-full text-sm font-bold ${
+            isFollowingAccount()
+              ? 'bg-transparent border border-white text-white group hover:border-red-600'
+              : 'text-black bg-white hover:bg-neutral-100'
+          }`}
+          onClick={() => handleFollow()}
+        >
+          {isFollowingAccount() ? (
+            <>
+              <span className='group-hover:hidden'>Following</span>
+              <span className='hidden group-hover:block text-red-600 px-[2px]'>
+                Unfollow
+              </span>
+            </>
+          ) : (
+            'Follow'
+          )}
+        </button>
+      )}
+    </div>
   )
 }
 
