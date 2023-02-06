@@ -18,9 +18,10 @@ import {
   HiOutlineHashtag,
 } from 'react-icons/hi'
 
-import { RiHome7Fill, RiHome7Line, RiQuillPenLine } from 'react-icons/ri'
+import { RiHome7Fill, RiHome7Line } from 'react-icons/ri'
 
 import Spinner from './Spinner'
+import { ModalTweetForm } from './ModalTweetForm'
 
 const VerticalNavbar: FC = () => {
   const user = useAuthStore(state => state.user)
@@ -70,10 +71,7 @@ const VerticalNavbar: FC = () => {
                   IconOutline={BsPersonOutline}
                   IconFill={BsPersonFill}
                 />
-                <button className='py-3 rounded-full lg:w-full bg-blue-500 text-lg font-bold max-lg:p-4'>
-                  <span className='max-lg:hidden'>Tweet</span>
-                  <RiQuillPenLine className='lg:hidden text-3xl' />
-                </button>
+                <ModalTweetForm />
               </>
             )}
           </div>
