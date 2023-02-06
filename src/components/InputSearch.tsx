@@ -36,7 +36,7 @@ export const InputSearch: FC<InputSearchProps> = ({ query, searchBar }) => {
   )
 
   return (
-    <Combobox>
+    <Combobox value={queryValue}>
       <div className='relative'>
         <Combobox.Input
           className={`peer/search pr-4 pl-12 py-3 placeholder:text-zinc-500 focus:outline-none focus:bg-transparent border border-transparent focus:border-blue-500 rounded-full w-full bg-zinc-900 ${
