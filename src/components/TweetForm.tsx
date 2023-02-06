@@ -1,13 +1,15 @@
 import { FC, useState } from 'react'
 
-import { Formik } from 'formik'
-import * as Yup from 'yup'
+import { useAuthStore } from '../store/authStore'
 
 import { TweetInitialValue } from '../interfaces/Tweet'
 
 import { BsImage } from 'react-icons/bs'
 import { AiOutlineGif } from 'react-icons/ai'
 import { HiOutlineHashtag } from 'react-icons/hi'
+
+import { Formik } from 'formik'
+import * as Yup from 'yup'
 
 const initialValue: TweetInitialValue = {
   content: '',
@@ -21,14 +23,12 @@ const schemaFormValidate = Yup.object().shape({
 })
 
 interface TweetFormProps {
-  avatar: string
   placeholder: string
   isHomeForm?: boolean
   handleSubmit: (value: any, actions: any) => void
 }
 
 export const TweetForm: FC<TweetFormProps> = ({
-  avatar,
   isHomeForm,
   placeholder,
   handleSubmit,
@@ -36,11 +36,17 @@ export const TweetForm: FC<TweetFormProps> = ({
   const [isFocusContent, setIsFocusContent] = useState(false)
   const [isFocusHashtags, setIsFocusHashtags] = useState(false)
 
+  const user = useAuthStore(state => state.user)
+
   return (
     <div
       className={`${isHomeForm && 'px-4'} py-4 grid grid-cols-[auto_1fr] gap-3`}
     >
-      <img className='w-11 h-11 rounded-full' src={avatar} alt='' />
+      <img
+        className='w-11 h-11 rounded-full'
+        src={user?.account.avatar}
+        alt=''
+      />
       <Formik
         initialValues={initialValue}
         validationSchema={schemaFormValidate}
