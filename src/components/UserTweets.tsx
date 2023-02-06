@@ -1,10 +1,11 @@
 import { FC } from 'react'
 
 import { useParams } from 'react-router-dom'
+
+import { AxiosError } from 'axios'
 import { useQuery } from 'react-query'
 
 import { Tweet } from '../interfaces/Tweet'
-import { AxiosError } from 'axios'
 import { getUserTweets } from '../services/tweetService'
 
 import TweetItem from './TweetItem'
