@@ -14,6 +14,18 @@ const accountApi = axios.create({
   baseURL: API_TWITTER_ACCOUNT_BASE,
 })
 
+export const searchAccounts = async (
+  query: string
+): Promise<AccountInItem[]> => {
+  const response = await accountApi.get<IAccountsListResponse>('/search', {
+    params: {
+      query,
+      limit: 10,
+    },
+  })
+  return response.data.accounts
+}
+
 export const getProfileByUsername = async (
   username: string
 ): Promise<AccountInProfile> => {
