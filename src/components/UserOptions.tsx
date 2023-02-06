@@ -40,7 +40,7 @@ const UserOptions: FC<UserOptionsProps> = ({ user }) => {
       >
         <Menu.Items
           className={
-            'absolute bottom-24 rounded-md max-lg:rounded-2xl overflow-hidden shadow-white shadow-border max-lg:w-16 bg-black py-1.5 z-10'
+            'absolute bottom-24 rounded-md max-lg:rounded-2xl overflow-hidden shadow-neutral-400 shadow-border max-lg:w-16 bg-black py-1.5 z-10'
           }
         >
           <MenuOption Icon={HiOutlineLogout} onClick={() => handleLogOut()}>
