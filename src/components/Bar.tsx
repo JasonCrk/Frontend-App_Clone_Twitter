@@ -8,7 +8,7 @@ interface BarProps {
 export const Bar: FC<BarProps> = ({ children, styles }) => {
   return (
     <div
-      className={`sticky top-0 w-full bg-black bg-opacity-10 backdrop-blur-md z-20 ${styles}`}
+      className={`sticky top-0 w-full bg-black bg-opacity-10 backdrop-blur-md z-10 ${styles}`}
     >
       {children}
     </div>
