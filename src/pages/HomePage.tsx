@@ -79,7 +79,6 @@ export const HomePage: FC = () => {
       ) : user ? (
         <TweetForm
           handleSubmit={sendTweet}
-          avatar={user!.account.avatar}
           placeholder="What's happening?"
           isHomeForm
         />
