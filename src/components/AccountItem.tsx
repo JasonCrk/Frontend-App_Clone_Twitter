@@ -9,7 +9,16 @@ import { useMutation, useQueryClient } from 'react-query'
 import { AccountInItem } from '../interfaces/Account'
 import { followAccount } from '../services/accountService'
 
-const AccountItem: FC<AccountInItem> = ({ avatar, user, bibliography }) => {
+interface AccountItemProps extends AccountInItem {
+  showBtnFollow?: boolean
+}
+
+const AccountItem: FC<AccountItemProps> = ({
+  avatar,
+  user,
+  bibliography,
+  showBtnFollow,
+}) => {
   const userAuth = useAuthStore(state => state.user)
   const isAuth = useAuthStore(state => state.isAuth)
   const token = useAuthStore(state => state.token!)
@@ -48,7 +57,7 @@ const AccountItem: FC<AccountInItem> = ({ avatar, user, bibliography }) => {
     <div className='relative'>
       <NavLink
         to={`/${user.username}`}
-        className='py-3 px-4 w-full hover:bg-white/5 hover:transition-colors flex flex-row items-center justify-between'
+        className='py-3 px-4 w-full hover:bg-neutral-900 hover:transition-colors flex flex-row items-center justify-between'
       >
         <div className='flex items-center gap-2'>
           <img src={avatar} alt='' className='w-12 rounded-full' />
@@ -74,7 +83,7 @@ const AccountItem: FC<AccountInItem> = ({ avatar, user, bibliography }) => {
         </div>
       </NavLink>
 
-      {isNotMyAccount && (
+      {isNotMyAccount && showBtnFollow && (
         <button
           className={`absolute top-5 right-4 py-2 px-5 rounded-full text-sm font-bold ${
             isFollowingAccount()
