@@ -12,11 +12,10 @@ import { searchTweetsOrAccounts } from '../services/tweetService'
 import { Tab } from '@headlessui/react'
 
 import { Bar } from '../components/Bar'
+import { InputSearch } from '../components/InputSearch'
 import Spinner from '../components/Spinner'
 import AccountItem from '../components/AccountItem'
 import TweetItem from '../components/TweetItem'
-
-import { BsSearch } from 'react-icons/bs'
 
 const tabsFilters = [
   {
@@ -57,17 +56,10 @@ export const SearchPage: FC = () => {
     <>
       <Bar styles='border-b border-neutral-500'>
         <div className='px-4 py-2'>
-          <label className='relative'>
-            <input
-              type='text'
-              className='peer/search pr-4 pl-12 py-3 placeholder:text-zinc-500 focus:outline-none focus:bg-transparent border border-transparent focus:border-blue-500 rounded-full w-full bg-zinc-900'
-              placeholder='Search Twitter'
-            />
-            <BsSearch className='absolute top-0.5 left-4 text-lg text-zinc-500 peer-focus/search:text-blue-600' />
-          </label>
+          <InputSearch query={queries.query} searchBar />
         </div>
 
-        <div className='w-full mt-1'>
+        <div className='w-full'>
           <Tab.Group>
             <Tab.List className='flex justify-around'>
               {tabsFilters.map(({ name, path }) => (
@@ -104,7 +96,7 @@ export const SearchPage: FC = () => {
           No hay resultados
         </div>
       ) : (
-        <div>
+        <div className='divide-y divide-neutral-500'>
           {queries.find === 'user'
             ? (data as AccountInItem[]).map(account => (
                 <AccountItem key={account.id} {...account} />
