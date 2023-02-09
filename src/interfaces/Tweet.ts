@@ -37,7 +37,6 @@ export interface TweetInitialValue {
   images: any[]
 }
 
-export interface TrendTweet {
-  hashtag: string
-  countTweets: number
+export interface TrendTweets {
+  [hashtag: string]: number
 }

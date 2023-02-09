@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { useQuery } from 'react-query'
 
-import { TrendTweet } from '../interfaces/Tweet'
+import { TrendTweets } from '../interfaces/Tweet'
 
 import { getTrendTweetsList } from '../services/tweetService'
 
@@ -16,7 +16,7 @@ const TrendTweetsList: FC = () => {
     data: trends,
     isLoading,
     error,
-  } = useQuery<TrendTweet[]>('trendTweetsList', getTrendTweetsList)
+  } = useQuery<TrendTweets>('trendTweetsList', getTrendTweetsList)
 
   if (isLoading)
     return (
@@ -29,15 +29,20 @@ const TrendTweetsList: FC = () => {
 
   return (
     <>
-      {trends && trends.length === 0 ? (
+      {trends && Object.keys(trends).length === 0 ? (
         <div className='pt-3 pb-6 text-center text-lg text-blue-200'>
           No trends :(
         </div>
       ) : (
         <>
-          {trends?.map((trendData, index) => (
-            <TrendTweetsItem key={index} {...trendData} />
+          {Object.keys(trends!).map((hashtag, index) => (
+            <TrendTweetsItem
+              key={index}
+              hashtag={hashtag}
+              countTweets={trends![hashtag]}
+            />
           ))}
+
           <Link to={'/trends'}>
             <div className='py-3 px-4 w-full hover:bg-white/5 hover:transition-colors text-sky-500'>
               Show More

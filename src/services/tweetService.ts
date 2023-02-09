@@ -5,7 +5,7 @@ import {
   ISearchTweetsParams,
   ITweetResponse,
   ITweetsResponse,
-  TrendTweet,
+  TrendTweets,
   Tweet,
 } from '../interfaces/Tweet'
 
@@ -70,13 +70,13 @@ export const getLikedTweets = async (username: string): Promise<Tweet[]> => {
   return result.data.posts
 }
 
-export const getTrendTweetsList = async (): Promise<TrendTweet[]> => {
-  const result = await tweetsApi.get<{ trends: TrendTweet[] }>('/trends')
+export const getTrendTweetsList = async (): Promise<TrendTweets> => {
+  const result = await tweetsApi.get<{ trends: TrendTweets }>('/trends')
   return result.data.trends
 }
 
-export const getTrendTweetsLargeList = async (): Promise<TrendTweet[]> => {
-  const result = await tweetsApi.get<{ trends: TrendTweet[] }>('/trends', {
+export const getTrendTweetsLargeList = async (): Promise<TrendTweets> => {
+  const result = await tweetsApi.get<{ trends: TrendTweets }>('/trends', {
     params: {
       limit: 20,
     },
