@@ -1,15 +1,22 @@
-import { FC, Fragment, useState } from 'react'
+import { FC, useState } from 'react'
 
-import { Dialog, Transition } from '@headlessui/react'
-import { TweetForm } from './TweetForm'
-import { TweetInitialValue } from '../interfaces/Tweet'
-import { FormikHelpers } from 'formik'
-import { createTweet } from '../services/tweetService'
+import { useAuthStore } from '../store/authStore'
+
 import { useMutation, useQueryClient } from 'react-query'
-import { toast } from 'react-toastify'
+
+import { TweetInitialValue } from '../interfaces/Tweet'
+import { createTweet } from '../services/tweetService'
+
+import { Dialog } from '@headlessui/react'
+
+import { TweetForm } from './TweetForm'
+
 import { RiQuillPenLine } from 'react-icons/ri'
 import { AiOutlineClose } from 'react-icons/ai'
-import { useAuthStore } from '../store/authStore'
+
+import { FormikHelpers } from 'formik'
+import { toast } from 'react-toastify'
+import { Modal } from './Modal'
 
 export const ModalTweetForm: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -71,52 +78,21 @@ export const ModalTweetForm: FC = () => {
         <RiQuillPenLine className='lg:hidden text-3xl' />
       </button>
 
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as='div' onClose={handleCloseModal} className='relative z-10'>
-          <Transition.Child
-            as={Fragment}
-            enter='ease-out duration-300'
-            enterFrom='opacity-0'
-            enterTo='opacity-100'
-            leave='ease-in duration-200'
-            leaveFrom='opacity-100'
-            leaveTo='opacity-0'
+      <Modal isOpen={isOpen} closeModal={handleCloseModal}>
+        <Dialog.Panel
+          className={
+            'w-full max-w-lg transform overflow-hidden rounded-2xl bg-black pt-10 px-4 pb-2 text-left align-middle transition-all shadow-neutral-800 shadow-border relative text-white'
+          }
+        >
+          <button
+            className='absolute p-2 rounded-full top-2 left-2 text-xl hover:bg-neutral-800'
+            onClick={() => handleCloseModal()}
           >
-            <div className='fixed inset-0 bg-gray-500 bg-opacity-60' />
-          </Transition.Child>
-
-          <div className='fixed inset-0 overflow-y-auto'>
-            <div className='flex min-h-full items-start justify-center pt-8'>
-              <Transition.Child
-                as={Fragment}
-                enter='ease-out duration-300'
-                enterFrom='opacity-0 scale-95'
-                enterTo='opacity-100 scale-100'
-                leave='ease-in duration-200'
-                leaveFrom='opacity-100 scale-100'
-                leaveTo='opacity-0 scale-95'
-              >
-                <Dialog.Panel
-                  className={
-                    'w-full max-w-lg transform overflow-hidden rounded-2xl bg-black pt-10 px-4 pb-2 text-left align-middle transition-all shadow-neutral-800 shadow-border relative text-white'
-                  }
-                >
-                  <button
-                    className='absolute p-2 rounded-full top-2 left-2 text-xl hover:bg-neutral-800'
-                    onClick={() => handleCloseModal()}
-                  >
-                    <AiOutlineClose />
-                  </button>
-                  <TweetForm
-                    handleSubmit={sendTweet}
-                    placeholder="What's happening?"
-                  />
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
+            <AiOutlineClose />
+          </button>
+          <TweetForm handleSubmit={sendTweet} placeholder="What's happening?" />
+        </Dialog.Panel>
+      </Modal>
     </>
   )
 }
