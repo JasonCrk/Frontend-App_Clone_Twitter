@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import type { FC } from 'react'
 
 import { NavLink, useNavigate } from 'react-router-dom'
 
@@ -11,6 +11,7 @@ import { followAccount } from '../services/accountService'
 
 interface AccountItemProps extends AccountInItem {
   showBtnFollow?: boolean
+  hoverLight?: boolean
 }
 
 const AccountItem: FC<AccountItemProps> = ({
@@ -18,6 +19,7 @@ const AccountItem: FC<AccountItemProps> = ({
   user,
   bibliography,
   showBtnFollow,
+  hoverLight,
 }) => {
   const userAuth = useAuthStore(state => state.user)
   const isAuth = useAuthStore(state => state.isAuth)
@@ -57,10 +59,16 @@ const AccountItem: FC<AccountItemProps> = ({
     <div className='relative'>
       <NavLink
         to={`/${user.username}`}
-        className='py-3 px-4 w-full hover:bg-neutral-900 hover:transition-colors flex flex-row items-center justify-between'
+        className={`py-3 px-4 w-full  hover:transition-colors flex flex-row items-center justify-between ${
+          hoverLight ? 'hover:bg-white/5' : 'hover:bg-neutral-900'
+        }`}
       >
         <div className='flex items-center gap-2'>
-          <img src={avatar} alt='' className='w-12 rounded-full' />
+          <img
+            src={avatar}
+            alt=''
+            className='w-12 h-12 object-cover rounded-full'
+          />
           <div>
             <p
               className={`font-bold hover:underline truncate ${
