@@ -70,6 +70,11 @@ export const getLikedTweets = async (username: string): Promise<Tweet[]> => {
   return result.data.posts
 }
 
+export const getMediaTweets = async (username: string): Promise<Tweet[]> => {
+  const result = await tweetsApi.get<ITweetsResponse>(`/user/${username}/media`)
+  return result.data.posts
+}
+
 export const getTrendTweetsList = async (): Promise<TrendTweets> => {
   const result = await tweetsApi.get<{ trends: TrendTweets }>('/trends')
   return result.data.trends
