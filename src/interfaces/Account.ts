@@ -13,6 +13,15 @@ export interface Account {
   verify: boolean
 }
 
+export interface AccountInitialValues {
+  website: string
+  bibliography: string
+  location: string
+  firstName: string
+  avatar: any
+  header: any
+}
+
 export interface AccountInItem {
   id: string
   avatar: string
