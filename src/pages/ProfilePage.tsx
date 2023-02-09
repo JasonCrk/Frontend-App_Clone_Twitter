@@ -1,22 +1,24 @@
 import type { FC } from 'react'
 
-import { NavLink, Outlet, useLocation, useParams } from 'react-router-dom'
+import { Link, Outlet, useLocation, useParams } from 'react-router-dom'
+
+import { useAuthStore } from '../store/authStore'
 
 import { useQuery } from 'react-query'
 
-import { AccountInProfile } from '../interfaces/Account'
-
 import { AxiosError } from 'axios'
+import { AccountInProfile } from '../interfaces/Account'
 import { getProfileByUsername } from '../services/accountService'
 
 import { Tab } from '@headlessui/react'
 
 import { Bar } from '../components/Bar'
+import { ModalEditProfile } from '../components/ModalEditProfile'
 import Spinner from '../components/Spinner'
 
 import { AiOutlineArrowLeft, AiOutlineLink } from 'react-icons/ai'
 import { BsCalendar3, BsFillPatchCheckFill } from 'react-icons/bs'
-import { CiLocationOn } from 'react-icons/ci'
+import { HiLocationMarker } from 'react-icons/hi'
 import { TbBallon } from 'react-icons/tb'
 
 import { formatBirthday, formatJoinAccount } from '../utils/formatDate'
@@ -37,12 +39,18 @@ const tabsCategories = [
 ]
 
 export const ProfilePage: FC = () => {
-  const { username } = useParams()
+  const isAuth = useAuthStore(state => state.isAuth)
+  const user = useAuthStore(state => state.user)
+
+  const { username } = useParams() as { username: string }
   const location = useLocation()
 
-  const { data: profile, isLoading } = useQuery<AccountInProfile, AxiosError>(
-    ['profile', username],
-    () => getProfileByUsername(username!)
+  const {
+    data: profile,
+    isLoading,
+    error,
+  } = useQuery<AccountInProfile, AxiosError>(['profile', username], () =>
+    getProfileByUsername(username)
   )
 
   const tabSelected = (path: string): boolean =>
@@ -54,18 +62,21 @@ export const ProfilePage: FC = () => {
         <div className='flex justify-center mt-10'>
           <Spinner />
         </div>
+      ) : error ? (
+        <div className='text-center text-red-600 text-xl'>Hubo un error</div>
       ) : profile ? (
-        <>
+        <div>
           <Bar styles='flex gap-6 px-4 items-center py-1'>
-            <NavLink
+            <Link
               to={'/home'}
               className='p-3 hover:bg-neutral-800 rounded-full transition-colors text-lg'
             >
               <AiOutlineArrowLeft />
-            </NavLink>
+            </Link>
             <div>
               <p className='text-xl font-bold flex items-center gap-2'>
-                {profile.user.firstName}
+                <span>{profile.user.firstName}</span>
+
                 {profile.verify && (
                   <BsFillPatchCheckFill className='text-blue-500' />
                 )}
@@ -84,14 +95,14 @@ export const ProfilePage: FC = () => {
             <img
               src={profile.avatar}
               alt=''
-              className='w-32 h-32 rounded-full absolute top-32 left-5 border-black border-4'
+              className='w-32 h-32 object-cover rounded-full absolute top-32 left-5 border-black border-4'
             />
             <div>
-              <div className='flex justify-end mx-4 mt-4 mb-6'>
-                <button className='border border-slate-500 rounded-full bg-transparent px-4 py-2 hover:bg-neutral-800 font-bold text-sm transition-colors'>
-                  Edit profile
-                </button>
-              </div>
+              {isAuth && user?.id === profile.user.id ? (
+                <ModalEditProfile profile={profile} />
+              ) : (
+                <div className='h-[38px] mx-4 mt-4 mb-6 w-full' />
+              )}
               <div className='m-4'>
                 <p className='text-xl font-bold'>{profile.user.firstName}</p>
                 <p className='text-neutral-500'>@{profile.user.username}</p>
@@ -101,31 +112,35 @@ export const ProfilePage: FC = () => {
 
                 <div className='flex justify-start items-center flex-wrap gap-4 py-2'>
                   {profile.website && (
-                    <NavLink
-                      to='https://emerzon.com'
+                    <Link
+                      to={profile.website}
                       className='flex gap-1 items-center'
                     >
                       <AiOutlineLink className='text-neutral-500' />{' '}
                       <span className='text-blue-500'>{profile.website}</span>
-                    </NavLink>
+                    </Link>
                   )}
+
                   {profile.location && (
                     <span className='flex gap-1 items-center text-neutral-500'>
-                      <CiLocationOn /> hello Location
+                      <HiLocationMarker />
+                      <span>{profile.location}</span>
                     </span>
                   )}
+
                   {profile.birthday && (
                     <span className='flex gap-1 items-center text-neutral-500'>
                       <TbBallon /> {formatBirthday(profile.birthday)}
                     </span>
                   )}
+
                   <span className='flex gap-1 items-center text-neutral-500'>
                     <BsCalendar3 /> {formatJoinAccount(profile.createdAt)}
                   </span>
                 </div>
 
                 <div className='flex gap-4 items-center'>
-                  <NavLink
+                  <Link
                     to={`/${username}/followings`}
                     className='hover:underline'
                   >
@@ -133,8 +148,8 @@ export const ProfilePage: FC = () => {
                       {profile.followings.length}{' '}
                     </span>
                     <span className='text-neutral-500'>Following</span>
-                  </NavLink>
-                  <NavLink
+                  </Link>
+                  <Link
                     to={`/${username}/followers`}
                     className='hover:underline'
                   >
@@ -142,7 +157,7 @@ export const ProfilePage: FC = () => {
                       {profile.user.followers.length}{' '}
                     </span>
                     <span className='text-neutral-500'>Followers</span>
-                  </NavLink>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -154,7 +169,7 @@ export const ProfilePage: FC = () => {
                   <Tab
                     key={name}
                     to={`/${username}` + path}
-                    as={NavLink}
+                    as={Link}
                     className={`w-full hover:bg-neutral-700/40 hover:transition-[background] py-3 text-center`}
                   >
                     <span
@@ -174,7 +189,7 @@ export const ProfilePage: FC = () => {
               <Outlet />
             </div>
           </div>
-        </>
+        </div>
       ) : null}
     </>
   )
