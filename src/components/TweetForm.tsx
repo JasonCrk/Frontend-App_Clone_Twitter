@@ -43,7 +43,7 @@ export const TweetForm: FC<TweetFormProps> = ({
       className={`${isHomeForm && 'px-4'} py-4 grid grid-cols-[auto_1fr] gap-3`}
     >
       <img
-        className='w-11 h-11 rounded-full'
+        className='w-11 h-11 object-cover rounded-full'
         src={user?.account.avatar}
         alt=''
       />

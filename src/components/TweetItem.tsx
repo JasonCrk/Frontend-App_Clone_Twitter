@@ -70,7 +70,7 @@ const TweetItem: FC<Tweet> = ({
         <img
           src={user.account.avatar}
           alt={user.username}
-          className='rounded-full w-12'
+          className='rounded-full w-12 h-12 object-cover'
         />
       </Link>
       <div>
