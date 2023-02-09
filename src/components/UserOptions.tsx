@@ -52,17 +52,17 @@ const UserOptions: FC<UserOptionsProps> = ({ user }) => {
         <div className='hover:bg-white hover:bg-opacity-10 max-sm:content-start transition-[background] p-3 rounded-full mb-4 grid grid-cols-[auto_1fr_auto] max-lg:grid-cols-1 gap-2 lg:w-full'>
           <img
             src={user.account.avatar}
-            className='rounded-full w-12'
+            className='rounded-full w-11 h-11 object-cover'
             alt='avatar'
           />
-          <div className='flex flex-col items-start justify-center max-lg:hidden'>
+          <div className='flex flex-col items-start justify-center max-lg:hidden h-full'>
             <p
-              className='font-bold text-lg leading-4 truncate w-32'
+              className='font-bold text-[1.1rem] leading-4 truncate w-32 text-start'
               title={user.firstName}
             >
               {user.firstName}
             </p>
-            <p className='opacity-40'>@{user.username}</p>
+            <p className='opacity-40 text-base'>@{user.username}</p>
           </div>
           <div className='flex items-center max-lg:hidden'>
             <SlOptions />
