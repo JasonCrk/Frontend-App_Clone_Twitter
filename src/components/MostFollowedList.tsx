@@ -30,7 +30,7 @@ const MostFollowedList: FC = () => {
         <div className='text-center text-sky-500'>no users</div>
       ) : (
         accounts?.map(account => (
-          <AccountItem key={account.id} showBtnFollow {...account} />
+          <AccountItem key={account.id} showBtnFollow hoverLight {...account} />
         ))
       )}
     </div>
