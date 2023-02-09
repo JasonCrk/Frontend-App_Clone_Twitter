@@ -91,7 +91,7 @@ export const HomePage: FC = () => {
       ) : error ? (
         <div>Error</div>
       ) : tweets ? (
-        <div className='divide-y divide-neutral-500 border-t border-neutral-500'>
+        <div className='divide-y divide-outline-layout border-t border-outline-layout'>
           {tweets.map(tweet => (
             <TweetItem key={tweet.id} {...tweet} />
           ))}

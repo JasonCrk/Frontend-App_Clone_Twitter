@@ -185,7 +185,7 @@ export const ProfilePage: FC = () => {
                 ))}
               </Tab.List>
             </Tab.Group>
-            <div className='border-t border-neutral-500'>
+            <div className='border-t border-outline-layout'>
               <Outlet />
             </div>
           </div>

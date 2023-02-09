@@ -1,8 +1,14 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      colors: {
+        'outline-layout': colors.neutral[700],
+        'menu-b': colors.neutral[700],
+      },
       height: {
         imagePost: '32rem',
       },

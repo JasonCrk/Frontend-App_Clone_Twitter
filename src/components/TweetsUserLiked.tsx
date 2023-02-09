@@ -30,7 +30,7 @@ export const TweetsUserLiked: FC = () => {
       ) : error ? (
         <div className='text-center text-red-500'>Hubo un error</div>
       ) : tweets ? (
-        <div>
+        <div className='divide-y divide-outline-layout'>
           {tweets.length === 0 ? (
             <h6 className='text-center mt-4 font-bold text-lg'>
               No hay ningun Tweet

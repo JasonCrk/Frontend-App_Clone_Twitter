@@ -65,7 +65,7 @@ export const TweetMenu: FC<TweetMenuProps> = ({
       >
         <Menu.Items
           className={
-            'absolute top-10 right-2 overflow-hidden shadow-white shadow-border py-1.5 z-10 w-fit rounded-md bg-black'
+            'absolute top-10 right-2 overflow-hidden shadow-menu-b shadow-border py-1.5 z-10 w-fit rounded-md bg-black'
           }
         >
           {isAuth && username === userAuth?.username && (

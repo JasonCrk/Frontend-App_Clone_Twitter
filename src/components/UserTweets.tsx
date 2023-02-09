@@ -31,7 +31,7 @@ export const UserTweets: FC = () => {
       ) : error ? (
         <div className='text-center text-red-500'>Hubo un error</div>
       ) : tweets ? (
-        <div className='divide-y divide-neutral-500'>
+        <div className='divide-y divide-outline-layout'>
           {tweets.map(tweet => (
             <TweetItem key={tweet.id} {...tweet} />
           ))}

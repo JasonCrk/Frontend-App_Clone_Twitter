@@ -33,7 +33,7 @@ export const MediaTweets: FC = () => {
     return <div className='text-center text-xl text-red-600'>Hubo un error</div>
 
   return (
-    <div>
+    <div className='divide-y divide-outline-layout'>
       {tweets!.map(tweet => (
         <TweetItem key={tweet.id} {...tweet} />
       ))}
