@@ -57,6 +57,7 @@ const TweetItem: FC<Tweet> = ({
 
   const handleDeleteTweet = () => {
     queryClient.invalidateQueries('tweets')
+    queryClient.invalidateQueries('trendTweetsList')
   }
 
   return (
