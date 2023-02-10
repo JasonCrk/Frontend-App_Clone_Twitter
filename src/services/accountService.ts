@@ -37,7 +37,12 @@ export const getUserFollowers = async (
   userId: string
 ): Promise<AccountInItem[]> => {
   const response = await accountApi.get<IAccountsListResponse>(
-    `/${userId}/followers?limit=3`
+    `/${userId}/followers`,
+    {
+      params: {
+        limit: 3,
+      },
+    }
   )
   return response.data.accounts
 }
@@ -46,7 +51,12 @@ export const getMostFollowedUsers = async (
   limit?: number
 ): Promise<AccountInItem[]> => {
   const response = await accountApi.get<IAccountsListResponse>(
-    `/most_followed${limit ? '?limit=' + limit : ''}`
+    `/most_followed`,
+    {
+      params: {
+        limit,
+      },
+    }
   )
   return response.data.accounts
 }
