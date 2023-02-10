@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import { FC, useEffect } from 'react'
 
 import { redirect, Link, useParams, useNavigate } from 'react-router-dom'
 
@@ -49,6 +49,10 @@ export const DetailTweetPage: FC = () => {
       queryClient.invalidateQueries('tweet')
     },
   })
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 })
+  }, [])
 
   const sendCommentTweet = (
     value: TweetInitialValue,
@@ -104,8 +108,8 @@ export const DetailTweetPage: FC = () => {
       </Bar>
       <div className='p-4 relative'>
         <TweetMenu
-          username={tweet!.user.username}
           tweetId={tweet!.id}
+          username={tweet!.user.username}
           actionDeleteTweet={handleDeleteTweet}
         />
         <Link to={`/${tweet?.user.username}`} className='flex gap-3 mb-4 w-fit'>
@@ -176,7 +180,6 @@ export const DetailTweetPage: FC = () => {
           </div>
           <TweetForm
             handleSubmit={sendCommentTweet}
-            avatar={tweet!.user.account.avatar}
             placeholder='Tweet your reply'
           />
         </div>
