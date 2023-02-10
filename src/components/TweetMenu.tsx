@@ -1,7 +1,5 @@
 import { FC, Fragment } from 'react'
 
-import { redirect } from 'react-router-dom'
-
 import { shallow } from 'zustand/shallow'
 import { useAuthStore } from '../store/authStore'
 
@@ -11,8 +9,9 @@ import { deleteTweet } from '../services/tweetService'
 
 import { toast } from 'react-toastify'
 
-import MenuOption from './MenuOption'
 import { Menu, Transition } from '@headlessui/react'
+
+import MenuOption from './MenuOption'
 
 import { SlOptions } from 'react-icons/sl'
 import { BsFillTrashFill } from 'react-icons/bs'
@@ -46,9 +45,6 @@ export const TweetMenu: FC<TweetMenuProps> = ({
   })
 
   const handleDeleteTweet = () => {
-    if (!isAuth || username !== userAuth?.username)
-      return redirect('/auth/signIn')
-
     deleteTweetMutation({ tweetId, accessToken: token! })
   }
 
@@ -69,12 +65,14 @@ export const TweetMenu: FC<TweetMenuProps> = ({
           }
         >
           {isAuth && username === userAuth?.username && (
-            <MenuOption
-              Icon={BsFillTrashFill}
-              onClick={() => handleDeleteTweet()}
-            >
-              Eliminar
-            </MenuOption>
+            <>
+              <MenuOption
+                Icon={BsFillTrashFill}
+                onClick={() => handleDeleteTweet()}
+              >
+                Eliminar
+              </MenuOption>
+            </>
           )}
         </Menu.Items>
       </Transition>
