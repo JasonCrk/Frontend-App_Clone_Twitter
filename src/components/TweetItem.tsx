@@ -51,7 +51,6 @@ const TweetItem: FC<Tweet> = ({
 
   const handleLikeTweet = () => {
     if (!isAuth) return navigate('/auth/signIn')
-
     likeTweetMutation({ tweetId: id, accessToken: token! })
   }
 
