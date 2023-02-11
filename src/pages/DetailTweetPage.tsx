@@ -81,12 +81,12 @@ export const DetailTweetPage: FC = () => {
     return (
       <>
         <Bar styles='py-3 px-4 flex gap-6 text-xl items-center'>
-          <Link
-            to={'/home'}
+          <button
+            onClick={() => window.history.back()}
             className='p-2 hover:bg-neutral-800 rounded-full transition-colors'
           >
             <AiOutlineArrowLeft />
-          </Link>
+          </button>
           <p className='font-bold'>Tweet</p>
         </Bar>
         <div className='flex justify-center pt-10'>
@@ -98,12 +98,12 @@ export const DetailTweetPage: FC = () => {
   return (
     <>
       <Bar styles='py-3 px-4 flex gap-6 text-xl items-center'>
-        <Link
-          to={'/home'}
+        <button
+          onClick={() => window.history.back()}
           className='p-2 hover:bg-neutral-800 rounded-full transition-colors'
         >
           <AiOutlineArrowLeft />
-        </Link>
+        </button>
         <p className='font-bold'>Tweet</p>
       </Bar>
       <div className='p-4 relative'>
