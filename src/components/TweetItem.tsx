@@ -9,13 +9,14 @@ import { useAuthStore } from '../store/authStore'
 import { Tweet } from '../interfaces/Tweet'
 import { likeTweet } from '../services/tweetService'
 
-import { formatTimezone } from '../utils/formatDate'
-
-import { BsFillPatchCheckFill } from 'react-icons/bs'
-
-import { AiFillHeart, AiOutlineHeart, AiOutlineComment } from 'react-icons/ai'
 import { TweetMenu } from './TweetMenu'
 import { FilterTag } from './FilterTag'
+import { GridImages } from './GridImages'
+
+import { BsFillPatchCheckFill } from 'react-icons/bs'
+import { AiFillHeart, AiOutlineHeart, AiOutlineComment } from 'react-icons/ai'
+
+import { formatTimezone } from '../utils/formatDate'
 
 const TweetItem: FC<Tweet> = ({
   id,
@@ -94,25 +95,7 @@ const TweetItem: FC<Tweet> = ({
 
           <p className='mb-2'>{content}</p>
 
-          {images.length === 1 ? (
-            <img
-              src={images[0].imageUrl}
-              key={images[0].id}
-              alt=''
-              className='rounded-2xl w-full mb-4'
-            />
-          ) : images.length === 2 ? (
-            <div className='grid grid-cols-2 mb-4 rounded-2xl'>
-              {images.map(image => (
-                <img
-                  src={image.imageUrl}
-                  key={image.id}
-                  alt=''
-                  className='h-96 w-full mb-4 object-cover'
-                />
-              ))}
-            </div>
-          ) : null}
+          {images.length > 0 && <GridImages images={images} />}
         </div>
 
         {tweetHashtags && (
