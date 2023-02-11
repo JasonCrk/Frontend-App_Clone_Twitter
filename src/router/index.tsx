@@ -20,6 +20,9 @@ import { SearchPage } from '../pages/SearchPage'
 import { UserTweets } from '../components/UserTweets'
 import { TweetsUserLiked } from '../components/TweetsUserLiked'
 import { MediaTweets } from '../components/MediaTweets'
+import { FollowPage } from '../pages/FollowPage'
+import { UserFollowersPage } from '../pages/UserFollowersPage'
+import { UserFollowingPage } from '../pages/UserFollowingPage'
 
 export const router = createBrowserRouter([
   {
@@ -75,6 +78,20 @@ export const router = createBrowserRouter([
           {
             path: 'media',
             element: <MediaTweets />,
+          },
+        ],
+      },
+      {
+        path: ':username/f',
+        element: <FollowPage />,
+        children: [
+          {
+            path: 'followers',
+            element: <UserFollowersPage />,
+          },
+          {
+            path: 'following',
+            element: <UserFollowingPage />,
           },
         ],
       },
