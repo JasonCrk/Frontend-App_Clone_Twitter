@@ -86,7 +86,7 @@ const AccountItem: FC<AccountItemProps> = ({
             >
               @{user.username}
             </p>
-            {bibliography && <p className=''>{bibliography}</p>}
+            {bibliography && <p>{bibliography}</p>}
           </div>
         </div>
       </NavLink>
