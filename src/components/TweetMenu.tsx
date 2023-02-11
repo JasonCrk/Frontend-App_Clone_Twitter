@@ -70,7 +70,7 @@ export const TweetMenu: FC<TweetMenuProps> = ({
                 Icon={BsFillTrashFill}
                 onClick={() => handleDeleteTweet()}
               >
-                Eliminar
+                Delete
               </MenuOption>
             </>
           )}
