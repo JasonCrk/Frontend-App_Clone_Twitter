@@ -24,7 +24,7 @@ const VerticalSearchTweets: FC = () => {
         </>
       )}
 
-      <div className='bg-zinc-900 rounded-2xl w-full overflow-hidden mt-1'>
+      <div className='bg-zinc-900 rounded-2xl w-full overflow-hidden mt-1 mb-6'>
         <h6 className='px-4 py-3 text-xl font-extrabold'>Who to follow</h6>
         <MostFollowedList />
       </div>
