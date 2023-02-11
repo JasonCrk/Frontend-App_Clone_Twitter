@@ -34,15 +34,19 @@ export const getProfileByUsername = async (
 }
 
 export const getUserFollowers = async (
-  userId: string
+  username: string
 ): Promise<AccountInItem[]> => {
   const response = await accountApi.get<IAccountsListResponse>(
-    `/${userId}/followers`,
-    {
-      params: {
-        limit: 3,
-      },
-    }
+    `/${username}/followers`
+  )
+  return response.data.accounts
+}
+
+export const getUserFollowing = async (
+  username: string
+): Promise<AccountInItem[]> => {
+  const response = await accountApi.get<IAccountsListResponse>(
+    `/${username}/followings`
   )
   return response.data.accounts
 }
