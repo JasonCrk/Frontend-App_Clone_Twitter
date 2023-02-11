@@ -67,12 +67,12 @@ export const ProfilePage: FC = () => {
       ) : profile ? (
         <div>
           <Bar styles='flex gap-6 px-4 items-center py-1'>
-            <Link
-              to={'/home'}
+            <button
+              onClick={() => window.history.back()}
               className='p-3 hover:bg-neutral-800 rounded-full transition-colors text-lg'
             >
               <AiOutlineArrowLeft />
-            </Link>
+            </button>
             <div>
               <p className='text-xl font-bold flex items-center gap-2'>
                 <span>{profile.user.firstName}</span>
@@ -141,7 +141,7 @@ export const ProfilePage: FC = () => {
 
                 <div className='flex gap-4 items-center'>
                   <Link
-                    to={`/${username}/followings`}
+                    to={`/${username}/f/following`}
                     className='hover:underline'
                   >
                     <span className='font-bold'>
@@ -150,7 +150,7 @@ export const ProfilePage: FC = () => {
                     <span className='text-neutral-500'>Following</span>
                   </Link>
                   <Link
-                    to={`/${username}/followers`}
+                    to={`/${username}/f/followers`}
                     className='hover:underline'
                   >
                     <span className='font-bold'>
