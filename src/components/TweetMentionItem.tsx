@@ -1,19 +1,40 @@
 import { FC } from 'react'
-import { BsFillPatchCheckFill } from 'react-icons/bs'
+
+import { useNavigate } from 'react-router-dom'
+
 import { Tweet } from '../interfaces/Tweet'
-import { formatTimezone } from '../utils/formatDate'
+
 import { FilterTag } from './FilterTag'
 import { GridImages } from './GridImages'
 
+import { BsFillPatchCheckFill } from 'react-icons/bs'
+
+import { formatTimezone } from '../utils/formatDate'
+
 interface TweetMentionItemProps {
   tweet: Tweet
+  isLink?: boolean
 }
 
-export const TweetMentionItem: FC<TweetMentionItemProps> = ({ tweet }) => {
-  const tweetHashtags = (hashtags: string | null) => hashtags?.split(',')
+export const TweetMentionItem: FC<TweetMentionItemProps> = ({
+  tweet,
+  isLink,
+}) => {
+  const navigate = useNavigate()
+
+  const tweetHashtags = tweet.hashtags?.split(',')
+
+  const handleNavigateTweet = () => {
+    if (isLink) navigate(`/tweets/${tweet.id}`)
+  }
 
   return (
-    <div className='border border-outline-layout rounded-2xl w-full'>
+    <div
+      className={`border border-outline-layout rounded-2xl w-full ${
+        isLink && 'hover:bg-white/5 cursor-pointer'
+      }`}
+      onClick={() => handleNavigateTweet()}
+    >
       <div className='p-3'>
         <div className='flex gap-1 items-center'>
           <img
@@ -32,9 +53,9 @@ export const TweetMentionItem: FC<TweetMentionItemProps> = ({ tweet }) => {
 
         <p className='py-1'>{tweet.content}</p>
 
-        {tweetHashtags(tweet.hashtags) && (
+        {tweetHashtags && (
           <div className='flex flex-wrap mb-2'>
-            {tweetHashtags(tweet.hashtags)!.map(hashtag => (
+            {tweetHashtags.map(hashtag => (
               <FilterTag key={hashtag} tag={hashtag.trim()} />
             ))}
           </div>
