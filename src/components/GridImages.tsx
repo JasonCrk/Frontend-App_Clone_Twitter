@@ -14,17 +14,15 @@ export const GridImages: FC<GridImagesProps> = ({ images, isMention }) => {
         src={images[0].imageUrl}
         key={images[0].id}
         alt=''
-        className={`rounded-b-2xl w-full ${
-          isMention ? 'rounded-t-2x' : 'mb-4'
-        }`}
+        className={`w-full ${isMention ? 'rounded-b-2xl' : 'mb-4 rounded-2xl'}`}
       />
     )
 
   if (images.length === 2)
     return (
       <div
-        className={`grid grid-cols-2 gap-px rounded-b-2xl ${
-          isMention ? 'rounded-t-2xl' : 'mb-4'
+        className={`grid grid-cols-2 gap-px ${
+          isMention ? 'rounded-b-2xl' : 'mb-4 rounded-2xl'
         }`}
       >
         {images.map(image => (
