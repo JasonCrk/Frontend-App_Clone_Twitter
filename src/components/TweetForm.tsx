@@ -5,6 +5,7 @@ import { useAuthStore } from '../store/authStore'
 import { TweetInitialValue } from '../interfaces/Tweet'
 
 import { TweetMentionForForm } from './TweetMentionForForm'
+import { FileButton } from './form/FileButton'
 
 import { BsImage } from 'react-icons/bs'
 import { AiOutlineGif } from 'react-icons/ai'
@@ -114,36 +115,22 @@ export const TweetForm: FC<TweetFormProps> = ({
 
                   <div className='flex justify-between w-full'>
                     <div className='flex flex-row items-center justify-start'>
-                      <label
-                        htmlFor='images'
-                        className='p-2 rounded-full text-lg text-blue-500 hover:bg-blue-500 hover:bg-opacity-10 transition-[background] cursor-pointer'
-                      >
-                        <BsImage />
-                      </label>
-                      <input
+                      <FileButton
                         id='images'
                         name='images'
-                        className='hidden'
-                        multiple
-                        type='file'
+                        Icon={BsImage}
+                        multipleSelect
                         accept='image/png, image/jpeg'
                         onChange={e =>
                           setFieldValue('images', e.currentTarget.files)
                         }
                       />
 
-                      <label
-                        htmlFor='gifs'
-                        className='p-2 rounded-full text-lg text-blue-500 hover:bg-blue-500 hover:bg-opacity-10 transition-[background] cursor-pointer'
-                      >
-                        <AiOutlineGif />
-                      </label>
-                      <input
+                      <FileButton
                         id='gifs'
                         name='images'
-                        multiple
-                        className='hidden'
-                        type='file'
+                        Icon={AiOutlineGif}
+                        multipleSelect
                         accept='image/gif'
                         onChange={e =>
                           setFieldValue('images', e.currentTarget.files)
