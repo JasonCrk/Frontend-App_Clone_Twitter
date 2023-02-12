@@ -1,5 +1,5 @@
 import { UserInTweet } from './User'
-import { ImageTweet } from './ImageTweet'
+import { Image } from './Image'
 
 export interface CountInTweet {
   id: string
@@ -13,7 +13,7 @@ export interface Tweet {
   createdAt: Date
   updatedAt: Date
   mention: Tweet | null
-  images: ImageTweet[]
+  images: Image[]
   likes: CountInTweet[]
   comments: CountInTweet[]
 }
