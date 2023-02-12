@@ -1,25 +1,32 @@
-import { FC } from 'react'
+import type { FC } from 'react'
 
 import { ImageTweet } from '../interfaces/ImageTweet'
 
 interface GridImagesProps {
   images: ImageTweet[]
+  isMention?: boolean
 }
 
-export const GridImages: FC<GridImagesProps> = ({ images }) => {
+export const GridImages: FC<GridImagesProps> = ({ images, isMention }) => {
   if (images.length === 1)
     return (
       <img
         src={images[0].imageUrl}
         key={images[0].id}
         alt=''
-        className='rounded-2xl w-full mb-4'
+        className={`rounded-b-2xl w-full ${
+          isMention ? 'rounded-t-2x' : 'mb-4'
+        }`}
       />
     )
 
   if (images.length === 2)
     return (
-      <div className='grid grid-cols-2 mb-4 gap-px rounded-2xl'>
+      <div
+        className={`grid grid-cols-2 gap-px rounded-b-2xl ${
+          isMention ? 'rounded-t-2xl' : 'mb-4'
+        }`}
+      >
         {images.map(image => (
           <img
             src={image.imageUrl}
