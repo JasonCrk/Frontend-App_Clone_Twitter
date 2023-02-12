@@ -6,6 +6,7 @@ import { useQueryClient, useMutation, useQuery } from 'react-query'
 
 import { useAuthStore } from '../store/authStore'
 
+import { AxiosError } from 'axios'
 import { Tweet, TweetInitialValue } from '../interfaces/Tweet'
 import { getTweetById, likeTweet } from '../services/tweetService'
 
@@ -14,6 +15,8 @@ import { TweetForm } from '../components/TweetForm'
 import { TweetMenu } from '../components/TweetMenu'
 
 import Spinner from '../components/Spinner'
+import { GridImages } from '../components/GridImages'
+import { TweetMentionItem } from '../components/TweetMentionItem'
 
 import { BsFillPatchCheckFill } from 'react-icons/bs'
 import {
@@ -27,26 +30,28 @@ import { formatDateTime } from '../utils/formatDate'
 
 import { FormikHelpers } from 'formik'
 
-import { AxiosError } from 'axios'
-
 export const DetailTweetPage: FC = () => {
-  const { tweetId } = useParams()
+  const { tweetId } = useParams() as { tweetId: string }
   const navigate = useNavigate()
 
-  const { data: tweet, isLoading } = useQuery<Tweet, AxiosError>('tweet', () =>
-    getTweetById(tweetId as string)
+  const { data: tweet, isLoading } = useQuery<Tweet, AxiosError>(
+    ['tweet', tweetId],
+    () => getTweetById(tweetId)
   )
 
   const queryClient = useQueryClient()
 
   const isAuth = useAuthStore(state => state.isAuth)
   const userAuth = useAuthStore(state => state.user)
-  const token = useAuthStore(state => state.token)
+  const token = useAuthStore(state => state.token!)
 
   const { mutate: likeTweetMutation } = useMutation({
     mutationFn: likeTweet,
     onSuccess: () => {
       queryClient.invalidateQueries('tweet')
+    },
+    onError: error => {
+      console.log(error)
     },
   })
 
@@ -70,7 +75,7 @@ export const DetailTweetPage: FC = () => {
   const handleLikeTweet = () => {
     if (isAuth) return redirect('/auth/signIn')
 
-    likeTweetMutation({ tweetId: tweet!.id, accessToken: token! })
+    likeTweetMutation({ tweetId: tweet!.id, accessToken: token })
   }
 
   const handleDeleteTweet = () => {
@@ -116,7 +121,7 @@ export const DetailTweetPage: FC = () => {
           <img
             src={tweet!.user.account.avatar}
             alt={tweet!.user.username}
-            className='rounded-full w-12'
+            className='rounded-full w-12 h-12 object-cover'
           />
           <div className='flex flex-col gap-1 justify-center'>
             <div className='flex gap-1 text-lg leading-4'>
@@ -132,30 +137,12 @@ export const DetailTweetPage: FC = () => {
         </Link>
         <div>
           <p className='mb-2'>{tweet?.content}</p>
-          {tweet?.images.length === 1 ? (
-            <img
-              src={tweet.images[0].imageUrl}
-              key={tweet.images[0].id}
-              alt=''
-              className='rounded-2xl w-full mb-4'
-              width={1080}
-              height={900}
-            />
-          ) : tweet?.images.length === 2 ? (
-            <div className='grid grid-cols-2 mb-4 rounded-2xl'>
-              {tweet.images.map(image => (
-                <img
-                  src={image.imageUrl}
-                  key={image.id}
-                  alt=''
-                  className='h-96 w-full mb-4 object-cover'
-                  width={1080}
-                  height={900}
-                />
-              ))}
-            </div>
-          ) : null}
-          <div className='pb-3 border-b border-neutral-600 flex gap-4 text-neutral-500'>
+
+          {tweet!.images.length > 0 && <GridImages images={tweet!.images} />}
+
+          {tweet?.mention && <TweetMentionItem tweet={tweet.mention} />}
+
+          <div className='py-3 border-b border-neutral-600 flex gap-4 text-neutral-500'>
             <span>{formatDateTime(tweet!.createdAt)}</span>
             <p>
               <span className='text-white'>{tweet?.comments.length}</span> Quote
@@ -165,6 +152,7 @@ export const DetailTweetPage: FC = () => {
               <span className='text-white'>{tweet?.likes.length}</span> Likes
             </p>
           </div>
+
           <div className='flex justify-around py-1 items-center gap-6 border-b border-neutral-600 text-2xl'>
             <button
               className={`${
@@ -178,6 +166,7 @@ export const DetailTweetPage: FC = () => {
               <AiOutlineComment />
             </button>
           </div>
+
           <TweetForm
             handleSubmit={sendCommentTweet}
             placeholder='Tweet your reply'
