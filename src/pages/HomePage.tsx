@@ -1,6 +1,6 @@
-import { FC, useEffect } from 'react'
+import type { FC } from 'react'
 
-import { useAuthStore } from '../store/authStore'
+import { useProtect } from '../hooks/useProtect'
 
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 
@@ -15,24 +15,11 @@ import Spinner from '../components/Spinner'
 import { FormikHelpers } from 'formik'
 
 import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
 
 export const HomePage: FC = () => {
+  const { user, isLoadingAuth, token } = useProtect()
+
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
-
-  const { user, isLoadingAuth, token, isAuth } = useAuthStore(state => ({
-    user: state.user,
-    isLoadingAuth: state.loading,
-    token: state.token,
-    isAuth: state.isAuth,
-  }))
-
-  useEffect(() => {
-    if (!isAuth || !token) {
-      navigate('/explore')
-    }
-  }, [])
 
   const { data: tweets, isLoading, error } = useQuery('tweets', getAllTweets)
 
