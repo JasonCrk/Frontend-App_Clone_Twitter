@@ -17,6 +17,7 @@ import { BsFillPatchCheckFill } from 'react-icons/bs'
 import { AiFillHeart, AiOutlineHeart, AiOutlineComment } from 'react-icons/ai'
 
 import { formatTimezone } from '../utils/formatDate'
+import { TweetMentionItem } from './TweetMentionItem'
 
 const TweetItem: FC<Tweet> = ({
   id,
@@ -25,6 +26,7 @@ const TweetItem: FC<Tweet> = ({
   images,
   createdAt,
   likes,
+  mention,
   comments,
   hashtags,
 }) => {
@@ -98,15 +100,17 @@ const TweetItem: FC<Tweet> = ({
           {images.length > 0 && <GridImages images={images} />}
         </div>
 
+        {mention && <TweetMentionItem tweet={mention} isLink />}
+
         {tweetHashtags && (
-          <div className='flex flex-wrap mb-2'>
+          <div className='flex flex-wrap mt-2'>
             {tweetHashtags.map(hashtag => (
               <FilterTag key={hashtag} tag={hashtag.trim()} />
             ))}
           </div>
         )}
 
-        <div className='flex justify-start gap-8'>
+        <div className='flex justify-start gap-8 mt-2'>
           <button
             className={`${
               likeCheck() && 'text-pink-600'
@@ -124,12 +128,14 @@ const TweetItem: FC<Tweet> = ({
                 className={`p-1.5 text-3xl group-hover:bg-pink-600 group-hover:bg-opacity-80 group-hover:transition-[background] rounded-full`}
               />
             )}
+
             <span
               className={`group-hover:text-pink-600 group-hover:transition-colors`}
             >
               {likes.length}
             </span>
           </button>
+
           <button className='flex group items-center gap-2 text-lg relative'>
             <AiOutlineComment className='p-1.5 text-3xl group-hover:bg-blue-500 group-hover:bg-opacity-80 group-hover:transition-[background] rounded-full' />
             <span className='group-hover:text-blue-500 group-hover:transition-colors'>
