@@ -1,7 +1,9 @@
-import { FC, Fragment } from 'react'
+import { FC, Fragment, useContext } from 'react'
 
 import { shallow } from 'zustand/shallow'
 import { useAuthStore } from '../store/authStore'
+
+import { createTweetContext } from '../context/CreateTweetProvider'
 
 import { useMutation } from 'react-query'
 
@@ -15,6 +17,7 @@ import MenuOption from './MenuOption'
 
 import { SlOptions } from 'react-icons/sl'
 import { BsFillTrashFill } from 'react-icons/bs'
+import { FaQuoteRight } from 'react-icons/fa'
 
 interface TweetMenuProps {
   actionDeleteTweet: () => void
@@ -27,6 +30,8 @@ export const TweetMenu: FC<TweetMenuProps> = ({
   tweetId,
   actionDeleteTweet,
 }) => {
+  const { handleOpen } = useContext(createTweetContext)
+
   const { userAuth, isAuth, token } = useAuthStore(
     state => ({
       userAuth: state.user,
@@ -48,6 +53,10 @@ export const TweetMenu: FC<TweetMenuProps> = ({
     deleteTweetMutation({ tweetId, accessToken: token! })
   }
 
+  const handleMentionTweet = () => {
+    handleOpen(tweetId)
+  }
+
   return (
     <Menu as='div' className='absolute top-2 right-2'>
       <Transition
@@ -64,13 +73,22 @@ export const TweetMenu: FC<TweetMenuProps> = ({
             'absolute top-10 right-2 overflow-hidden shadow-menu-b shadow-border py-1.5 z-10 w-fit rounded-md bg-black'
           }
         >
-          {isAuth && username === userAuth?.username && (
+          {isAuth && (
             <>
+              {username === userAuth?.username && (
+                <MenuOption
+                  Icon={BsFillTrashFill}
+                  onClick={() => handleDeleteTweet()}
+                >
+                  Delete
+                </MenuOption>
+              )}
+
               <MenuOption
-                Icon={BsFillTrashFill}
-                onClick={() => handleDeleteTweet()}
+                Icon={FaQuoteRight}
+                onClick={() => handleMentionTweet()}
               >
-                Delete
+                Mention
               </MenuOption>
             </>
           )}

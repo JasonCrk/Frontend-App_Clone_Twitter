@@ -34,6 +34,7 @@ export interface ISearchTweetsParams {
 export interface TweetInitialValue {
   content: string
   hashtags: string
+  mention?: string
   images: any[]
 }
 
