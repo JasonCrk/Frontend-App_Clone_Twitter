@@ -12,7 +12,7 @@ export interface Tweet {
   user: UserInTweet
   createdAt: Date
   updatedAt: Date
-  mention: Tweet
+  mention: Tweet | null
   images: ImageTweet[]
   likes: CountInTweet[]
   comments: CountInTweet[]
