@@ -24,13 +24,11 @@ const schemaFormValidate = Yup.object().shape({
 
 interface TweetFormProps {
   placeholder: string
-  isHomeForm?: boolean
   handleSubmit: (value: any, actions: any) => void
   mention?: string
 }
 
 export const TweetForm: FC<TweetFormProps> = ({
-  isHomeForm,
   placeholder,
   handleSubmit,
   mention,
@@ -48,9 +46,7 @@ export const TweetForm: FC<TweetFormProps> = ({
   }
 
   return (
-    <div
-      className={`${isHomeForm && 'px-4'} py-4 grid grid-cols-[auto_1fr] gap-3`}
-    >
+    <div className='p-4 grid grid-cols-[auto_1fr] gap-3'>
       <img
         className='w-11 h-11 object-cover rounded-full'
         src={user?.account.avatar}
@@ -69,106 +65,84 @@ export const TweetForm: FC<TweetFormProps> = ({
           handleBlur,
           errors,
         }) => (
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={handleSubmit}
+            className={`flex flex-col w-full items-start ${
+              mention ? 'gap-4' : 'gap-2'
+            }`}
+          >
             <div
-              className={`flex flex-col w-full items-start ${
-                mention ? 'gap-4' : 'gap-2'
-              }`}
+              className={`${
+                isFocusContent || mention ? 'h-fit' : 'flex gap-2 h-11'
+              } w-full`}
             >
-              <div
-                className={`${
-                  isFocusContent || mention ? 'h-fit' : 'flex gap-2 h-11'
-                } w-full`}
-              >
-                <textarea
-                  name='content'
-                  placeholder={placeholder}
-                  className={`commentScroll w-full focus:outline-none bg-transparent placeholder:text-neutral-600 resize-none border-b-2 transition-colors ${
-                    isFocusContent || mention ? 'text-xl' : 'text-2xl'
-                  } ${
-                    errors.content
-                      ? 'border-red-500'
-                      : 'focus:border-blue-600 border-neutral-500'
-                  }`}
-                  onFocus={() => setIsFocusContent(true)}
+              <textarea
+                name='content'
+                placeholder={placeholder}
+                className={`commentScroll w-full focus:outline-none bg-transparent placeholder:text-neutral-600 resize-none transition-colors ${
+                  isFocusContent || mention ? 'text-xl' : 'text-2xl'
+                } ${errors.content && 'placeholder:text-neutral-700'}`}
+                onFocus={() => setIsFocusContent(true)}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                rows={4}
+              ></textarea>
+            </div>
+
+            {mention && <TweetMentionForForm tweetId={mention} />}
+
+            <div className='flex justify-between w-full'>
+              <div className='flex flex-row items-center justify-start'>
+                <FileButton
+                  id='images'
+                  name='images'
+                  Icon={BsImage}
+                  multipleSelect
+                  accept='image/png, image/jpeg'
+                  onChange={e => setFieldValue('images', e.currentTarget.files)}
+                />
+
+                <FileButton
+                  id='gifs'
+                  name='images'
+                  Icon={AiOutlineGif}
+                  multipleSelect
+                  accept='image/gif'
+                  onChange={e => setFieldValue('images', e.currentTarget.files)}
+                />
+
+                <button
+                  className='p-2 rounded-full text-lg text-blue-500 hover:bg-blue-500 hover:bg-opacity-10 transition-[background] cursor-pointer'
+                  type='button'
+                  onClick={() => setIsFocusHashtags(prev => !prev)}
+                >
+                  <HiOutlineHashtag />
+                </button>
+                <input
+                  id='hashtags'
+                  name='hashtags'
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  rows={isHomeForm ? 4 : 3}
-                ></textarea>
-
-                <p className='text-red-500'>{errors.content}</p>
-
-                {!isFocusContent && !mention && (
-                  <button
-                    disabled
-                    type='button'
-                    className='disabled:bg-blue-400 bg-blue-600 disabled:opacity-30 px-5 rounded-full font-bold'
-                  >
-                    Reply
-                  </button>
-                )}
+                  className={`bg-black outline-none px-2 py-1 border-b border-blue-500 placeholder:text-neutral-600 w-full ${
+                    isFocusHashtags ? 'inline-block' : 'hidden'
+                  }`}
+                  placeholder='separate with ","'
+                  type='text'
+                />
               </div>
 
-              {(isFocusContent || mention) && (
-                <>
-                  {mention && <TweetMentionForForm tweetId={mention} />}
-
-                  <div className='flex justify-between w-full'>
-                    <div className='flex flex-row items-center justify-start'>
-                      <FileButton
-                        id='images'
-                        name='images'
-                        Icon={BsImage}
-                        multipleSelect
-                        accept='image/png, image/jpeg'
-                        onChange={e =>
-                          setFieldValue('images', e.currentTarget.files)
-                        }
-                      />
-
-                      <FileButton
-                        id='gifs'
-                        name='images'
-                        Icon={AiOutlineGif}
-                        multipleSelect
-                        accept='image/gif'
-                        onChange={e =>
-                          setFieldValue('images', e.currentTarget.files)
-                        }
-                      />
-
-                      <button
-                        className='p-2 rounded-full text-lg text-blue-500 hover:bg-blue-500 hover:bg-opacity-10 transition-[background] cursor-pointer'
-                        type='button'
-                        onClick={() => setIsFocusHashtags(prev => !prev)}
-                      >
-                        <HiOutlineHashtag />
-                      </button>
-                      <input
-                        id='hashtags'
-                        name='hashtags'
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={`bg-black outline-none px-2 py-1 border-b border-blue-500 placeholder:text-neutral-600 w-full ${
-                          isFocusHashtags ? 'inline-block' : 'hidden'
-                        }`}
-                        placeholder='separate with ","'
-                        type='text'
-                      />
-                    </div>
-
-                    <button
-                      type='submit'
-                      className='bg-blue-600 px-5 py-2 rounded-full font-bold hover:bg-blue-500 hover:transition-colors disabled:bg-opacity-20'
-                      disabled={
-                        isSubmitting || !!errors.content || !!errors.hashtags
-                      }
-                    >
-                      Reply
-                    </button>
-                  </div>
-                </>
-              )}
+              <button
+                type='submit'
+                className='bg-blue-600 px-5 py-2 rounded-full font-bold hover:transition-colors disabled:opacity-20'
+                disabled={
+                  isSubmitting ||
+                  !!errors.content ||
+                  !!errors.hashtags ||
+                  !isFocusContent
+                }
+              >
+                Reply
+              </button>
             </div>
           </form>
         )}
