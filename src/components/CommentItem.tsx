@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import type { FC } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -21,11 +21,15 @@ export const CommentItem: FC<Comment> = ({
   images,
   likes,
   comments,
+  post,
+  comment,
 }) => {
   const navigate = useNavigate()
 
   const isAuth = useAuthStore(state => state.isAuth)
   const userAuth = useAuthStore(state => state.user)
+
+  const replyingUser = post?.user.username || comment?.user.username
 
   const checkLiked = (): boolean => {
     if (!isAuth) return false
@@ -60,6 +64,16 @@ export const CommentItem: FC<Comment> = ({
               {formatTimezone(createdAt)}
             </span>
           </Link>
+
+          <p className='text-gray-500'>
+            Replying to{' '}
+            <Link
+              to={`/${replyingUser}`}
+              className='text-blue-500 hover:underline'
+            >
+              @{replyingUser}
+            </Link>
+          </p>
 
           <p className='mb-2'>{content}</p>
 
