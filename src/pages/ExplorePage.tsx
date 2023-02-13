@@ -35,7 +35,7 @@ export const ExplorePage: FC = () => {
       ) : tweets ? (
         <div className='divide-y divide-outline-layout border-t border-outline-layout'>
           {tweets.map(tweet => (
-            <TweetItem key={tweet.id} {...tweet} />
+            <TweetItem key={tweet.id} tweetData={tweet} />
           ))}
         </div>
       ) : null}

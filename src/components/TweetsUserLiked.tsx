@@ -36,7 +36,7 @@ export const TweetsUserLiked: FC = () => {
               No hay ningun Tweet
             </h6>
           ) : (
-            tweets.map(tweet => <TweetItem key={tweet.id} {...tweet} />)
+            tweets.map(tweet => <TweetItem key={tweet.id} tweetData={tweet} />)
           )}
         </div>
       ) : null}

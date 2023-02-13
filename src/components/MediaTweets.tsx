@@ -34,8 +34,8 @@ export const MediaTweets: FC = () => {
 
   return (
     <div className='divide-y divide-outline-layout'>
-      {tweets!.map(tweet => (
-        <TweetItem key={tweet.id} {...tweet} />
+      {tweets?.map(tweet => (
+        <TweetItem key={tweet.id} tweetData={tweet} />
       ))}
     </div>
   )

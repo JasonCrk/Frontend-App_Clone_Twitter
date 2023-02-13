@@ -1,10 +1,10 @@
-import { FC } from 'react'
+import type { FC } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
 
-import { useMutation, useQueryClient } from 'react-query'
-
 import { useAuthStore } from '../store/authStore'
+
+import { useMutation, useQueryClient } from 'react-query'
 
 import { Tweet } from '../interfaces/Tweet'
 import { likeTweet } from '../services/tweetService'
@@ -12,32 +12,37 @@ import { likeTweet } from '../services/tweetService'
 import { TweetMenu } from './TweetMenu'
 import { FilterTag } from './FilterTag'
 import { GridImages } from './GridImages'
+import { TweetMentionItem } from './TweetMentionItem'
 
 import { BsFillPatchCheckFill } from 'react-icons/bs'
 import { AiFillHeart, AiOutlineHeart, AiOutlineComment } from 'react-icons/ai'
 
 import { formatTimezone } from '../utils/formatDate'
-import { TweetMentionItem } from './TweetMentionItem'
 
-const TweetItem: FC<Tweet> = ({
-  id,
-  content,
-  user,
-  images,
-  createdAt,
-  likes,
-  mention,
-  comments,
-  hashtags,
-}) => {
+interface TweetItemProps {
+  tweetData: Tweet
+  showConnection?: boolean
+}
+
+const TweetItem: FC<TweetItemProps> = ({ tweetData, showConnection }) => {
+  const {
+    id,
+    content,
+    user,
+    images,
+    createdAt,
+    likes,
+    mention,
+    comments,
+    hashtags,
+  } = tweetData
+
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
   const userAuth = useAuthStore(state => state.user)
   const isAuth = useAuthStore(state => state.isAuth)
   const token = useAuthStore(state => state.token)
-
-  const tweetHashtags = hashtags?.split(',')
 
   const { mutate: likeTweetMutation } = useMutation({
     mutationFn: likeTweet,
@@ -46,6 +51,8 @@ const TweetItem: FC<Tweet> = ({
       queryClient.invalidateQueries('userTweets')
     },
   })
+
+  const tweetHashtags = hashtags?.split(',')
 
   const likeCheck = (): boolean => {
     const userLike = likes.find(user => user.id === userAuth?.id)
@@ -63,20 +70,26 @@ const TweetItem: FC<Tweet> = ({
   }
 
   return (
-    <div className='p-4 grid grid-cols-tweet gap-4 border-neutral-500 relative hover:bg-white/5 hover:transition-colors'>
+    <div className='px-4 pt-4 grid grid-cols-tweet gap-4 border-neutral-500 relative hover:bg-white/5 hover:transition-colors'>
       <TweetMenu
         username={user.username}
         tweetId={id}
         actionDeleteTweet={handleDeleteTweet}
       />
-      <Link to={`/${user.username}`} className='h-fit'>
-        <img
-          src={user.account.avatar}
-          alt={user.username}
-          className='rounded-full w-12 h-12 object-cover'
-        />
-      </Link>
-      <div>
+
+      <div className='flex flex-col items-center'>
+        <Link to={`/${user.username}`}>
+          <img
+            src={user.account.avatar}
+            alt={user.username}
+            className='rounded-full w-12 h-12 object-cover'
+          />
+        </Link>
+
+        {showConnection && <div className='w-[2px] h-full bg-outline-layout' />}
+      </div>
+
+      <div className='pb-4'>
         <div
           className='cursor-pointer'
           onClick={() => navigate(`/tweets/${id}`)}

@@ -102,7 +102,7 @@ export const SearchPage: FC = () => {
                 <AccountItem key={account.id} {...account} />
               ))
             : (data as Tweet[]).map(tweet => (
-                <TweetItem key={tweet.id} {...tweet} />
+                <TweetItem key={tweet.id} tweetData={tweet} />
               ))}
         </div>
       )}
