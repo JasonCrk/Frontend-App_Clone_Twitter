@@ -17,7 +17,7 @@ import Spinner from '../components/Spinner'
 import { GridImages } from '../components/GridImages'
 import { TweetMentionItem } from '../components/TweetMentionItem'
 import { CommentForm } from '../components/CommentForm'
-import { CommentsList } from '../components/CommentsList'
+import { CommentsListForTweet } from '../components/CommentsListForTweet'
 
 import { BsFillPatchCheckFill } from 'react-icons/bs'
 import {
@@ -162,7 +162,7 @@ export const DetailTweetPage: FC = () => {
         </div>
       </div>
 
-      <CommentsList tweetId={tweet!.id} />
+      <CommentsListForTweet tweetId={tweet!.id} />
     </>
   )
 }

@@ -9,11 +9,13 @@ import { getAllCommentOfTweet } from '../services/commentService'
 import Spinner from './Spinner'
 import { CommentItem } from './CommentItem'
 
-interface CommentsListProps {
+interface CommentsListForTweetProps {
   tweetId: string
 }
 
-export const CommentsList: FC<CommentsListProps> = ({ tweetId }) => {
+export const CommentsListForTweet: FC<CommentsListForTweetProps> = ({
+  tweetId,
+}) => {
   const {
     data: comments,
     isLoading,
