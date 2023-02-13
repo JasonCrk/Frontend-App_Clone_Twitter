@@ -42,7 +42,7 @@ export const CommentsList: FC<CommentsListProps> = ({ tweetId }) => {
   return (
     <div className='divide-y divide-outline-layout'>
       {comments?.map(comment => (
-        <CommentItem key={comment.id} {...comment} />
+        <CommentItem key={comment.id} commentData={comment} />
       ))}
     </div>
   )

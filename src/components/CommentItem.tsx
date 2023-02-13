@@ -13,17 +13,27 @@ import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from 'react-icons/ai'
 
 import { formatTimezone } from '../utils/formatDate'
 
-export const CommentItem: FC<Comment> = ({
-  content,
-  user,
-  createdAt,
-  id,
-  images,
-  likes,
-  comments,
-  post,
-  comment,
+interface CommentItemProps {
+  showConnection?: boolean
+  commentData: Comment
+}
+
+export const CommentItem: FC<CommentItemProps> = ({
+  commentData,
+  showConnection,
 }) => {
+  const {
+    content,
+    user,
+    createdAt,
+    id,
+    images,
+    likes,
+    comments,
+    post,
+    comment,
+  } = commentData
+
   const navigate = useNavigate()
 
   const isAuth = useAuthStore(state => state.isAuth)
@@ -38,7 +48,11 @@ export const CommentItem: FC<Comment> = ({
   }
 
   return (
-    <div className='p-4 grid grid-cols-tweet gap-4 border-neutral-500 relative'>
+    <div className='p-4 grid grid-cols-tweet gap-4 border-outline-layout relative hover:bg-white/5 hover:transition-colors'>
+      {showConnection && (
+        <div className='absolute top-0 left-10 w-[2px] h-3 bg-outline-layout' />
+      )}
+
       <Link to={`/${user.username}`} className='h-fit'>
         <img
           src={user.account.avatar}
