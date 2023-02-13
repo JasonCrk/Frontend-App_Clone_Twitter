@@ -15,6 +15,7 @@ export interface Comment {
 
 export interface CommentInitialValue {
   content: string
-  postId: string
+  postId?: string
+  commentId?: string
   images: any[]
 }
