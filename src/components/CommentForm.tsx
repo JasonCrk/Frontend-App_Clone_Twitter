@@ -23,10 +23,15 @@ const schemaFormValidate = Yup.object().shape({
 
 interface CommentFormProps {
   placeholder: string
-  tweetId: string
+  initialValue: CommentInitialValue
+  getCommentFormData: (value: CommentInitialValue) => FormData
 }
 
-export const CommentForm: FC<CommentFormProps> = ({ placeholder, tweetId }) => {
+export const CommentForm: FC<CommentFormProps> = ({
+  placeholder,
+  initialValue,
+  getCommentFormData,
+}) => {
   const [isFocusContent, setIsFocusContent] = useState(false)
 
   const user = useAuthStore(state => state.user)
@@ -39,17 +44,12 @@ export const CommentForm: FC<CommentFormProps> = ({ placeholder, tweetId }) => {
     mutationFn: createComment,
     onSuccess: () => {
       queryClient.invalidateQueries('tweetComments')
+      queryClient.invalidateQueries('commentComments')
     },
     onError: error => {
       console.log(error)
     },
   })
-
-  const initialValue: CommentInitialValue = {
-    content: '',
-    postId: tweetId,
-    images: [],
-  }
 
   const handleSubmit = async (
     value: CommentInitialValue,
@@ -57,14 +57,7 @@ export const CommentForm: FC<CommentFormProps> = ({ placeholder, tweetId }) => {
   ) => {
     if (!isAuth) return redirect('/auth/signIn')
 
-    const commentFormData = new FormData()
-
-    commentFormData.append('postId', value.postId)
-    commentFormData.append('content', value.content)
-
-    value.images.forEach(image => {
-      commentFormData.append('images', image)
-    })
+    const commentFormData = getCommentFormData(value)
 
     createCommentMutation({ accessToken: token!, commentData: commentFormData })
 
