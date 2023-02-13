@@ -7,16 +7,17 @@ import { useQueryClient, useMutation, useQuery } from 'react-query'
 import { useAuthStore } from '../store/authStore'
 
 import { AxiosError } from 'axios'
-import { Tweet, TweetInitialValue } from '../interfaces/Tweet'
+import { Tweet } from '../interfaces/Tweet'
 import { getTweetById, likeTweet } from '../services/tweetService'
 
 import { Bar } from '../components/Bar'
-import { TweetForm } from '../components/TweetForm'
 import { TweetMenu } from '../components/TweetMenu'
 
 import Spinner from '../components/Spinner'
 import { GridImages } from '../components/GridImages'
 import { TweetMentionItem } from '../components/TweetMentionItem'
+import { CommentForm } from '../components/CommentForm'
+import { CommentsList } from '../components/CommentsList'
 
 import { BsFillPatchCheckFill } from 'react-icons/bs'
 import {
@@ -27,8 +28,6 @@ import {
 } from 'react-icons/ai'
 
 import { formatDateTime } from '../utils/formatDate'
-
-import { FormikHelpers } from 'formik'
 
 export const DetailTweetPage: FC = () => {
   const { tweetId } = useParams() as { tweetId: string }
@@ -58,14 +57,6 @@ export const DetailTweetPage: FC = () => {
   useEffect(() => {
     window.scrollTo({ top: 0 })
   }, [])
-
-  const sendCommentTweet = (
-    value: TweetInitialValue,
-    actions: FormikHelpers<TweetInitialValue>
-  ) => {
-    console.log(value)
-    actions.setSubmitting(false)
-  }
 
   const likeCheck = (): boolean => {
     const userLike = tweet?.likes.find(user => user.id === userAuth?.id)
@@ -111,7 +102,7 @@ export const DetailTweetPage: FC = () => {
         </button>
         <p className='font-bold'>Tweet</p>
       </Bar>
-      <div className='p-4 relative'>
+      <div className='p-4 relative border-b border-b-outline-layout'>
         <TweetMenu
           tweetId={tweet!.id}
           username={tweet!.user.username}
@@ -140,7 +131,7 @@ export const DetailTweetPage: FC = () => {
 
           {tweet!.images.length > 0 && <GridImages images={tweet!.images} />}
 
-          {tweet?.mention && <TweetMentionItem tweet={tweet.mention} />}
+          {tweet?.mention && <TweetMentionItem tweet={tweet.mention} isLink />}
 
           <div className='py-3 border-b border-neutral-600 flex gap-4 text-neutral-500'>
             <span>{formatDateTime(tweet!.createdAt)}</span>
@@ -167,24 +158,11 @@ export const DetailTweetPage: FC = () => {
             </button>
           </div>
 
-          <TweetForm
-            handleSubmit={sendCommentTweet}
-            placeholder='Tweet your reply'
-          />
+          <CommentForm placeholder='Tweet you reply' tweetId={tweet!.id} />
         </div>
       </div>
 
-      {/*
-      {tweet?.comments.length === 0 ? (
-        <div className='pb-4 text-center font-bold text-xl'>
-          NO HAY COMENTARIOS
-        </div>
-      ) : (
-        tweet?.comments.map(comment => (
-          <CommentItem key={comment.id} {...comment} />
-        ))
-      )}
-      */}
+      <CommentsList tweetId={tweet!.id} />
     </>
   )
 }

@@ -10,6 +10,19 @@ export interface User {
   account: Account
 }
 
+export interface UserUsername {
+  user: {
+    username: string
+  }
+}
+
+export interface UserInComment {
+  id: string
+  firstName: string
+  username: string
+  account: AccountInTweet
+}
+
 export interface UserInTweet {
   id: string
   username: string
