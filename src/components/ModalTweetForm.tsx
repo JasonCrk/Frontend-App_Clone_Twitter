@@ -50,9 +50,9 @@ export const ModalTweetForm: FC = () => {
 
     if (value.hashtags) formTweet.append('hashtags', value.hashtags)
 
-    for (const image of value.images) {
+    value.images.forEach(image => {
       formTweet.append('images', image)
-    }
+    })
 
     createTweetMutation({ tweetData: formTweet, accessToken: token! })
 
@@ -66,7 +66,7 @@ export const ModalTweetForm: FC = () => {
     <Modal isOpen={isOpen} closeModal={handleClose}>
       <Dialog.Panel
         className={
-          'w-full max-w-lg transform overflow-hidden rounded-2xl bg-black pt-10 px-4 pb-2 text-left align-middle transition-all shadow-neutral-800 shadow-border relative text-white'
+          'w-full max-w-lg transform overflow-hidden rounded-2xl bg-black pt-10 pb-2 text-left align-middle transition-all shadow-neutral-800 shadow-border relative text-white'
         }
       >
         <button
