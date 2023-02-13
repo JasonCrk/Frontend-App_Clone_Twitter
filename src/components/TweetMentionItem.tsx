@@ -30,8 +30,8 @@ export const TweetMentionItem: FC<TweetMentionItemProps> = ({
 
   return (
     <div
-      className={`border border-outline-layout rounded-2xl w-full ${
-        isLink && 'hover:bg-white/5 cursor-pointer'
+      className={`border border-outline-layout bg-black rounded-2xl w-full ${
+        isLink && 'hover:bg-white/5 hover:transition-colors cursor-pointer'
       }`}
       onClick={() => handleNavigateTweet()}
     >
