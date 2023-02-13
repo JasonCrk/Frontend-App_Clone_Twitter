@@ -2,15 +2,16 @@ import { FC } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
 
+import { useAuthStore } from '../store/authStore'
+
 import { Comment } from '../interfaces/Comment'
 
 import { GridImages } from './GridImages'
 
 import { BsFillPatchCheckFill } from 'react-icons/bs'
+import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from 'react-icons/ai'
 
 import { formatTimezone } from '../utils/formatDate'
-import { useAuthStore } from '../store/authStore'
-import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from 'react-icons/ai'
 
 export const CommentItem: FC<Comment> = ({
   content,
@@ -26,7 +27,7 @@ export const CommentItem: FC<Comment> = ({
   const isAuth = useAuthStore(state => state.isAuth)
   const userAuth = useAuthStore(state => state.user)
 
-  const likeCheck = (): boolean => {
+  const checkLiked = (): boolean => {
     if (!isAuth) return false
     const userLike = likes.find(user => user.id === userAuth?.id)
     return Boolean(userLike)
@@ -68,14 +69,12 @@ export const CommentItem: FC<Comment> = ({
         <div className='flex justify-start gap-8 mt-2'>
           <button
             className={`${
-              likeCheck() && 'text-pink-600'
+              checkLiked() && 'text-pink-600'
             } flex group items-center gap-2 text-lg relative`}
           >
-            {likeCheck() ? (
+            {checkLiked() ? (
               <AiFillHeart
-                className={`${
-                  likeCheck() && 'group-hover:text-white'
-                } p-1.5 text-3xl group-hover:bg-pink-600 group-hover:bg-opacity-80 group-hover:transition-colors rounded-full`}
+                className={`p-1.5 text-3xl group-hover:bg-pink-600 group-hover:bg-opacity-80 group-hover:transition-colors rounded-full group-hover:text-white`}
               />
             ) : (
               <AiOutlineHeart
