@@ -8,6 +8,7 @@ import { useAuthStore } from '../store/authStore'
 
 import { AxiosError } from 'axios'
 import { Tweet } from '../interfaces/Tweet'
+import { CommentInitialValue } from '../interfaces/Comment'
 import { getTweetById, likeTweet } from '../services/tweetService'
 
 import { Bar } from '../components/Bar'
@@ -31,6 +32,7 @@ import { formatDateTime } from '../utils/formatDate'
 
 export const DetailTweetPage: FC = () => {
   const { tweetId } = useParams() as { tweetId: string }
+
   const navigate = useNavigate()
 
   const { data: tweet, isLoading } = useQuery<Tweet, AxiosError>(
@@ -58,6 +60,25 @@ export const DetailTweetPage: FC = () => {
     window.scrollTo({ top: 0 })
   }, [])
 
+  const commentFormData = (value: CommentInitialValue) => {
+    const commentFormData = new FormData()
+
+    commentFormData.append('postId', value.postId!)
+    commentFormData.append('content', value.content)
+
+    value.images.forEach(image => {
+      commentFormData.append('images', image)
+    })
+
+    return commentFormData
+  }
+
+  const commentInitialValue: CommentInitialValue = {
+    content: '',
+    postId: tweetId,
+    images: [],
+  }
+
   const likeCheck = (): boolean => {
     const userLike = tweet?.likes.find(user => user.id === userAuth?.id)
     return Boolean(userLike)
@@ -65,7 +86,6 @@ export const DetailTweetPage: FC = () => {
 
   const handleLikeTweet = () => {
     if (isAuth) return redirect('/auth/signIn')
-
     likeTweetMutation({ tweetId: tweet!.id, accessToken: token })
   }
 
@@ -158,7 +178,11 @@ export const DetailTweetPage: FC = () => {
             </button>
           </div>
 
-          <CommentForm placeholder='Tweet you reply' tweetId={tweet!.id} />
+          <CommentForm
+            placeholder='Tweet you reply'
+            initialValue={commentInitialValue}
+            getCommentFormData={commentFormData}
+          />
         </div>
       </div>
 
