@@ -35,7 +35,7 @@ export const HomePage: FC = () => {
 
   const sendTweet = (
     value: TweetInitialValue,
-    actions: FormikHelpers<TweetInitialValue>
+    { resetForm, setSubmitting }: FormikHelpers<TweetInitialValue>
   ) => {
     const formTweet = new FormData()
 
@@ -45,14 +45,15 @@ export const HomePage: FC = () => {
       formTweet.append('hashtags', value.hashtags)
     }
 
-    for (const image of value.images) {
+    value.images.forEach(image => {
       formTweet.append('images', image)
-    }
+    })
+
+    resetForm()
 
     createTweetMutation({ tweetData: formTweet, accessToken: token! })
 
-    actions.setSubmitting(false)
-    actions.resetForm()
+    setSubmitting(false)
   }
 
   return (
@@ -64,11 +65,7 @@ export const HomePage: FC = () => {
           <Spinner />
         </div>
       ) : user ? (
-        <TweetForm
-          handleSubmit={sendTweet}
-          placeholder="What's happening?"
-          isHomeForm
-        />
+        <TweetForm handleSubmit={sendTweet} placeholder="What's happening?" />
       ) : null}
 
       {isLoading ? (
