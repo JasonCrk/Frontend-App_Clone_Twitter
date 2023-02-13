@@ -50,7 +50,7 @@ export const CommentItem: FC<CommentItemProps> = ({
   return (
     <div className='p-4 grid grid-cols-tweet gap-4 border-outline-layout relative hover:bg-white/5 hover:transition-colors'>
       {showConnection && (
-        <div className='absolute top-0 left-10 w-[2px] h-3 bg-outline-layout' />
+        <div className='absolute top-0 left-[2.45rem] w-[2px] h-3 bg-outline-layout' />
       )}
 
       <Link to={`/${user.username}`} className='h-fit'>
@@ -63,7 +63,7 @@ export const CommentItem: FC<CommentItemProps> = ({
       <div>
         <div
           className='cursor-pointer'
-          onClick={() => navigate(`/tweets/${id}`)}
+          onClick={() => navigate(`/tweets/${post?.id}/comments/${id}`)}
         >
           <Link
             to={`/${user.username}`}

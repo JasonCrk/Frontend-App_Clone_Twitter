@@ -11,18 +11,19 @@ import { SignInPage } from '../pages/SignIn'
 import { SignUpPage } from '../pages/SignUp'
 
 import { HomePage } from '../pages/HomePage'
+import { TrendsPage } from '../pages/TrendsPage'
+import { SearchPage } from '../pages/SearchPage'
+import { FollowPage } from '../pages/FollowPage'
 import { ExplorePage } from '../pages/ExplorePage'
 import { ProfilePage } from '../pages/ProfilePage'
-import { TrendsPage } from '../pages/TrendsPage'
 import { DetailTweetPage } from '../pages/DetailTweetPage'
-import { SearchPage } from '../pages/SearchPage'
+import { UserFollowersPage } from '../pages/UserFollowersPage'
+import { UserFollowingPage } from '../pages/UserFollowingPage'
+import { DetailCommentPage } from '../pages/DetailCommentPage'
 
 import { UserTweets } from '../components/UserTweets'
 import { TweetsUserLiked } from '../components/TweetsUserLiked'
 import { MediaTweets } from '../components/MediaTweets'
-import { FollowPage } from '../pages/FollowPage'
-import { UserFollowersPage } from '../pages/UserFollowersPage'
-import { UserFollowingPage } from '../pages/UserFollowingPage'
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ export const router = createBrowserRouter([
       {
         path: 'tweets/:tweetId',
         element: <DetailTweetPage />,
+      },
+      {
+        path: 'tweets/:tweetId/comments/:commentId',
+        element: <DetailCommentPage />,
       },
       {
         path: 'explore',
