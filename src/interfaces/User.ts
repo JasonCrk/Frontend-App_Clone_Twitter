@@ -11,6 +11,7 @@ export interface User {
 }
 
 export interface UserUsername {
+  id: string
   user: {
     username: string
   }
