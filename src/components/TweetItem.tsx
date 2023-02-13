@@ -63,7 +63,7 @@ const TweetItem: FC<Tweet> = ({
   }
 
   return (
-    <div className='p-4 grid grid-cols-tweet gap-4 border-neutral-500 relative'>
+    <div className='p-4 grid grid-cols-tweet gap-4 border-neutral-500 relative hover:bg-white/5 hover:transition-colors'>
       <TweetMenu
         username={user.username}
         tweetId={id}
