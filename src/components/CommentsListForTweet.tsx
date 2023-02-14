@@ -4,7 +4,7 @@ import { useQuery } from 'react-query'
 
 import { AxiosError } from 'axios'
 import { Comment } from '../interfaces/Comment'
-import { getAllCommentOfTweet } from '../services/commentService'
+import { getAllCommentsOfTweet } from '../services/commentService'
 
 import Spinner from './Spinner'
 import { CommentItem } from './CommentItem'
@@ -21,7 +21,7 @@ export const CommentsListForTweet: FC<CommentsListForTweetProps> = ({
     isLoading,
     error,
   } = useQuery<Comment[], AxiosError>(['tweetComments', tweetId], () =>
-    getAllCommentOfTweet(tweetId)
+    getAllCommentsOfTweet(tweetId)
   )
 
   if (isLoading)

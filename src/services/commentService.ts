@@ -8,8 +8,7 @@ const commentApi = axios.create({
   baseURL: API_TWITTER_COMMENTS_BASE,
 })
 
-// TODO: rename for getAllCommentsOfTweet
-export const getAllCommentOfTweet = async (
+export const getAllCommentsOfTweet = async (
   tweetId: string
 ): Promise<Comment[]> => {
   const response = await commentApi.get<{ comments: Comment[] }>(
