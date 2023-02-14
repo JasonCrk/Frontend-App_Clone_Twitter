@@ -73,6 +73,7 @@ export const ProfilePage: FC = () => {
             >
               <AiOutlineArrowLeft />
             </button>
+
             <div>
               <p className='text-xl font-bold flex items-center gap-2'>
                 <span>{profile.user.firstName}</span>
@@ -81,6 +82,7 @@ export const ProfilePage: FC = () => {
                   <BsFillPatchCheckFill className='text-blue-500' />
                 )}
               </p>
+
               <p className='text-neutral-500 text-sm'>
                 {profile.user.posts.length} Tweets
               </p>
@@ -92,32 +94,38 @@ export const ProfilePage: FC = () => {
               alt=''
               className='w-full h-48 object-cover'
             />
+
             <img
               src={profile.avatar}
               alt=''
               className='w-32 h-32 object-cover rounded-full absolute top-32 left-5 border-black border-4'
             />
+
             <div>
               {isAuth && user?.id === profile.user.id ? (
                 <ModalEditProfile profile={profile} />
               ) : (
                 <div className='h-[38px] mx-4 mt-4 mb-6 w-full' />
               )}
+
               <div className='m-4'>
                 <p className='text-xl font-bold'>{profile.user.firstName}</p>
                 <p className='text-neutral-500'>@{profile.user.username}</p>
+
                 {profile.bibliography && (
                   <p className='py-1'>{profile.bibliography}</p>
                 )}
 
-                <div className='flex justify-start items-center flex-wrap gap-4 py-2'>
+                <div className='flex justify-start items-center flex-wrap gap-x-4 gap-y-1 py-2'>
                   {profile.website && (
                     <Link
                       to={profile.website}
                       className='flex gap-1 items-center'
                     >
                       <AiOutlineLink className='text-neutral-500' />{' '}
-                      <span className='text-blue-500'>{profile.website}</span>
+                      <span className='text-blue-500 hover:underline'>
+                        {profile.website}
+                      </span>
                     </Link>
                   )}
 
@@ -149,6 +157,7 @@ export const ProfilePage: FC = () => {
                     </span>
                     <span className='text-neutral-500'>Following</span>
                   </Link>
+
                   <Link
                     to={`/${username}/f/followers`}
                     className='hover:underline'
@@ -185,6 +194,7 @@ export const ProfilePage: FC = () => {
                 ))}
               </Tab.List>
             </Tab.Group>
+
             <div className='border-t border-outline-layout'>
               <Outlet />
             </div>
