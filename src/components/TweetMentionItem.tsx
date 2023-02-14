@@ -31,11 +31,13 @@ export const TweetMentionItem: FC<TweetMentionItemProps> = ({
   return (
     <div
       className={`border border-outline-layout bg-black rounded-2xl w-full ${
-        isLink && 'hover:bg-white/5 hover:transition-colors cursor-pointer'
+        isLink && 'hover:bg-white/5 hover:transition-colors'
       }`}
-      onClick={() => handleNavigateTweet()}
     >
-      <div className='p-3'>
+      <div
+        className='px-3 pt-3 cursor-pointer'
+        onClick={() => handleNavigateTweet()}
+      >
         <div className='flex gap-1 items-center'>
           <img
             className='w-6 h-6 object-cover rounded-full'
@@ -52,19 +54,21 @@ export const TweetMentionItem: FC<TweetMentionItemProps> = ({
         </div>
 
         <p className='py-1'>{tweet.content}</p>
-
-        {tweetHashtags && (
-          <div className='flex flex-wrap mb-2'>
-            {tweetHashtags.map(hashtag => (
-              <FilterTag key={hashtag} tag={hashtag.trim()} />
-            ))}
-          </div>
-        )}
       </div>
 
-      {tweet.images.length > 0 && (
-        <GridImages images={tweet.images} isMention />
+      {tweetHashtags && (
+        <div className='flex flex-wrap px-3 pb-3'>
+          {tweetHashtags.map(hashtag => (
+            <FilterTag key={hashtag} tag={hashtag.trim()} />
+          ))}
+        </div>
       )}
+
+      <div onClick={() => handleNavigateTweet()} className='cursor-pointer'>
+        {tweet.images.length > 0 && (
+          <GridImages images={tweet.images} isMention />
+        )}
+      </div>
     </div>
   )
 }
