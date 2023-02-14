@@ -2,13 +2,12 @@ import { FC, useEffect } from 'react'
 
 import { redirect, Link, useParams, useNavigate } from 'react-router-dom'
 
-import { useQueryClient, useMutation, useQuery } from 'react-query'
-
 import { useAuthStore } from '../store/authStore'
+
+import { useQueryClient, useMutation, useQuery } from 'react-query'
 
 import { AxiosError } from 'axios'
 import { Tweet } from '../interfaces/Tweet'
-import { CommentInitialValue } from '../interfaces/Comment'
 import { getTweetById, likeTweet } from '../services/tweetService'
 
 import { Bar } from '../components/Bar'
@@ -17,8 +16,8 @@ import { TweetMenu } from '../components/TweetMenu'
 import Spinner from '../components/Spinner'
 import { GridImages } from '../components/GridImages'
 import { TweetMentionItem } from '../components/TweetMentionItem'
-import { CommentForm } from '../components/CommentForm'
 import { CommentsListForTweet } from '../components/CommentsListForTweet'
+import { CommentFormForTweet } from '../components/CommentFormForTweet'
 
 import { BsFillPatchCheckFill } from 'react-icons/bs'
 import {
@@ -59,25 +58,6 @@ export const DetailTweetPage: FC = () => {
   useEffect(() => {
     window.scrollTo({ top: 0 })
   }, [])
-
-  const commentFormData = (value: CommentInitialValue) => {
-    const commentFormData = new FormData()
-
-    commentFormData.append('postId', value.postId!)
-    commentFormData.append('content', value.content)
-
-    value.images.forEach(image => {
-      commentFormData.append('images', image)
-    })
-
-    return commentFormData
-  }
-
-  const commentInitialValue: CommentInitialValue = {
-    content: '',
-    postId: tweetId,
-    images: [],
-  }
 
   const likeCheck = (): boolean => {
     const userLike = tweet?.likes.find(user => user.id === userAuth?.id)
@@ -128,6 +108,7 @@ export const DetailTweetPage: FC = () => {
           username={tweet!.user.username}
           actionDeleteTweet={handleDeleteTweet}
         />
+
         <Link to={`/${tweet?.user.username}`} className='flex gap-3 mb-4 w-fit'>
           <img
             src={tweet!.user.account.avatar}
@@ -146,6 +127,7 @@ export const DetailTweetPage: FC = () => {
             <div className='text-neutral-500'>@{tweet?.user.username}</div>
           </div>
         </Link>
+
         <div>
           <p className='mb-2'>{tweet?.content}</p>
 
@@ -178,11 +160,7 @@ export const DetailTweetPage: FC = () => {
             </button>
           </div>
 
-          <CommentForm
-            placeholder='Tweet you reply'
-            initialValue={commentInitialValue}
-            getCommentFormData={commentFormData}
-          />
+          <CommentFormForTweet tweetId={tweetId} />
         </div>
       </div>
 
