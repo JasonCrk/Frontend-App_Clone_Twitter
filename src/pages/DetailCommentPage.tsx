@@ -1,14 +1,14 @@
 import type { FC } from 'react'
 
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link, redirect } from 'react-router-dom'
 
 import { useAuthStore } from '../store/authStore'
 
-import { useQuery } from 'react-query'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 
 import { AxiosError } from 'axios'
 import { Comment, CommentInitialValue } from '../interfaces/Comment'
-import { getCommentById } from '../services/commentService'
+import { getCommentById, likeComment } from '../services/commentService'
 
 import { Bar } from '../components/Bar'
 import Spinner from '../components/Spinner'
@@ -35,8 +35,10 @@ export const DetailCommentPage: FC = () => {
 
   const isAuth = useAuthStore(state => state.isAuth)
   const userAuth = useAuthStore(state => state.user)
+  const token = useAuthStore(state => state.token!)
 
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const {
     data: comment,
@@ -46,14 +48,20 @@ export const DetailCommentPage: FC = () => {
     getCommentById(commentId)
   )
 
+  const { mutate: likeCommentMutation } = useMutation({
+    mutationFn: likeComment,
+    onSuccess: () => {
+      queryClient.invalidateQueries('comment')
+    },
+    onError: error => {
+      console.log(error)
+    },
+  })
+
   const commentFormData = (value: CommentInitialValue) => {
     const commentFormData = new FormData()
 
-    if (value.commentId) {
-      commentFormData.append('commentId', value.commentId)
-    } else {
-      commentFormData.append('postId', value.postId!)
-    }
+    commentFormData.append('commentId', value.commentId!)
 
     commentFormData.append('content', value.content)
 
@@ -74,6 +82,11 @@ export const DetailCommentPage: FC = () => {
     if (!isAuth) return false
     const userLike = comment?.likes.find(user => user.id === userAuth?.id)
     return Boolean(userLike)
+  }
+
+  const handleLikeComment = () => {
+    if (!isAuth) return redirect('/auth/signIn')
+    likeCommentMutation({ commentId: comment!.id, accessToken: token })
   }
 
   return (
@@ -156,6 +169,7 @@ export const DetailCommentPage: FC = () => {
                   className={`${
                     checkLiked() && 'text-pink-600'
                   } hover:bg-pink-600 hover:bg-opacity-10 hover:text-pink-600 hover:transition-[background] p-2 rounded-full`}
+                  onClick={() => handleLikeComment()}
                 >
                   {checkLiked() ? <AiFillHeart /> : <AiOutlineHeart />}
                 </button>
