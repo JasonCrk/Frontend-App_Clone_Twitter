@@ -16,13 +16,15 @@ import { likeComment } from '../services/commentService'
 import { useMutation, useQueryClient } from 'react-query'
 
 interface CommentItemProps {
-  showConnection?: boolean
   commentData: Comment
+  showConnectionTop?: boolean
+  showConnectionBottom?: boolean
 }
 
 export const CommentItem: FC<CommentItemProps> = ({
   commentData,
-  showConnection,
+  showConnectionTop,
+  showConnectionBottom,
 }) => {
   const {
     content,
@@ -67,19 +69,26 @@ export const CommentItem: FC<CommentItemProps> = ({
   }
 
   return (
-    <div className='p-4 grid grid-cols-tweet gap-4 border-outline-layout relative hover:bg-white/5 hover:transition-colors'>
-      {showConnection && (
+    <div className='px-4 pt-4 grid grid-cols-tweet gap-4 border-outline-layout relative hover:bg-white/5 hover:transition-colors'>
+      {showConnectionTop && (
         <div className='absolute top-0 left-[2.45rem] w-[2px] h-3 bg-outline-layout' />
       )}
 
-      <Link to={`/${user.username}`} className='h-fit'>
-        <img
-          src={user.account.avatar}
-          alt={user.username}
-          className='rounded-full w-12 h-12 object-cover'
-        />
-      </Link>
-      <div>
+      <div className='flex flex-col items-center'>
+        <Link to={`/${user.username}`} className='h-fit'>
+          <img
+            src={user.account.avatar}
+            alt={user.username}
+            className='rounded-full w-12 h-12 object-cover'
+          />
+        </Link>
+
+        {showConnectionBottom && (
+          <div className='w-[2px] h-full bg-outline-layout' />
+        )}
+      </div>
+
+      <div className='pb-2'>
         <div
           className='cursor-pointer'
           onClick={() => navigate(`/tweets/${post?.id}/comments/${id}`)}
