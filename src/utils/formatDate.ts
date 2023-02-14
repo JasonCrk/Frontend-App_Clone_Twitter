@@ -1,7 +1,7 @@
 import moment from 'moment'
 
 export const formatTimezone = (date: Date): string => {
-  return moment(date).startOf('date').fromNow()
+  return moment(date).local(true).startOf('seconds').fromNow()
 }
 
 export const formatDateTime = (date: Date) => {
