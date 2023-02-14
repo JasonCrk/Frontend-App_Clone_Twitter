@@ -59,6 +59,12 @@ export const CommentForm: FC<CommentFormProps> = ({
 
     const commentFormData = getCommentFormData(value)
 
+    commentFormData.append('content', value.content)
+
+    value.images.forEach(image => {
+      commentFormData.append('images', image)
+    })
+
     createCommentMutation({ accessToken: token!, commentData: commentFormData })
 
     console.log(value)
