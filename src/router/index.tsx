@@ -20,6 +20,7 @@ import { DetailTweetPage } from '../pages/DetailTweetPage'
 import { UserFollowersPage } from '../pages/UserFollowersPage'
 import { UserFollowingPage } from '../pages/UserFollowingPage'
 import { DetailCommentPage } from '../pages/DetailCommentPage'
+import { DetailSubCommentPage } from '../pages/DetailSubCommentPage'
 
 import { UserTweets } from '../components/UserTweets'
 import { TweetsUserLiked } from '../components/TweetsUserLiked'
@@ -49,6 +50,10 @@ export const router = createBrowserRouter([
       {
         path: 'tweets/:tweetId/comments/:commentId',
         element: <DetailCommentPage />,
+      },
+      {
+        path: 'comments/:commentParentId/comments/:commentId',
+        element: <DetailSubCommentPage />,
       },
       {
         path: 'explore',
