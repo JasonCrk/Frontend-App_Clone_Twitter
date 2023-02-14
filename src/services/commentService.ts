@@ -50,3 +50,22 @@ export const createComment = async ({
   )
   return response.data.comment
 }
+
+export const likeComment = async ({
+  commentId,
+  accessToken,
+}: {
+  commentId: string
+  accessToken: string
+}): Promise<Comment> => {
+  const response = await commentApi.post<{ comment: Comment }>(
+    '/like',
+    { commentId },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  )
+  return response.data.comment
+}

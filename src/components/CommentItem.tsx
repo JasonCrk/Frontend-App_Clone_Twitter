@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, redirect, useNavigate } from 'react-router-dom'
 
 import { useAuthStore } from '../store/authStore'
 
@@ -12,6 +12,8 @@ import { BsFillPatchCheckFill } from 'react-icons/bs'
 import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from 'react-icons/ai'
 
 import { formatTimezone } from '../utils/formatDate'
+import { likeComment } from '../services/commentService'
+import { useMutation, useQueryClient } from 'react-query'
 
 interface CommentItemProps {
   showConnection?: boolean
@@ -35,9 +37,21 @@ export const CommentItem: FC<CommentItemProps> = ({
   } = commentData
 
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const isAuth = useAuthStore(state => state.isAuth)
   const userAuth = useAuthStore(state => state.user)
+  const token = useAuthStore(state => state.token!)
+
+  const { mutate: likeCommentMutation } = useMutation({
+    mutationFn: likeComment,
+    onSuccess: () => {
+      queryClient.invalidateQueries('tweetComments')
+    },
+    onError: error => {
+      console.log(error)
+    },
+  })
 
   const replyingUser = post?.user.username || comment?.user.username
 
@@ -45,6 +59,11 @@ export const CommentItem: FC<CommentItemProps> = ({
     if (!isAuth) return false
     const userLike = likes.find(user => user.id === userAuth?.id)
     return Boolean(userLike)
+  }
+
+  const handleLikeComment = () => {
+    if (!isAuth) return redirect('/auth/signIn')
+    likeCommentMutation({ commentId: id, accessToken: token })
   }
 
   return (
@@ -99,6 +118,7 @@ export const CommentItem: FC<CommentItemProps> = ({
             className={`${
               checkLiked() && 'text-pink-600'
             } flex group items-center gap-2 text-lg relative`}
+            onClick={() => handleLikeComment()}
           >
             {checkLiked() ? (
               <AiFillHeart
