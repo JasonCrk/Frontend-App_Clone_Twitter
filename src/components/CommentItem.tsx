@@ -56,6 +56,9 @@ export const CommentItem: FC<CommentItemProps> = ({
   })
 
   const replyingUser = post?.user.username || comment?.user.username
+  const urlNavigateComment = post?.id
+    ? `/tweets/${post.id}/comments/${id}`
+    : `/comments/${comment?.id}/comments/${id}`
 
   const checkLiked = (): boolean => {
     if (!isAuth) return false
@@ -91,7 +94,7 @@ export const CommentItem: FC<CommentItemProps> = ({
       <div className='pb-2'>
         <div
           className='cursor-pointer'
-          onClick={() => navigate(`/tweets/${post?.id}/comments/${id}`)}
+          onClick={() => navigate(urlNavigateComment)}
         >
           <Link
             to={`/${user.username}`}
