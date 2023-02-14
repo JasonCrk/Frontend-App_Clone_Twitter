@@ -7,15 +7,15 @@ import { useAuthStore } from '../store/authStore'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 
 import { AxiosError } from 'axios'
-import { Comment, CommentInitialValue } from '../interfaces/Comment'
+import { Comment } from '../interfaces/Comment'
 import { getCommentById, likeComment } from '../services/commentService'
 
-import { Bar } from '../components/Bar'
 import Spinner from '../components/Spinner'
+import { Bar } from '../components/Bar'
 import { TweetItemById } from '../components/TweetItemById'
 import { GridImages } from '../components/GridImages'
-import { CommentForm } from '../components/CommentForm'
 import { CommentsListForComment } from '../components/CommentsListForComment'
+import { CommentFormForComment } from '../components/CommentFormForComment'
 
 import {
   AiFillHeart,
@@ -57,26 +57,6 @@ export const DetailCommentPage: FC = () => {
       console.log(error)
     },
   })
-
-  const commentFormData = (value: CommentInitialValue) => {
-    const commentFormData = new FormData()
-
-    commentFormData.append('commentId', value.commentId!)
-
-    commentFormData.append('content', value.content)
-
-    value.images.forEach(image => {
-      commentFormData.append('images', image)
-    })
-
-    return commentFormData
-  }
-
-  const commentInitialValue: CommentInitialValue = {
-    content: '',
-    commentId,
-    images: [],
-  }
 
   const checkLiked = (): boolean => {
     if (!isAuth) return false
@@ -178,11 +158,7 @@ export const DetailCommentPage: FC = () => {
                 </button>
               </div>
 
-              <CommentForm
-                placeholder='Tweet you reply'
-                initialValue={commentInitialValue}
-                getCommentFormData={commentFormData}
-              />
+              <CommentFormForComment commentId={comment.id} />
             </div>
           </div>
 
