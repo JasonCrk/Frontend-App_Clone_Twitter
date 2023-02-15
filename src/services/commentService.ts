@@ -51,6 +51,24 @@ export const createComment = async ({
   return response.data.comment
 }
 
+export const deleteComment = async ({
+  commentId,
+  accessToken,
+}: {
+  commentId: string
+  accessToken: string
+}): Promise<{ message: string }> => {
+  const response = await commentApi.delete<{ message: string }>(
+    `/${commentId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  )
+  return response.data
+}
+
 export const likeComment = async ({
   commentId,
   accessToken,

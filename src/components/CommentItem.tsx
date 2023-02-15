@@ -4,7 +4,10 @@ import { Link, redirect, useNavigate } from 'react-router-dom'
 
 import { useAuthStore } from '../store/authStore'
 
+import { useMutation, useQueryClient } from 'react-query'
+
 import { Comment } from '../interfaces/Comment'
+import { likeComment } from '../services/commentService'
 
 import { GridImages } from './GridImages'
 
@@ -12,8 +15,7 @@ import { BsFillPatchCheckFill } from 'react-icons/bs'
 import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from 'react-icons/ai'
 
 import { formatTimezone } from '../utils/formatDate'
-import { likeComment } from '../services/commentService'
-import { useMutation, useQueryClient } from 'react-query'
+import { CommentMenu } from './CommentMenu'
 
 interface CommentItemProps {
   commentData: Comment
@@ -76,6 +78,8 @@ export const CommentItem: FC<CommentItemProps> = ({
       {showConnectionTop && (
         <div className='absolute top-0 left-[2.45rem] w-[2px] h-3 bg-outline-layout' />
       )}
+
+      <CommentMenu username={user.username} commentId={id} />
 
       <div className='flex flex-col items-center'>
         <Link to={`/${user.username}`} className='h-fit'>
