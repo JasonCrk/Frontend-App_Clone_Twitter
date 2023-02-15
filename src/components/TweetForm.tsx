@@ -47,13 +47,22 @@ export const TweetForm: FC<TweetFormProps> = ({ mention, onComplete }) => {
     content: '',
     hashtags: '',
     mention,
-    images: [],
+    images: new FileList(),
   }
 
   const handleSubmit = (
     value: TweetInitialValue,
     { setSubmitting, resetForm }: FormikHelpers<TweetInitialValue>
   ) => {
+    if (value.images.length > 4) {
+      toast.warning('Solo se permiten 4 imagenes', {
+        position: 'bottom-center',
+      })
+
+      setSubmitting(false)
+      return
+    }
+
     const formTweet = new FormData()
 
     formTweet.append('content', value.content)
