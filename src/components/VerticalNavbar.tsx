@@ -63,12 +63,6 @@ const VerticalNavbar: FC = () => {
             {isAuth && (
               <>
                 <LinkNavbar
-                  path='/notifications'
-                  name='Notifications'
-                  IconOutline={HiOutlineBell}
-                  IconFill={HiBell}
-                />
-                <LinkNavbar
                   path={`/${user?.username}`}
                   name='Profile'
                   IconOutline={BsPersonOutline}
@@ -77,7 +71,7 @@ const VerticalNavbar: FC = () => {
 
                 <button
                   className='py-3 rounded-full lg:w-full bg-blue-500 text-lg font-bold max-lg:p-4'
-                  onClick={() => handleOpen(null)}
+                  onClick={() => handleOpen(undefined)}
                 >
                   <span className='max-lg:hidden'>Tweet</span>
                   <RiQuillPenLine className='lg:hidden text-3xl' />
