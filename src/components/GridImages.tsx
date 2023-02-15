@@ -1,9 +1,9 @@
 import type { FC } from 'react'
 
-import { ImageTweet } from '../interfaces/ImageTweet'
+import { Image } from '../interfaces/Image'
 
 interface GridImagesProps {
-  images: ImageTweet[]
+  images: Image[]
   isMention?: boolean
 }
 
