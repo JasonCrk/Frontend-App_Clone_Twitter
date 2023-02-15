@@ -1,13 +1,8 @@
 import { FC, useContext } from 'react'
 
-import { useAuthStore } from '../store/authStore'
-
 import { createTweetContext } from '../context/CreateTweetProvider'
 
-import { useMutation, useQueryClient } from 'react-query'
-
-import { TweetInitialValue } from '../interfaces/Tweet'
-import { createTweet } from '../services/tweetService'
+import { useQueryClient } from 'react-query'
 
 import { Dialog } from '@headlessui/react'
 
@@ -16,48 +11,16 @@ import { TweetForm } from './TweetForm'
 
 import { AiOutlineClose } from 'react-icons/ai'
 
-import { FormikHelpers } from 'formik'
-
-import { toast } from 'react-toastify'
-
 export const ModalTweetForm: FC = () => {
-  const token = useAuthStore(state => state.token!)
-
   const { isOpen, handleClose, mentionTweet } = useContext(createTweetContext)
 
   const queryClient = useQueryClient()
 
-  const { mutate: createTweetMutation } = useMutation({
-    mutationFn: createTweet,
-    onSuccess: () => {
-      queryClient.invalidateQueries('tweets')
-      queryClient.invalidateQueries('mostFollowed')
-    },
-    onError: () => {
-      toast.error('There was an error trying to create the tweet')
-    },
-  })
-
-  const sendTweet = (
-    value: TweetInitialValue,
-    actions: FormikHelpers<TweetInitialValue>
-  ) => {
-    const formTweet = new FormData()
-
-    formTweet.append('content', value.content)
-
-    if (value.mention) formTweet.append('mention', value.mention)
-
-    if (value.hashtags) formTweet.append('hashtags', value.hashtags)
-
-    value.images.forEach(image => {
-      formTweet.append('images', image)
-    })
-
-    createTweetMutation({ tweetData: formTweet, accessToken: token! })
-
-    actions.setSubmitting(false)
-    actions.resetForm()
+  const handleCreateTweet = () => {
+    queryClient.invalidateQueries('tweets')
+    queryClient.invalidateQueries('trendTweetsList')
+    queryClient.invalidateQueries('userTweets')
+    queryClient.invalidateQueries('mediaTweets')
 
     handleClose()
   }
@@ -76,11 +39,7 @@ export const ModalTweetForm: FC = () => {
           <AiOutlineClose />
         </button>
 
-        <TweetForm
-          handleSubmit={sendTweet}
-          placeholder="What's happening?"
-          mention={mentionTweet}
-        />
+        <TweetForm onComplete={handleCreateTweet} mention={mentionTweet} />
       </Dialog.Panel>
     </Modal>
   )

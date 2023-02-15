@@ -23,6 +23,7 @@ export const ExplorePage: FC = () => {
       <Bar styles='px-4 py-2'>
         <InputSearch searchBar />
       </Bar>
+
       <div>
         <h6 className='px-4 py-3 text-xl font-extrabold'>Trends for you</h6>
         <TrendTweetsList />

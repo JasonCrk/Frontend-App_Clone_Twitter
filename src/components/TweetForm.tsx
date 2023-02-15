@@ -2,7 +2,10 @@ import { FC, useState } from 'react'
 
 import { useAuthStore } from '../store/authStore'
 
+import { useMutation } from 'react-query'
+
 import { TweetInitialValue } from '../interfaces/Tweet'
+import { createTweet } from '../services/tweetService'
 
 import { TweetMentionForForm } from './TweetMentionForForm'
 import { FileButton } from './form/FileButton'
@@ -11,8 +14,10 @@ import { BsImage } from 'react-icons/bs'
 import { AiOutlineGif } from 'react-icons/ai'
 import { HiOutlineHashtag } from 'react-icons/hi'
 
-import { Formik } from 'formik'
+import { Formik, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
+
+import { toast } from 'react-toastify'
 
 const schemaFormValidate = Yup.object().shape({
   content: Yup.string().max(255, 'max 255 characters').required('Is required'),
@@ -23,26 +28,58 @@ const schemaFormValidate = Yup.object().shape({
 })
 
 interface TweetFormProps {
-  placeholder: string
-  handleSubmit: (value: any, actions: any) => void
+  onComplete: () => void
   mention?: string
 }
 
-export const TweetForm: FC<TweetFormProps> = ({
-  placeholder,
-  handleSubmit,
-  mention,
-}) => {
+export const TweetForm: FC<TweetFormProps> = ({ mention, onComplete }) => {
   const [isFocusContent, setIsFocusContent] = useState(false)
   const [isFocusHashtags, setIsFocusHashtags] = useState(false)
 
   const user = useAuthStore(state => state.user)
+  const token = useAuthStore(state => state.token!)
+
+  const { mutate: createTweetMutation } = useMutation({
+    mutationFn: createTweet,
+  })
 
   const initialValue: TweetInitialValue = {
     content: '',
     hashtags: '',
     mention,
     images: [],
+  }
+
+  const handleSubmit = (
+    value: TweetInitialValue,
+    { setSubmitting, resetForm }: FormikHelpers<TweetInitialValue>
+  ) => {
+    const formTweet = new FormData()
+
+    formTweet.append('content', value.content)
+
+    if (value.hashtags) {
+      formTweet.append('hashtags', value.hashtags)
+    }
+
+    for (const image of value.images) {
+      formTweet.append('images', image)
+    }
+
+    createTweetMutation(
+      { tweetData: formTweet, accessToken: token },
+      {
+        onSuccess: () => {
+          onComplete()
+          resetForm()
+          setSubmitting(false)
+        },
+        onError: () => {
+          toast.error('There was an error trying to create the tweet')
+          setSubmitting(false)
+        },
+      }
+    )
   }
 
   return (
@@ -78,7 +115,7 @@ export const TweetForm: FC<TweetFormProps> = ({
             >
               <textarea
                 name='content'
-                placeholder={placeholder}
+                placeholder="What's happening?"
                 className={`commentScroll w-full focus:outline-none bg-transparent placeholder:text-neutral-600 resize-none transition-colors ${
                   isFocusContent || mention ? 'text-xl' : 'text-2xl'
                 } ${errors.content && 'placeholder:text-neutral-700'}`}
