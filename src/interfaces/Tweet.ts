@@ -35,7 +35,7 @@ export interface TweetInitialValue {
   content: string
   hashtags: string
   mention?: string
-  images: FileList
+  images: FileList | null
 }
 
 export interface TrendTweets {
