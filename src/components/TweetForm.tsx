@@ -9,6 +9,7 @@ import { createTweet } from '../services/tweetService'
 
 import { TweetMentionForForm } from './TweetMentionForForm'
 import { FileButton } from './form/FileButton'
+import { PreviewSelectedImages } from './PreviewSelectedImages'
 
 import { BsImage } from 'react-icons/bs'
 import { AiOutlineGif } from 'react-icons/ai'
@@ -19,6 +20,8 @@ import * as Yup from 'yup'
 
 import { toast } from 'react-toastify'
 
+import { fileListToFilesUrl } from '../utils/actionsFileList'
+
 const schemaFormValidate = Yup.object().shape({
   content: Yup.string().max(255, 'max 255 characters').required('Is required'),
   hashtags: Yup.string()
@@ -27,14 +30,32 @@ const schemaFormValidate = Yup.object().shape({
     .nullable(),
 })
 
+interface TweetFormState {
+  isFocusContent: boolean
+  isFocusHashtags: boolean
+  selectedImages: string[]
+  selectedFileImages: File[]
+}
+
 interface TweetFormProps {
   onComplete: () => void
   mention?: string
 }
 
 export const TweetForm: FC<TweetFormProps> = ({ mention, onComplete }) => {
-  const [isFocusContent, setIsFocusContent] = useState(false)
-  const [isFocusHashtags, setIsFocusHashtags] = useState(false)
+  const [isFocusContent, setIsFocusContent] =
+    useState<TweetFormState['isFocusContent']>(false)
+
+  const [isFocusHashtags, setIsFocusHashtags] =
+    useState<TweetFormState['isFocusHashtags']>(false)
+
+  const [selectedImages, setSelectedImages] = useState<
+    TweetFormState['selectedImages']
+  >([])
+
+  const [selectedFileImages, setSelectedFileImages] = useState<
+    TweetFormState['selectedFileImages']
+  >([])
 
   const user = useAuthStore(state => state.user)
   const token = useAuthStore(state => state.token!)
@@ -47,14 +68,37 @@ export const TweetForm: FC<TweetFormProps> = ({ mention, onComplete }) => {
     content: '',
     hashtags: '',
     mention,
-    images: new FileList(),
+    images: null,
+  }
+
+  const handleChangeImage = (images: FileList | null) => {
+    const exceedsEstablished = images!.length + selectedImages.length > 4
+
+    if (exceedsEstablished) {
+      toast.warning('Solo se permiten 4 imagenes', {
+        position: 'bottom-center',
+      })
+      return
+    }
+
+    if (images) {
+      for (const image of images) {
+        setSelectedFileImages(prevImages => [...prevImages, image])
+      }
+    }
+
+    const imageUrls = fileListToFilesUrl(images)
+
+    imageUrls.forEach(imageUrl => {
+      setSelectedImages(prevImages => [...prevImages, imageUrl])
+    })
   }
 
   const handleSubmit = (
     value: TweetInitialValue,
     { setSubmitting, resetForm }: FormikHelpers<TweetInitialValue>
   ) => {
-    if (value.images.length > 4) {
+    if (selectedFileImages && selectedFileImages.length > 4) {
       toast.warning('Solo se permiten 4 imagenes', {
         position: 'bottom-center',
       })
@@ -71,8 +115,10 @@ export const TweetForm: FC<TweetFormProps> = ({ mention, onComplete }) => {
       formTweet.append('hashtags', value.hashtags)
     }
 
-    for (const image of value.images) {
-      formTweet.append('images', image)
+    if (selectedFileImages) {
+      for (const image of selectedFileImages) {
+        formTweet.append('images', image)
+      }
     }
 
     createTweetMutation(
@@ -135,6 +181,14 @@ export const TweetForm: FC<TweetFormProps> = ({ mention, onComplete }) => {
               ></textarea>
             </div>
 
+            {selectedImages && (
+              <PreviewSelectedImages
+                selectedImages={selectedImages}
+                setFilesImage={setSelectedImages}
+                setSelectedFileImages={setSelectedFileImages}
+              />
+            )}
+
             {mention && <TweetMentionForForm tweetId={mention} />}
 
             <div className='flex justify-between w-full'>
@@ -145,7 +199,10 @@ export const TweetForm: FC<TweetFormProps> = ({ mention, onComplete }) => {
                   Icon={BsImage}
                   multipleSelect
                   accept='image/png, image/jpeg'
-                  onChange={e => setFieldValue('images', e.currentTarget.files)}
+                  onChange={e => {
+                    handleChangeImage(e.currentTarget.files)
+                    setFieldValue('images', e.currentTarget.files)
+                  }}
                 />
 
                 <FileButton
@@ -154,7 +211,10 @@ export const TweetForm: FC<TweetFormProps> = ({ mention, onComplete }) => {
                   Icon={AiOutlineGif}
                   multipleSelect
                   accept='image/gif'
-                  onChange={e => setFieldValue('images', e.currentTarget.files)}
+                  onChange={e => {
+                    handleChangeImage(e.currentTarget.files)
+                    setFieldValue('images', e.currentTarget.files)
+                  }}
                 />
 
                 <button
