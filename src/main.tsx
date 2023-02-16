@@ -1,4 +1,5 @@
 import ReactDOM from 'react-dom/client'
+import { StrictMode } from 'react'
 
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
@@ -14,14 +15,16 @@ import 'react-toastify/dist/ReactToastify.css'
 const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <QueryClientProvider client={queryClient}>
-    <RouterProvider router={router} />
-    <ToastContainer
-      theme='dark'
-      position='bottom-left'
-      autoClose={5000}
-      pauseOnHover
-    />
-    <ReactQueryDevtools initialIsOpen={false} />
-  </QueryClientProvider>
+  <StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <ToastContainer
+        theme='dark'
+        position='bottom-left'
+        autoClose={5000}
+        pauseOnHover
+      />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  </StrictMode>
 )
