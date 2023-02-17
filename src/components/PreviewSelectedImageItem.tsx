@@ -18,7 +18,7 @@ export const PreviewSelectedImageItem: FC<PreviewSelectedImageItemProps> = ({
   handleDeleteImage
 }) => {
   return (
-    <div className={`relative ${stylesDiv}`}>
+    <div className={`relative w-full ${stylesDiv}`}>
       <button
         type='button'
         onClick={() => handleDeleteImage(imageUrl, index)}
