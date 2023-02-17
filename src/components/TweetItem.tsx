@@ -125,16 +125,14 @@ const TweetItem: FC<TweetItemProps> = ({ tweetData, showConnection }) => {
 
         <div className='flex justify-start gap-8 mt-2'>
           <button
-            className={`${
-              likeCheck() && 'text-pink-600'
-            } flex group items-center gap-2 text-lg relative`}
+            className={`${likeCheck() && 'text-pink-600'
+              } flex group items-center gap-2 text-lg relative`}
             onClick={() => handleLikeTweet()}
           >
             {likeCheck() ? (
               <AiFillHeart
-                className={`${
-                  likeCheck() && 'group-hover:text-white'
-                } p-1.5 text-3xl group-hover:bg-pink-600 group-hover:bg-opacity-80 group-hover:transition-colors rounded-full`}
+                className={`${likeCheck() && 'group-hover:text-white'
+                  } p-1.5 text-3xl group-hover:bg-pink-600 group-hover:bg-opacity-80 group-hover:transition-colors rounded-full`}
               />
             ) : (
               <AiOutlineHeart
