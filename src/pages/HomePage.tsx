@@ -1,6 +1,8 @@
-import type { FC } from 'react'
+import { FC, useContext } from 'react'
 
 import { useProtect } from '../hooks/useProtect'
+
+import { createTweetContext } from '../context/CreateTweetProvider'
 
 import { useQuery, useQueryClient } from 'react-query'
 
@@ -13,6 +15,7 @@ import Spinner from '../components/Spinner'
 
 export const HomePage: FC = () => {
   const { user, isLoadingAuth } = useProtect()
+  const { isOpen } = useContext(createTweetContext)
 
   const queryClient = useQueryClient()
 
@@ -31,7 +34,7 @@ export const HomePage: FC = () => {
         <div className='flex justify-center'>
           <Spinner />
         </div>
-      ) : user ? (
+      ) : user && !isOpen ? (
         <TweetForm onComplete={handleCreateTweet} />
       ) : null}
 
