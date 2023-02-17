@@ -21,24 +21,39 @@ export const GridImages: FC<GridImagesProps> = ({ images, isMention }) => {
   if (images.length === 2)
     return (
       <div
-        className={`grid grid-cols-2 gap-px ${
-          isMention ? 'rounded-b-2xl' : 'mb-4 rounded-2xl'
-        }`}
+        className={`grid grid-cols-2 gap-1 h-96 overflow-hidden ${isMention ? 'rounded-b-2xl' : 'mb-4 rounded-2xl'
+          }`}
       >
         {images.map(image => (
           <img
             src={image.imageUrl}
             key={image.id}
             alt=''
-            className='h-96 w-full mb-4 object-cover'
+            className='h-full w-full object-cover'
           />
         ))}
       </div>
     )
 
-  if (images.length === 3) return <div>3 Image</div>
+  if (images.length === 3) return <div className='grid grid-cols-2 grid-rows-2 gap-1 h-96 mb-4 rounded-2xl overflow-hidden'>
+    {images.map((image, index) => (
+      <img
+        src={image.imageUrl}
+        key={image.id}
+        alt=''
+        className={`h-full w-full object-cover ${index === 0 && 'row-span-2'}`}
+      />
+    ))}
+  </div>
 
-  if (images.length === 4) return <div>4 Image</div>
-
-  return <div>Hay más de 4 images</div>
+  return <div className='grid grid-cols-2 grid-rows-2 gap-1 h-96 mb-4 rounded-2xl overflow-hidden'>
+    {images.map(image => (
+      <img
+        src={image.imageUrl}
+        key={image.id}
+        alt=''
+        className='h-full w-full object-cover'
+      />
+    ))}
+  </div>
 }
