@@ -1,6 +1,6 @@
 import type { Dispatch, FC, SetStateAction } from 'react'
 
-import { AiOutlineClose } from 'react-icons/ai'
+import { PreviewSelectedImageItem } from './PreviewSelectedImageItem'
 
 interface PreviewSelectedImagesProps {
   selectedImages: string[]
@@ -24,20 +24,24 @@ export const PreviewSelectedImages: FC<PreviewSelectedImagesProps> = ({
     })
   }
 
-  return (
-    <div>
-      {selectedImages.map((imageUrl, index) => (
-        <div key={imageUrl} className='relative'>
-          <button
-            type='button'
-            onClick={() => handleDeleteImage(imageUrl, index)}
-            className='absolute bg-neutral-700/50 top-3 left-3 p-2 rounded-full hover:bg-neutral-700/90 hover:text-white'
-          >
-            <AiOutlineClose />
-          </button>
+  if (selectedImages.length === 1) return <PreviewSelectedImageItem index={0} imageUrl={selectedImages[0]} handleDeleteImage={handleDeleteImage} />
 
-          <img src={imageUrl} alt='' className='w-full rounded-xl' />
-        </div>
+  if (selectedImages.length === 2) return <div className='grid grid-cols-2 gap-2'>
+    {selectedImages.map((imageUrl, index) => (
+      <PreviewSelectedImageItem key={index} index={index} imageUrl={imageUrl} handleDeleteImage={handleDeleteImage} stylesImage='object-cover object-center' />
+    ))}
+  </div>
+
+  if (selectedImages.length === 3) return <div className='grid grid-cols-2 grid-rows-2 gap-2'>
+    {selectedImages.map((imageUrl, index) => (
+      <PreviewSelectedImageItem key={index} index={index} imageUrl={imageUrl} handleDeleteImage={handleDeleteImage} stylesDiv={index === 0 ? 'row-span-2' : ''} stylesImage={index === 0 ? 'object-cover' : ''} />
+    ))}
+  </div>
+
+  return (
+    <div className='grid grid-cols-2 grid-rows-2 gap-2'>
+      {selectedImages.map((imageUrl, index) => (
+        <PreviewSelectedImageItem key={index} index={index} imageUrl={imageUrl} handleDeleteImage={handleDeleteImage} stylesImage={'object-cover'} />
       ))}
     </div>
   )
