@@ -75,7 +75,7 @@ export const TweetForm: FC<TweetFormProps> = ({ mention, onComplete }) => {
     const exceedsEstablished = images!.length + selectedImages.length > 4
 
     if (exceedsEstablished) {
-      toast.warning('Solo se permiten 4 imagenes', {
+      toast.warning('Only 4 images allowed', {
         position: 'bottom-center',
       })
       return
