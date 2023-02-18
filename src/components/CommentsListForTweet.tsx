@@ -26,7 +26,7 @@ export const CommentsListForTweet: FC<CommentsListForTweetProps> = ({
 
   if (isLoading)
     return (
-      <div className='flex justify-center'>
+      <div className='flex justify-center pt-10'>
         <Spinner />
       </div>
     )

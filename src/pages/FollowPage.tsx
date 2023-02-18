@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import { NavLink, useParams, useLocation, Outlet } from 'react-router-dom'
+import { NavLink, useParams, useLocation, Outlet, useNavigate } from 'react-router-dom'
 
 import { Tab } from '@headlessui/react'
 
@@ -22,6 +22,7 @@ const tabsFollowAccounts = [
 export const FollowPage: FC = () => {
   const { username } = useParams() as { username: string }
   const location = useLocation()
+  const navigate = useNavigate()
 
   const activeLink = (path: string) => location.pathname === path
 
@@ -30,7 +31,7 @@ export const FollowPage: FC = () => {
       <Bar styles='border-b border-outline-layout'>
         <div className='flex gap-2 p-2'>
           <button
-            onClick={() => window.history.back()}
+            onClick={() => navigate(-1)}
             className='p-3 hover:bg-neutral-800 rounded-full transition-colors text-lg'
           >
             <AiOutlineArrowLeft />
@@ -50,11 +51,10 @@ export const FollowPage: FC = () => {
                   className={`w-full hover:bg-neutral-700/40 hover:transition-[background] py-3 text-center`}
                 >
                   <span
-                    className={`${
-                      activeLink(path(username))
+                    className={`${activeLink(path(username))
                         ? 'border-b-4 border-blue-500 font-bold'
                         : 'text-neutral-500'
-                    } py-3 text-lg`}
+                      } py-3 text-lg`}
                   >
                     {name}
                   </span>

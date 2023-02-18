@@ -28,14 +28,14 @@ export const UserFollowingPage: FC = () => {
 
   if (isLoading)
     return (
-      <div className='flex justify-center'>
+      <div className='flex justify-center pt-10'>
         <Spinner />
       </div>
     )
 
   if (error)
     return (
-      <div className='text-center text-red-600 text-xl'>
+      <div className='text-center text-red-600 text-xl py-6'>
         There was a mistake
       </div>
     )

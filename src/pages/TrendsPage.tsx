@@ -27,12 +27,12 @@ export const TrendsPage: FC = () => {
 
   if (isLoading)
     return (
-      <div className='flex justify-center'>
+      <div className='flex justify-center pt-10'>
         <Spinner />
       </div>
     )
 
-  if (error) return <div className='text-red-500'>Hubo un error</div>
+  if (error) return <div className='text-red-500 text-center text-xl py-6'>Hubo un error</div>
 
   return (
     <>

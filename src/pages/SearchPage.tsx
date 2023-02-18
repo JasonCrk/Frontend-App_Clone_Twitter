@@ -17,28 +17,26 @@ import Spinner from '../components/Spinner'
 import AccountItem from '../components/AccountItem'
 import TweetItem from '../components/TweetItem'
 
-const tabsFilters = [
-  {
-    name: 'Top',
-    path: (query: string) => `/search?q=${query}`,
-  },
-  {
-    name: 'Latest',
-    path: (query: string) => `/search?q=${query}&f=live`,
-  },
-  {
-    name: 'People',
-    path: (query: string) => `/search?q=${query}&f=user`,
-  },
-]
-
 export const SearchPage: FC = () => {
   const queries = useLoaderData() as ISearchTweetsParams
   const location = useLocation()
 
-  const locationSearch = `?q=${queries.query}${
-    queries.find ? '&f=' + queries.find : ''
-  }`
+  const tabsFilters = [
+    {
+      name: 'Top',
+      path: `/search?q=${queries.query}`,
+    },
+    {
+      name: 'Latest',
+      path: `/search?q=${queries.query}&f=live`,
+    },
+    {
+      name: 'People',
+      path: `/search?q=${queries.query}&f=user`,
+    },
+  ]
+
+  const locationSearch = `?q=${queries.query}${queries.find ? '&f=' + queries.find : ''}`
 
   const filterSelected = (path: string): boolean =>
     location.pathname + locationSearch === path
@@ -65,16 +63,15 @@ export const SearchPage: FC = () => {
               {tabsFilters.map(({ name, path }) => (
                 <Tab
                   key={name}
-                  to={path(queries.query)}
+                  to={path}
                   as={NavLink}
                   className={`w-full hover:bg-neutral-700/40 hover:transition-[background] py-3 text-center`}
                 >
                   <span
-                    className={`${
-                      filterSelected(path(queries.query))
-                        ? 'border-b-4 border-blue-500 font-bold'
-                        : 'text-neutral-500'
-                    } py-3 text-lg`}
+                    className={`${filterSelected(path)
+                      ? 'border-b-4 border-blue-500 font-bold'
+                      : 'text-neutral-500'
+                      } py-3 text-lg`}
                   >
                     {name}
                   </span>
@@ -86,7 +83,7 @@ export const SearchPage: FC = () => {
       </Bar>
 
       {isLoading ? (
-        <div className='flex justify-center mt-4'>
+        <div className='flex justify-center mt-6'>
           <Spinner />
         </div>
       ) : error ? (
@@ -99,11 +96,11 @@ export const SearchPage: FC = () => {
         <div className='divide-y divide-neutral-500'>
           {queries.find === 'user'
             ? (data as AccountInItem[]).map(account => (
-                <AccountItem key={account.id} {...account} />
-              ))
+              <AccountItem key={account.id} {...account} />
+            ))
             : (data as Tweet[]).map(tweet => (
-                <TweetItem key={tweet.id} tweetData={tweet} />
-              ))}
+              <TweetItem key={tweet.id} tweetData={tweet} />
+            ))}
         </div>
       )}
     </>

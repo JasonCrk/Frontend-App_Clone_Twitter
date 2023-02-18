@@ -5,6 +5,7 @@ import { useQuery } from 'react-query'
 import { AxiosError } from 'axios'
 import { Comment } from '../interfaces/Comment'
 import { getCommentById } from '../services/commentService'
+
 import Spinner from './Spinner'
 import { CommentItem } from './CommentItem'
 
@@ -23,7 +24,7 @@ export const CommentItemById: FC<CommentItemByIdProps> = ({ commentId }) => {
 
   if (isLoading)
     return (
-      <div className='flex justify-center'>
+      <div className='flex justify-center py-5'>
         <Spinner />
       </div>
     )

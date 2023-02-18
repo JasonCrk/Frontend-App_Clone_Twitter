@@ -31,7 +31,7 @@ export const HomePage: FC = () => {
       <Bar styles='text-xl py-3 px-4 font-bold'>Home</Bar>
 
       {isLoadingAuth ? (
-        <div className='flex justify-center'>
+        <div className='flex justify-center pt-10'>
           <Spinner />
         </div>
       ) : user && !isOpen ? (
@@ -39,7 +39,7 @@ export const HomePage: FC = () => {
       ) : null}
 
       {isLoading ? (
-        <div className='flex justify-center'>
+        <div className='flex justify-center pt-10'>
           <Spinner />
         </div>
       ) : error ? (

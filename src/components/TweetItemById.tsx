@@ -24,7 +24,7 @@ export const TweetItemById: FC<TweetItemByIdProps> = ({ tweetId }) => {
 
   if (isLoading)
     return (
-      <div className='flex justify-center'>
+      <div className='flex justify-center py-5'>
         <Spinner />
       </div>
     )

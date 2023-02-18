@@ -30,7 +30,7 @@ export const ExplorePage: FC = () => {
       </div>
 
       {isLoading ? (
-        <div className='flex justify-center'>
+        <div className='flex justify-center pt-10'>
           <Spinner />
         </div>
       ) : tweets ? (
