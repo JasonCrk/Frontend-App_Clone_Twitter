@@ -2,6 +2,7 @@ import { FC, useState } from 'react'
 
 import { redirect } from 'react-router-dom'
 
+import { shallow } from 'zustand/shallow'
 import { useAuthStore } from '../store/authStore'
 
 import { useMutation, useQueryClient } from 'react-query'
@@ -10,12 +11,17 @@ import { CommentInitialValue } from '../interfaces/Comment'
 import { createComment } from '../services/commentService'
 
 import { FileButton } from './form/FileButton'
+import { PreviewSelectedImages } from './PreviewSelectedImages'
 
 import { BsImage } from 'react-icons/bs'
 import { AiOutlineGif } from 'react-icons/ai'
 
 import { Formik, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
+
+import { toast } from 'react-toastify'
+
+import { fileListToFilesUrl } from '../utils/actionsFileList'
 
 const schemaFormValidate = Yup.object().shape({
   content: Yup.string().max(255, 'max 255 characters').required('Is required'),
@@ -27,16 +33,34 @@ interface CommentFormProps {
   getCommentFormData: (value: CommentInitialValue) => FormData
 }
 
+interface CommentFormState {
+  isFocusContent: boolean
+  selectedImages: string[]
+  selectedFileImages: File[]
+}
+
 export const CommentForm: FC<CommentFormProps> = ({
   placeholder,
   initialValue,
   getCommentFormData,
 }) => {
-  const [isFocusContent, setIsFocusContent] = useState(false)
+  const [isFocusContent, setIsFocusContent] = useState<
+    CommentFormState['isFocusContent']
+  >(false)
 
-  const user = useAuthStore(state => state.user)
-  const isAuth = useAuthStore(state => state.isAuth)
-  const token = useAuthStore(state => state.token!)
+  const [selectedImages, setSelectedImages] = useState<
+    CommentFormState['selectedImages']
+  >([])
+
+  const [selectedFileImages, setSelectedFileImages] = useState<
+    CommentFormState['selectedFileImages']
+  >([])
+
+  const { user, isAuth, token } = useAuthStore(state => ({
+    user: state.user,
+    isAuth: state.isAuth,
+    token: state.token!
+  }), shallow)
 
   const queryClient = useQueryClient()
 
@@ -51,19 +75,53 @@ export const CommentForm: FC<CommentFormProps> = ({
     },
   })
 
+  const handleChangeImage = (images: FileList | null) => {
+    const exceedsEstablished = images!.length + selectedImages.length > 4
+
+    if (exceedsEstablished) {
+      toast.warning('Solo se permiten 4 imagenes', {
+        position: 'bottom-center',
+      })
+      return
+    }
+
+    if (images) {
+      for (const image of images) {
+        setSelectedFileImages(prevImages => [...prevImages, image])
+      }
+    }
+
+    const imageUrls = fileListToFilesUrl(images)
+
+    imageUrls.forEach(imageUrl => {
+      setSelectedImages(prevImages => [...prevImages, imageUrl])
+    })
+  }
+
   const handleSubmit = async (
     value: CommentInitialValue,
     { setSubmitting }: FormikHelpers<CommentInitialValue>
   ) => {
     if (!isAuth) return redirect('/auth/signIn')
 
+    if (selectedFileImages && selectedFileImages.length > 4) {
+      toast.warning('Only 4 images allowed', {
+        position: 'bottom-center',
+      })
+
+      setSubmitting(false)
+      return
+    }
+
     const commentFormData = getCommentFormData(value)
 
     commentFormData.append('content', value.content)
 
-    value.images.forEach(image => {
-      commentFormData.append('images', image)
-    })
+    if (selectedFileImages) {
+      for (const image of selectedFileImages) {
+        commentFormData.append('images', image)
+      }
+    }
 
     createCommentMutation({ accessToken: token!, commentData: commentFormData })
 
@@ -94,20 +152,17 @@ export const CommentForm: FC<CommentFormProps> = ({
           <form onSubmit={handleSubmit}>
             <div className='flex flex-col w-full items-start gap-2'>
               <div
-                className={`${
-                  isFocusContent ? 'h-fit' : 'flex gap-2 h-11'
-                } w-full`}
+                className={`${isFocusContent ? 'h-fit' : 'flex gap-2 h-11'
+                  } w-full`}
               >
                 <textarea
                   name='content'
                   placeholder={placeholder}
-                  className={`commentScroll w-full focus:outline-none bg-transparent placeholder:text-neutral-600 resize-none border-b-2 transition-colors ${
-                    isFocusContent ? 'text-xl' : 'text-2xl'
-                  } ${
-                    errors.content
+                  className={`commentScroll w-full focus:outline-none bg-transparent placeholder:text-neutral-600 resize-none border-b-2 transition-colors ${isFocusContent ? 'text-xl' : 'text-2xl'
+                    } ${errors.content
                       ? 'border-red-500'
                       : 'focus:border-blue-600 border-neutral-500'
-                  }`}
+                    }`}
                   onFocus={() => setIsFocusContent(true)}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -128,38 +183,49 @@ export const CommentForm: FC<CommentFormProps> = ({
               </div>
 
               {isFocusContent && (
-                <div className='flex justify-between w-full'>
-                  <div className='flex flex-row items-center justify-start'>
-                    <FileButton
-                      id='images'
-                      name='images'
-                      Icon={BsImage}
-                      multipleSelect
-                      accept='image/png, image/jpeg'
-                      onChange={e =>
-                        setFieldValue('images', e.currentTarget.files)
-                      }
+                <>
+                  {selectedImages.length > 0 && (
+                    <PreviewSelectedImages
+                      selectedImages={selectedImages}
+                      setFilesImage={setSelectedImages}
+                      setSelectedFileImages={setSelectedFileImages}
                     />
+                  )}
+                  <div className='flex justify-between w-full'>
+                    <div className='flex flex-row items-center justify-start'>
+                      <FileButton
+                        id='images'
+                        name='images'
+                        Icon={BsImage}
+                        multipleSelect
+                        accept='image/png, image/jpeg'
+                        onChange={e => {
+                          handleChangeImage(e.currentTarget.files)
+                          setFieldValue('images', e.currentTarget.files)
+                        }}
+                      />
 
-                    <FileButton
-                      id='gifs'
-                      name='images'
-                      Icon={AiOutlineGif}
-                      multipleSelect
-                      accept='image/gif'
-                      onChange={e =>
-                        setFieldValue('images', e.currentTarget.files)
-                      }
-                    />
+                      <FileButton
+                        id='gifs'
+                        name='images'
+                        Icon={AiOutlineGif}
+                        multipleSelect
+                        accept='image/gif'
+                        onChange={e => {
+                          handleChangeImage(e.currentTarget.files)
+                          setFieldValue('images', e.currentTarget.files)
+                        }}
+                      />
+                    </div>
+                    <button
+                      type='submit'
+                      className='bg-blue-600 px-5 py-2 rounded-full font-bold hover:transition-colors disabled:opacity-20'
+                      disabled={isSubmitting || !!errors.content || !isFocusContent}
+                    >
+                      Reply
+                    </button>
                   </div>
-                  <button
-                    type='submit'
-                    className='bg-blue-600 px-5 py-2 rounded-full font-bold hover:transition-colors disabled:opacity-20'
-                    disabled={isSubmitting || !!errors.content}
-                  >
-                    Reply
-                  </button>
-                </div>
+                </>
               )}
             </div>
           </form>
