@@ -25,15 +25,6 @@ export const TrendsPage: FC = () => {
     getTrendTweetsLargeList
   )
 
-  if (isLoading)
-    return (
-      <div className='flex justify-center pt-10'>
-        <Spinner />
-      </div>
-    )
-
-  if (error) return <div className='text-red-500 text-center text-xl py-6'>Hubo un error</div>
-
   return (
     <>
       <Bar styles='py-3 px-4 flex gap-6 text-xl items-center'>
@@ -45,19 +36,29 @@ export const TrendsPage: FC = () => {
         </button>
         <p className='font-bold'>Trends</p>
       </Bar>
-      {trends && Object.keys(trends).length === 0 ? (
-        <div className='pt-3 pb-6 text-center text-lg text-blue-200'>
-          No trends :(
-        </div>
-      ) : (
-        Object.keys(trends!).map((hashtag, index) => (
-          <TrendTweetsItem
-            key={index}
-            hashtag={hashtag}
-            countTweets={trends![hashtag]}
-          />
-        ))
-      )}
+
+      {
+        isLoading ? (
+          <div className='flex justify-center pt-10'>
+            <Spinner />
+          </div>
+        ) : error ? (
+          <div className='text-red-500 text-center text-xl py-6'>Hubo un error</div>
+        ) : trends ? (
+          Object.keys(trends).length === 0 ? (
+            <div className='pt-3 pb-6 text-center text-lg text-blue-200'>
+              No trends :(
+            </div>
+          ) : (
+            Object.keys(trends!).map((hashtag, index) => (
+              <TrendTweetsItem
+                key={index}
+                hashtag={hashtag}
+                countTweets={trends![hashtag]}
+              />
+            )))
+        ) : null
+      }
     </>
   )
 }
