@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import { useParams, useNavigate, Link, redirect } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 
 import { useAuthStore } from '../store/authStore'
 
@@ -65,7 +65,7 @@ export const DetailCommentPage: FC = () => {
   }
 
   const handleLikeComment = () => {
-    if (!isAuth) return redirect('/auth/signIn')
+    if (!isAuth) return navigate('/auth/signIn')
     likeCommentMutation({ commentId: comment!.id, accessToken: token })
   }
 
