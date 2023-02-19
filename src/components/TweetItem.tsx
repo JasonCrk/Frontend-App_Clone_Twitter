@@ -77,6 +77,11 @@ const TweetItem: FC<TweetItemProps> = ({
     likeTweetMutation({ tweetId: id, accessToken: token! })
   }
 
+  const handleShowCreateCommentModal = () => {
+    if (!isAuth) return navigate('/auth/signIn')
+    handleOpenCreateCommentForTweet(id)
+  }
+
   const handleDeleteTweet = () => {
     queryClient.invalidateQueries('tweets')
     queryClient.invalidateQueries('trendTweetsList')
@@ -174,7 +179,7 @@ const TweetItem: FC<TweetItemProps> = ({
 
             <button
               className='flex group items-center gap-2 text-lg relative'
-              onClick={() => handleOpenCreateCommentForTweet(id)}
+              onClick={() => handleShowCreateCommentModal()}
             >
               <AiOutlineComment className='p-1.5 text-3xl group-hover:bg-blue-500 group-hover:bg-opacity-80 group-hover:transition-[background] rounded-full' />
               <span className='group-hover:text-blue-500 group-hover:transition-colors'>
