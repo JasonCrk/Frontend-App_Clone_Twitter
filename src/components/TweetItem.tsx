@@ -1,8 +1,10 @@
-import type { FC } from 'react'
+import { FC, useContext } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
 
 import { useAuthStore } from '../store/authStore'
+
+import { createCommentForTweetContext } from '../context/CreateCommentForTweetProvider'
 
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -21,10 +23,17 @@ import { formatTimezone } from '../utils/formatDate'
 
 interface TweetItemProps {
   tweetData: Tweet
+  hideActions?: boolean
+  noLink?: boolean
   showConnection?: boolean
 }
 
-const TweetItem: FC<TweetItemProps> = ({ tweetData, showConnection }) => {
+const TweetItem: FC<TweetItemProps> = ({
+  tweetData,
+  noLink,
+  showConnection,
+  hideActions,
+}) => {
   const {
     id,
     content,
@@ -43,6 +52,10 @@ const TweetItem: FC<TweetItemProps> = ({ tweetData, showConnection }) => {
   const userAuth = useAuthStore(state => state.user)
   const isAuth = useAuthStore(state => state.isAuth)
   const token = useAuthStore(state => state.token)
+
+  const { handleOpenCreateCommentForTweet } = useContext(
+    createCommentForTweetContext
+  )
 
   const { mutate: likeTweetMutation } = useMutation({
     mutationFn: likeTweet,
@@ -70,12 +83,18 @@ const TweetItem: FC<TweetItemProps> = ({ tweetData, showConnection }) => {
   }
 
   return (
-    <div className='px-4 pt-4 grid grid-cols-tweet gap-4 border-neutral-500 relative hover:bg-white/5 hover:transition-colors'>
-      <TweetMenu
-        username={user.username}
-        tweetId={id}
-        actionDeleteTweet={handleDeleteTweet}
-      />
+    <div
+      className={`px-4 pt-4 grid grid-cols-tweet gap-4 border-neutral-500 relative ${
+        !noLink && 'hover:bg-white/5 hover:transition-colors'
+      }`}
+    >
+      {!hideActions && (
+        <TweetMenu
+          username={user.username}
+          tweetId={id}
+          actionDeleteTweet={handleDeleteTweet}
+        />
+      )}
 
       <div className='flex flex-col items-center'>
         <Link to={`/${user.username}`}>
@@ -89,10 +108,13 @@ const TweetItem: FC<TweetItemProps> = ({ tweetData, showConnection }) => {
         {showConnection && <div className='w-[2px] h-full bg-outline-layout' />}
       </div>
 
-      <div className='pb-4'>
+      <div className={!hideActions ? 'pb-4' : ''}>
         <div
-          className='cursor-pointer'
-          onClick={() => navigate(`/tweets/${id}`)}
+          className={!noLink ? 'cursor-pointer' : ''}
+          onClick={() => {
+            if (noLink) return
+            navigate(`/tweets/${id}`)
+          }}
         >
           <Link
             to={`/${user.username}`}
@@ -115,7 +137,7 @@ const TweetItem: FC<TweetItemProps> = ({ tweetData, showConnection }) => {
 
         {mention && <TweetMentionItem tweet={mention} isLink />}
 
-        {tweetHashtags && (
+        {tweetHashtags && !hideActions && (
           <div className='flex flex-wrap mt-2'>
             {tweetHashtags.map(hashtag => (
               <FilterTag key={hashtag} tag={hashtag.trim()} />
@@ -123,37 +145,44 @@ const TweetItem: FC<TweetItemProps> = ({ tweetData, showConnection }) => {
           </div>
         )}
 
-        <div className='flex justify-start gap-8 mt-2'>
-          <button
-            className={`${likeCheck() && 'text-pink-600'
+        {!hideActions && (
+          <div className='flex justify-start gap-8 mt-2'>
+            <button
+              className={`${
+                likeCheck() && 'text-pink-600'
               } flex group items-center gap-2 text-lg relative`}
-            onClick={() => handleLikeTweet()}
-          >
-            {likeCheck() ? (
-              <AiFillHeart
-                className={`${likeCheck() && 'group-hover:text-white'
-                  } p-1.5 text-3xl group-hover:bg-pink-600 group-hover:bg-opacity-80 group-hover:transition-colors rounded-full`}
-              />
-            ) : (
-              <AiOutlineHeart
-                className={`p-1.5 text-3xl group-hover:bg-pink-600 group-hover:bg-opacity-80 group-hover:transition-[background] rounded-full`}
-              />
-            )}
-
-            <span
-              className={`group-hover:text-pink-600 group-hover:transition-colors`}
+              onClick={() => handleLikeTweet()}
             >
-              {likes.length}
-            </span>
-          </button>
+              {likeCheck() ? (
+                <AiFillHeart
+                  className={`${
+                    likeCheck() && 'group-hover:text-white'
+                  } p-1.5 text-3xl group-hover:bg-pink-600 group-hover:bg-opacity-80 group-hover:transition-colors rounded-full`}
+                />
+              ) : (
+                <AiOutlineHeart
+                  className={`p-1.5 text-3xl group-hover:bg-pink-600 group-hover:bg-opacity-80 group-hover:transition-[background] rounded-full`}
+                />
+              )}
 
-          <button className='flex group items-center gap-2 text-lg relative'>
-            <AiOutlineComment className='p-1.5 text-3xl group-hover:bg-blue-500 group-hover:bg-opacity-80 group-hover:transition-[background] rounded-full' />
-            <span className='group-hover:text-blue-500 group-hover:transition-colors'>
-              {comments.length}
-            </span>
-          </button>
-        </div>
+              <span
+                className={`group-hover:text-pink-600 group-hover:transition-colors`}
+              >
+                {likes.length}
+              </span>
+            </button>
+
+            <button
+              className='flex group items-center gap-2 text-lg relative'
+              onClick={() => handleOpenCreateCommentForTweet(id)}
+            >
+              <AiOutlineComment className='p-1.5 text-3xl group-hover:bg-blue-500 group-hover:bg-opacity-80 group-hover:transition-[background] rounded-full' />
+              <span className='group-hover:text-blue-500 group-hover:transition-colors'>
+                {comments.length}
+              </span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

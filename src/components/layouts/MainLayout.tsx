@@ -1,12 +1,15 @@
-import { FC } from 'react'
+import type { FC } from 'react'
 
 import { Outlet } from 'react-router-dom'
-import CreateTweetProvider from '../../context/CreateTweetProvider'
 
 import { useAuthStore } from '../../store/authStore'
-import { BarAuthOptions } from '../BarAuthOptions'
-import { ModalTweetForm } from '../ModalTweetForm'
 
+import CreateCommentForTweetProvider from '../../context/CreateCommentForTweetProvider'
+import CreateTweetProvider from '../../context/CreateTweetProvider'
+
+import { BarAuthOptions } from '../BarAuthOptions'
+import { ModalCommentFormForTweet } from '../ModalCommentFormForTweet'
+import { ModalTweetForm } from '../ModalTweetForm'
 import VerticalNavbar from '../VerticalNavbar'
 import VerticalSearchTweets from '../VerticalSearchTweets'
 
@@ -19,14 +22,20 @@ export const MainLayout: FC = () => {
         <CreateTweetProvider>
           <main className='grid max-sm:grid-cols-sm sm:grid-cols-sm md:grid-cols-md lg:grid-cols-md xl:grid-cols-xl 2xl:grid-cols-lg divide-x divide-outline-layout max-md:border-r max-md:border-outline-layout w-full'>
             <VerticalNavbar />
-            <div className='flex flex-col text-white'>
-              <Outlet />
-            </div>
+
+            <CreateCommentForTweetProvider>
+              <div className='flex flex-col text-white'>
+                <Outlet />
+              </div>
+              <ModalCommentFormForTweet />
+            </CreateCommentForTweetProvider>
+
             <VerticalSearchTweets />
           </main>
           <ModalTweetForm />
         </CreateTweetProvider>
       </div>
+
       {!isAuth && <BarAuthOptions />}
     </div>
   )

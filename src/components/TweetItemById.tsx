@@ -11,9 +11,15 @@ import TweetItem from './TweetItem'
 
 interface TweetItemByIdProps {
   tweetId: string
+  hideActions?: boolean
+  noLink?: boolean
 }
 
-export const TweetItemById: FC<TweetItemByIdProps> = ({ tweetId }) => {
+export const TweetItemById: FC<TweetItemByIdProps> = ({
+  tweetId,
+  hideActions,
+  noLink,
+}) => {
   const {
     data: tweet,
     isLoading,
@@ -32,5 +38,12 @@ export const TweetItemById: FC<TweetItemByIdProps> = ({ tweetId }) => {
   if (error)
     return <div className='text-center text-lg text-red-600'>Hubo un error</div>
 
-  return <TweetItem tweetData={tweet!} showConnection />
+  return (
+    <TweetItem
+      tweetData={tweet!}
+      showConnection
+      noLink={noLink}
+      hideActions={hideActions}
+    />
+  )
 }

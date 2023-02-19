@@ -1,7 +1,5 @@
 import { FC, useState } from 'react'
 
-import { redirect } from 'react-router-dom'
-
 import { shallow } from 'zustand/shallow'
 import { useAuthStore } from '../store/authStore'
 
@@ -28,8 +26,10 @@ const schemaFormValidate = Yup.object().shape({
 })
 
 interface CommentFormProps {
+  focus?: boolean
   placeholder: string
   initialValue: CommentInitialValue
+  afterSend?: () => void
   getCommentFormData: (value: CommentInitialValue) => FormData
 }
 
@@ -40,13 +40,15 @@ interface CommentFormState {
 }
 
 export const CommentForm: FC<CommentFormProps> = ({
+  focus,
+  afterSend,
   placeholder,
   initialValue,
   getCommentFormData,
 }) => {
   const [isFocusContent, setIsFocusContent] = useState<
     CommentFormState['isFocusContent']
-  >(false)
+  >(focus || false)
 
   const [selectedImages, setSelectedImages] = useState<
     CommentFormState['selectedImages']
@@ -56,30 +58,25 @@ export const CommentForm: FC<CommentFormProps> = ({
     CommentFormState['selectedFileImages']
   >([])
 
-  const { user, isAuth, token } = useAuthStore(state => ({
-    user: state.user,
-    isAuth: state.isAuth,
-    token: state.token!
-  }), shallow)
+  const { user, token } = useAuthStore(
+    state => ({
+      user: state.user,
+      token: state.token!,
+    }),
+    shallow
+  )
 
   const queryClient = useQueryClient()
 
   const { mutate: createCommentMutation } = useMutation({
     mutationFn: createComment,
-    onSuccess: () => {
-      queryClient.invalidateQueries('tweetComments')
-      queryClient.invalidateQueries('commentComments')
-    },
-    onError: error => {
-      console.log(error)
-    },
   })
 
   const handleChangeImage = (images: FileList | null) => {
     const exceedsEstablished = images!.length + selectedImages.length > 4
 
     if (exceedsEstablished) {
-      toast.warning('Solo se permiten 4 imagenes', {
+      toast.warning('only 4 images allowed', {
         position: 'bottom-center',
       })
       return
@@ -102,7 +99,7 @@ export const CommentForm: FC<CommentFormProps> = ({
     value: CommentInitialValue,
     { setSubmitting }: FormikHelpers<CommentInitialValue>
   ) => {
-    if (!isAuth) return redirect('/auth/signIn')
+    setSubmitting(true)
 
     if (selectedFileImages && selectedFileImages.length > 4) {
       toast.warning('Only 4 images allowed', {
@@ -123,10 +120,22 @@ export const CommentForm: FC<CommentFormProps> = ({
       }
     }
 
-    createCommentMutation({ accessToken: token!, commentData: commentFormData })
+    createCommentMutation(
+      { accessToken: token!, commentData: commentFormData },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries('tweetComments')
+          queryClient.invalidateQueries('commentComments')
+          queryClient.invalidateQueries('tweets')
 
-    console.log(value)
-    setSubmitting(false)
+          if (afterSend) afterSend()
+          setSubmitting(false)
+        },
+        onError: error => {
+          console.log(error)
+        },
+      }
+    )
   }
 
   return (
@@ -152,17 +161,20 @@ export const CommentForm: FC<CommentFormProps> = ({
           <form onSubmit={handleSubmit}>
             <div className='flex flex-col w-full items-start gap-2'>
               <div
-                className={`${isFocusContent ? 'h-fit' : 'flex gap-2 h-11'
-                  } w-full`}
+                className={`${
+                  isFocusContent ? 'h-fit' : 'flex gap-2 h-11'
+                } w-full`}
               >
                 <textarea
                   name='content'
                   placeholder={placeholder}
-                  className={`commentScroll w-full focus:outline-none bg-transparent placeholder:text-neutral-600 resize-none border-b-2 transition-colors ${isFocusContent ? 'text-xl' : 'text-2xl'
-                    } ${errors.content
+                  className={`commentScroll w-full focus:outline-none bg-transparent placeholder:text-neutral-600 resize-none border-b-2 transition-colors ${
+                    isFocusContent ? 'text-xl' : 'text-2xl'
+                  } ${
+                    errors.content
                       ? 'border-red-500'
                       : 'focus:border-blue-600 border-neutral-500'
-                    }`}
+                  }`}
                   onFocus={() => setIsFocusContent(true)}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -220,7 +232,9 @@ export const CommentForm: FC<CommentFormProps> = ({
                     <button
                       type='submit'
                       className='bg-blue-600 px-5 py-2 rounded-full font-bold hover:transition-colors disabled:opacity-20'
-                      disabled={isSubmitting || !!errors.content || !isFocusContent}
+                      disabled={
+                        isSubmitting || !!errors.content || !isFocusContent
+                      }
                     >
                       Reply
                     </button>

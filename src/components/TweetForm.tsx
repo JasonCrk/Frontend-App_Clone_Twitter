@@ -40,11 +40,17 @@ interface TweetFormState {
 interface TweetFormProps {
   onComplete: () => void
   mention?: string
+  focus?: boolean
 }
 
-export const TweetForm: FC<TweetFormProps> = ({ mention, onComplete }) => {
-  const [isFocusContent, setIsFocusContent] =
-    useState<TweetFormState['isFocusContent']>(false)
+export const TweetForm: FC<TweetFormProps> = ({
+  mention,
+  onComplete,
+  focus,
+}) => {
+  const [isFocusContent, setIsFocusContent] = useState<
+    TweetFormState['isFocusContent']
+  >(focus || false)
 
   const [isFocusHashtags, setIsFocusHashtags] =
     useState<TweetFormState['isFocusHashtags']>(false)
@@ -163,17 +169,21 @@ export const TweetForm: FC<TweetFormProps> = ({ mention, onComplete }) => {
         }) => (
           <form
             onSubmit={handleSubmit}
-            className={`flex flex-col w-full items-start ${mention ? 'gap-4' : 'gap-2'}`}
+            className={`flex flex-col w-full items-start ${
+              mention ? 'gap-4' : 'gap-2'
+            }`}
           >
             <div
-              className={`${isFocusContent || mention ? 'h-fit' : 'flex gap-2 h-11'
-                } w-full`}
+              className={`${
+                isFocusContent || mention ? 'h-fit' : 'flex gap-2 h-11'
+              } w-full`}
             >
               <textarea
                 name='content'
                 placeholder="What's happening?"
-                className={`commentScroll w-full focus:outline-none bg-transparent placeholder:text-neutral-600 resize-none transition-colors ${isFocusContent || mention ? 'text-xl' : 'text-2xl'
-                  } ${errors.content && 'placeholder:text-neutral-700'}`}
+                className={`commentScroll w-full focus:outline-none bg-transparent placeholder:text-neutral-600 resize-none transition-colors ${
+                  isFocusContent || mention ? 'text-xl' : 'text-2xl'
+                } ${errors.content && 'placeholder:text-neutral-700'}`}
                 onFocus={() => setIsFocusContent(true)}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -229,8 +239,9 @@ export const TweetForm: FC<TweetFormProps> = ({ mention, onComplete }) => {
                   name='hashtags'
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`bg-black outline-none px-2 py-1 border-b border-blue-500 placeholder:text-neutral-600 w-full ${isFocusHashtags ? 'inline-block' : 'hidden'
-                    }`}
+                  className={`bg-black outline-none px-2 py-1 border-b border-blue-500 placeholder:text-neutral-600 w-full ${
+                    isFocusHashtags ? 'inline-block' : 'hidden'
+                  }`}
                   placeholder='separate with ","'
                   type='text'
                 />
