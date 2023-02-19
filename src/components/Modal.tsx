@@ -1,10 +1,12 @@
 import { FC, ReactNode, Fragment } from 'react'
 
 import { Dialog, Transition } from '@headlessui/react'
+import { AiOutlineClose } from 'react-icons/ai'
 
 interface ModalProps {
   isOpen: boolean
   center?: boolean
+  styles: string
   closeModal: () => void
   children: ReactNode
 }
@@ -12,6 +14,7 @@ interface ModalProps {
 export const Modal: FC<ModalProps> = ({
   children,
   isOpen,
+  styles,
   closeModal,
   center,
 }) => {
@@ -45,7 +48,16 @@ export const Modal: FC<ModalProps> = ({
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
-              {children}
+              <Dialog.Panel className={styles}>
+                <button
+                  className='absolute p-2 rounded-full top-2 left-2 text-xl hover:bg-neutral-800'
+                  onClick={() => closeModal()}
+                >
+                  <AiOutlineClose />
+                </button>
+
+                {children}
+              </Dialog.Panel>
             </Transition.Child>
           </div>
         </div>

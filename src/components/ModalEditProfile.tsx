@@ -7,8 +7,6 @@ import { useMutation, useQueryClient } from 'react-query'
 import { AccountInitialValues, AccountInProfile } from '../interfaces/Account'
 import { updateProfile } from '../services/userService'
 
-import { Dialog } from '@headlessui/react'
-
 import { Formik, FormikHelpers, Form } from 'formik'
 import * as Yup from 'yup'
 
@@ -137,131 +135,132 @@ export const ModalEditProfile: FC<ModalEditProfileProps> = ({ profile }) => {
         </button>
       </div>
 
-      <Modal isOpen={isOpen} closeModal={handleCloseModal} center>
-        <Dialog.Panel
-          className={
-            'w-full max-w-lg max-h-[40rem] transform overflow-y-scroll rounded-2xl bg-black align-middle transition-all shadow-neutral-800 shadow-border relative text-white'
-          }
+      <Modal
+        isOpen={isOpen}
+        closeModal={handleCloseModal}
+        center
+        styles={
+          'w-full max-w-lg max-h-[40rem] transform overflow-y-scroll rounded-2xl bg-black align-middle transition-all shadow-neutral-800 shadow-border relative text-white'
+        }
+      >
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleOnSubmit}
         >
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleOnSubmit}
-          >
-            {({ setFieldValue, isSubmitting, errors }) => (
-              <Form>
-                <Bar styles='flex justify-between p-3'>
-                  <div className='flex gap-2 items-center'>
-                    <button
-                      type='button'
-                      className='p-2 rounded-full text-xl hover:bg-neutral-800'
-                      onClick={() => handleCloseModal()}
-                    >
-                      <AiOutlineClose />
-                    </button>
-                    <h2 className='font-bold'>Edit profile</h2>
-                  </div>
-
+          {({ setFieldValue, isSubmitting, errors }) => (
+            <Form>
+              <Bar styles='flex justify-between p-3'>
+                <div className='flex gap-2 items-center'>
                   <button
-                    type='submit'
-                    disabled={isSubmitting}
-                    className='disabled:opacity-20 px-4 py-1 font-bold rounded-full bg-white text-black'
+                    type='button'
+                    className='p-2 rounded-full text-xl hover:bg-neutral-800'
+                    onClick={() => handleCloseModal()}
                   >
-                    save
+                    <AiOutlineClose />
                   </button>
-                </Bar>
+                  <h2 className='font-bold'>Edit profile</h2>
+                </div>
 
-                <div className='relative'>
-                  <div className='relative mb-14'>
+                <button
+                  type='submit'
+                  disabled={isSubmitting}
+                  className='disabled:opacity-20 px-4 py-1 font-bold rounded-full bg-white text-black'
+                >
+                  save
+                </button>
+              </Bar>
+
+              <div className='relative'>
+                <div className='relative mb-14'>
+                  <img
+                    src={previewHeader}
+                    alt=''
+                    className='w-full h-40 object-cover'
+                  />
+                  <label
+                    htmlFor='header'
+                    className='absolute inset-0 m-auto bg-neutral-900/60 hover:bg-neutral-700/60 hover:transition-colors rounded-full w-fit h-fit p-2 text-2xl cursor-pointer'
+                  >
+                    <MdAddPhotoAlternate />
+                  </label>
+                  <input
+                    id='header'
+                    name='header'
+                    className='hidden'
+                    type='file'
+                    accept='image/png, image/jpeg'
+                    onChange={e => {
+                      setFieldValue('header', e.currentTarget.files![0])
+                      setPreviewHeader(
+                        URL.createObjectURL(e.currentTarget.files![0])
+                      )
+                    }}
+                  />
+                </div>
+
+                <div className='absolute top-28 left-5'>
+                  <div className='relative'>
                     <img
-                      src={previewHeader}
+                      src={previewAvatar}
                       alt=''
-                      className='w-full h-40 object-cover'
+                      className='w-28 h-28 rounded-full border-black border-4 object-cover'
                     />
                     <label
-                      htmlFor='header'
+                      htmlFor='avatar'
                       className='absolute inset-0 m-auto bg-neutral-900/60 hover:bg-neutral-700/60 hover:transition-colors rounded-full w-fit h-fit p-2 text-2xl cursor-pointer'
                     >
                       <MdAddPhotoAlternate />
                     </label>
                     <input
-                      id='header'
-                      name='header'
+                      id='avatar'
+                      name='avatar'
                       className='hidden'
                       type='file'
                       accept='image/png, image/jpeg'
                       onChange={e => {
-                        setFieldValue('header', e.currentTarget.files![0])
-                        setPreviewHeader(
+                        setFieldValue('avatar', e.currentTarget.files![0])
+                        setPreviewAvatar(
                           URL.createObjectURL(e.currentTarget.files![0])
                         )
                       }}
                     />
                   </div>
-
-                  <div className='absolute top-28 left-5'>
-                    <div className='relative'>
-                      <img
-                        src={previewAvatar}
-                        alt=''
-                        className='w-28 h-28 rounded-full border-black border-4 object-cover'
-                      />
-                      <label
-                        htmlFor='avatar'
-                        className='absolute inset-0 m-auto bg-neutral-900/60 hover:bg-neutral-700/60 hover:transition-colors rounded-full w-fit h-fit p-2 text-2xl cursor-pointer'
-                      >
-                        <MdAddPhotoAlternate />
-                      </label>
-                      <input
-                        id='avatar'
-                        name='avatar'
-                        className='hidden'
-                        type='file'
-                        accept='image/png, image/jpeg'
-                        onChange={e => {
-                          setFieldValue('avatar', e.currentTarget.files![0])
-                          setPreviewAvatar(
-                            URL.createObjectURL(e.currentTarget.files![0])
-                          )
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className='flex flex-col gap-3 p-4'>
-                    <CustomField
-                      placeholder='Enter your name'
-                      label='Name'
-                      error={errors.firstName}
-                      name='firstName'
-                      type='text'
-                    />
-                    <CustomTextarea
-                      placeholder='Enter your bibliography'
-                      label='Bibliography'
-                      error={errors.bibliography}
-                      name='bibliography'
-                    />
-                    <CustomField
-                      placeholder='Enter your location'
-                      label='Location'
-                      error={errors.location}
-                      name='location'
-                      type='text'
-                    />
-                    <CustomField
-                      placeholder='Enter your website'
-                      label='Website'
-                      error={errors.website}
-                      name='website'
-                      type='url'
-                    />
-                  </div>
                 </div>
-              </Form>
-            )}
-          </Formik>
-        </Dialog.Panel>
+
+                <div className='flex flex-col gap-3 p-4'>
+                  <CustomField
+                    placeholder='Enter your name'
+                    label='Name'
+                    error={errors.firstName}
+                    name='firstName'
+                    type='text'
+                  />
+                  <CustomTextarea
+                    placeholder='Enter your bibliography'
+                    label='Bibliography'
+                    error={errors.bibliography}
+                    name='bibliography'
+                  />
+                  <CustomField
+                    placeholder='Enter your location'
+                    label='Location'
+                    error={errors.location}
+                    name='location'
+                    type='text'
+                  />
+                  <CustomField
+                    placeholder='Enter your website'
+                    label='Website'
+                    error={errors.website}
+                    name='website'
+                    type='url'
+                  />
+                </div>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </Modal>
     </>
   )
