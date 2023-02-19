@@ -1,6 +1,6 @@
 import { FC, Fragment } from 'react'
 
-import { redirect } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { useAuthStore } from '../store/authStore'
 
@@ -19,12 +19,13 @@ interface UserOptionsProps {
 
 const UserOptions: FC<UserOptionsProps> = ({ user }) => {
   const { setIsAuth, setUser } = useAuthStore()
+  const navigate = useNavigate()
 
   const handleLogOut = () => {
-    redirect('/explore')
     setIsAuth(false)
     setUser(null)
     window.localStorage.removeItem('accessToken_twitter')
+    navigate('/explore')
   }
 
   return (
