@@ -22,7 +22,7 @@ export const MainLayout: FC = () => {
     <div className='bg-black'>
       <div
         className={`container mx-auto sm:px-0 md:px-0 lg:px-4 xl:px-30 2xl:px-40 w-full ${
-          isAuth && 'mb-20'
+          !isAuth && 'mb-20'
         }`}
       >
         <CreateTweetProvider>
