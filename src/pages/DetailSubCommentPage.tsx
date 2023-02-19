@@ -16,6 +16,7 @@ import { CommentItemById } from '../components/CommentItemById'
 import { GridImages } from '../components/GridImages'
 import { CommentsListForComment } from '../components/CommentsListForComment'
 import { CommentFormForComment } from '../components/CommentFormForComment'
+import { CommentMenu } from '../components/CommentMenu'
 
 import {
   AiFillHeart,
@@ -93,7 +94,10 @@ export const DetailSubCommentPage: FC = () => {
       ) : comment ? (
         <>
           <div className='p-4 relative border-b border-b-outline-layout'>
+            <CommentMenu commentData={comment} />
+
             <div className='absolute top-0 left-[2.45rem] w-[2px] h-3 bg-outline-layout' />
+
             <Link
               to={`/${comment.user.username}`}
               className='flex gap-3 mb-4 w-fit'

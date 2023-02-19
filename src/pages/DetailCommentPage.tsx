@@ -26,6 +26,7 @@ import {
 import { BsFillPatchCheckFill } from 'react-icons/bs'
 
 import { formatDateTime } from '../utils/formatDate'
+import { CommentMenu } from '../components/CommentMenu'
 
 export const DetailCommentPage: FC = () => {
   const { tweetId, commentId } = useParams() as {
@@ -92,7 +93,10 @@ export const DetailCommentPage: FC = () => {
       ) : comment ? (
         <>
           <div className='p-4 relative border-b border-b-outline-layout'>
+            <CommentMenu commentData={comment} />
+
             <div className='absolute top-0 left-[2.45rem] w-[2px] h-3 bg-outline-layout' />
+
             <Link
               to={`/${comment.user.username}`}
               className='flex gap-3 mb-4 w-fit'
