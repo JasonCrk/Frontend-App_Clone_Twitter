@@ -105,7 +105,7 @@ export const TweetForm: FC<TweetFormProps> = ({
     { setSubmitting, resetForm }: FormikHelpers<TweetInitialValue>
   ) => {
     if (selectedFileImages && selectedFileImages.length > 4) {
-      toast.warning('Solo se permiten 4 imagenes', {
+      toast.warning('Only 4 images allowed', {
         position: 'bottom-center',
       })
 
