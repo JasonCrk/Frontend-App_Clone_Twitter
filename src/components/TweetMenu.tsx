@@ -30,7 +30,7 @@ export const TweetMenu: FC<TweetMenuProps> = ({
   tweetId,
   actionDeleteTweet,
 }) => {
-  const { handleOpen } = useContext(createTweetContext)
+  const { handleOpenCreateTweet } = useContext(createTweetContext)
 
   const { userAuth, isAuth, token } = useAuthStore(
     state => ({
@@ -54,7 +54,7 @@ export const TweetMenu: FC<TweetMenuProps> = ({
   }
 
   const handleMentionTweet = () => {
-    handleOpen(tweetId)
+    handleOpenCreateTweet(tweetId)
   }
 
   return (
