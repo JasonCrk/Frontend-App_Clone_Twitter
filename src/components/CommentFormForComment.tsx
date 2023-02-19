@@ -6,10 +6,14 @@ import { CommentForm } from './CommentForm'
 
 interface CommentFormForCommentProps {
   commentId: string
+  autoFocus?: boolean
+  afterSend?: () => void
 }
 
 export const CommentFormForComment: FC<CommentFormForCommentProps> = ({
   commentId,
+  autoFocus,
+  afterSend,
 }) => {
   const commentFormData = (value: CommentInitialValue) => {
     const commentFormData = new FormData()
@@ -26,6 +30,8 @@ export const CommentFormForComment: FC<CommentFormForCommentProps> = ({
 
   return (
     <CommentForm
+      focus={autoFocus}
+      afterSend={afterSend}
       placeholder='Tweet you reply'
       initialValue={commentInitialValue}
       getCommentFormData={commentFormData}

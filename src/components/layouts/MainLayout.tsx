@@ -5,11 +5,13 @@ import { Outlet } from 'react-router-dom'
 import { useAuthStore } from '../../store/authStore'
 
 import CreateCommentForTweetProvider from '../../context/CreateCommentForTweetProvider'
+import CreateCommentForCommentProvider from '../../context/CreateCommentForCommentProvider'
 import CreateTweetProvider from '../../context/CreateTweetProvider'
 
 import { BarAuthOptions } from '../BarAuthOptions'
 import { ModalCommentFormForTweet } from '../ModalCommentFormForTweet'
 import { ModalTweetForm } from '../ModalTweetForm'
+import { ModalCommentFormForComment } from '../ModalCommentFormForComment'
 import VerticalNavbar from '../VerticalNavbar'
 import VerticalSearchTweets from '../VerticalSearchTweets'
 
@@ -24,10 +26,13 @@ export const MainLayout: FC = () => {
             <VerticalNavbar />
 
             <CreateCommentForTweetProvider>
-              <div className='flex flex-col text-white'>
-                <Outlet />
-              </div>
-              <ModalCommentFormForTweet />
+              <CreateCommentForCommentProvider>
+                <div className='flex flex-col text-white'>
+                  <Outlet />
+                </div>
+                <ModalCommentFormForTweet />
+                <ModalCommentFormForComment />
+              </CreateCommentForCommentProvider>
             </CreateCommentForTweetProvider>
 
             <VerticalSearchTweets />

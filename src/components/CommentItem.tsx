@@ -1,8 +1,10 @@
-import type { FC } from 'react'
+import { FC, useContext } from 'react'
 
 import { Link, redirect, useNavigate } from 'react-router-dom'
 
 import { useAuthStore } from '../store/authStore'
+
+import { createCommentForCommentContext } from '../context/CreateCommentForCommentProvider'
 
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -10,21 +12,25 @@ import { Comment } from '../interfaces/Comment'
 import { likeComment } from '../services/commentService'
 
 import { GridImages } from './GridImages'
+import { CommentMenu } from './CommentMenu'
 
 import { BsFillPatchCheckFill } from 'react-icons/bs'
 import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from 'react-icons/ai'
 
 import { formatTimezone } from '../utils/formatDate'
-import { CommentMenu } from './CommentMenu'
 
 interface CommentItemProps {
   commentData: Comment
+  noLink?: boolean
+  hideActions?: boolean
   showConnectionTop?: boolean
   showConnectionBottom?: boolean
 }
 
 export const CommentItem: FC<CommentItemProps> = ({
   commentData,
+  noLink,
+  hideActions,
   showConnectionTop,
   showConnectionBottom,
 }) => {
@@ -46,6 +52,10 @@ export const CommentItem: FC<CommentItemProps> = ({
   const isAuth = useAuthStore(state => state.isAuth)
   const userAuth = useAuthStore(state => state.user)
   const token = useAuthStore(state => state.token!)
+
+  const { handleOpenCreateCommentForComment } = useContext(
+    createCommentForCommentContext
+  )
 
   const { mutate: likeCommentMutation } = useMutation({
     mutationFn: likeComment,
@@ -73,13 +83,22 @@ export const CommentItem: FC<CommentItemProps> = ({
     likeCommentMutation({ commentId: id, accessToken: token })
   }
 
+  const handleShowCreateCommentModal = () => {
+    if (!isAuth) return navigate('/auth/signIn')
+    handleOpenCreateCommentForComment(id)
+  }
+
   return (
-    <div className='px-4 pt-4 grid grid-cols-tweet gap-4 border-outline-layout relative hover:bg-white/5 hover:transition-colors'>
+    <div
+      className={`px-4 pt-4 grid grid-cols-tweet gap-4 border-outline-layout relative ${
+        !noLink && 'hover:bg-white/5 hover:transition-colors'
+      }`}
+    >
       {showConnectionTop && (
         <div className='absolute top-0 left-[2.45rem] w-[2px] h-3 bg-outline-layout' />
       )}
 
-      <CommentMenu username={user.username} commentId={id} />
+      {!hideActions && <CommentMenu username={user.username} commentId={id} />}
 
       <div className='flex flex-col items-center'>
         <Link to={`/${user.username}`} className='h-fit'>
@@ -97,8 +116,10 @@ export const CommentItem: FC<CommentItemProps> = ({
 
       <div className='pb-2'>
         <div
-          className='cursor-pointer'
-          onClick={() => navigate(urlNavigateComment)}
+          className={!noLink ? 'cursor-pointer' : ''}
+          onClick={() => {
+            if (!noLink) navigate(urlNavigateComment)
+          }}
         >
           <Link
             to={`/${user.username}`}
@@ -129,37 +150,42 @@ export const CommentItem: FC<CommentItemProps> = ({
           {images.length > 0 && <GridImages images={images} />}
         </div>
 
-        <div className='flex justify-start gap-8 mt-2'>
-          <button
-            className={`${
-              checkLiked() && 'text-pink-600'
-            } flex group items-center gap-2 text-lg relative`}
-            onClick={() => handleLikeComment()}
-          >
-            {checkLiked() ? (
-              <AiFillHeart
-                className={`p-1.5 text-3xl group-hover:bg-pink-600 group-hover:bg-opacity-80 group-hover:transition-colors rounded-full group-hover:text-white`}
-              />
-            ) : (
-              <AiOutlineHeart
-                className={`p-1.5 text-3xl group-hover:bg-pink-600 group-hover:bg-opacity-80 group-hover:transition-[background] rounded-full`}
-              />
-            )}
-
-            <span
-              className={`group-hover:text-pink-600 group-hover:transition-colors`}
+        {!hideActions && (
+          <div className='flex justify-start gap-8 mt-2'>
+            <button
+              onClick={() => handleLikeComment()}
+              className={`${
+                checkLiked() && 'text-pink-600'
+              } flex group items-center gap-2 text-lg relative`}
             >
-              {likes.length}
-            </span>
-          </button>
+              {checkLiked() ? (
+                <AiFillHeart
+                  className={`p-1.5 text-3xl group-hover:bg-pink-600 group-hover:bg-opacity-80 group-hover:transition-colors rounded-full group-hover:text-white`}
+                />
+              ) : (
+                <AiOutlineHeart
+                  className={`p-1.5 text-3xl group-hover:bg-pink-600 group-hover:bg-opacity-80 group-hover:transition-[background] rounded-full`}
+                />
+              )}
 
-          <button className='flex group items-center gap-2 text-lg relative'>
-            <AiOutlineComment className='p-1.5 text-3xl group-hover:bg-blue-500 group-hover:bg-opacity-80 group-hover:transition-[background] rounded-full' />
-            <span className='group-hover:text-blue-500 group-hover:transition-colors'>
-              {comments.length}
-            </span>
-          </button>
-        </div>
+              <span
+                className={`group-hover:text-pink-600 group-hover:transition-colors`}
+              >
+                {likes.length}
+              </span>
+            </button>
+
+            <button
+              className='flex group items-center gap-2 text-lg relative'
+              onClick={() => handleShowCreateCommentModal()}
+            >
+              <AiOutlineComment className='p-1.5 text-3xl group-hover:bg-blue-500 group-hover:bg-opacity-80 group-hover:transition-[background] rounded-full' />
+              <span className='group-hover:text-blue-500 group-hover:transition-colors'>
+                {comments.length}
+              </span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

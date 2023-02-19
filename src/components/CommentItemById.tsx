@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import type { FC } from 'react'
 
 import { useQuery } from 'react-query'
 
@@ -11,9 +11,15 @@ import { CommentItem } from './CommentItem'
 
 interface CommentItemByIdProps {
   commentId: string
+  noLink?: boolean
+  hideActions?: boolean
 }
 
-export const CommentItemById: FC<CommentItemByIdProps> = ({ commentId }) => {
+export const CommentItemById: FC<CommentItemByIdProps> = ({
+  commentId,
+  noLink,
+  hideActions,
+}) => {
   const {
     data: comment,
     isLoading,
@@ -32,5 +38,12 @@ export const CommentItemById: FC<CommentItemByIdProps> = ({ commentId }) => {
   if (error)
     return <div className='text-center text-lg text-red-600'>Hubo un error</div>
 
-  return <CommentItem commentData={comment!} showConnectionBottom />
+  return (
+    <CommentItem
+      commentData={comment!}
+      showConnectionBottom
+      noLink={noLink}
+      hideActions={hideActions}
+    />
+  )
 }
