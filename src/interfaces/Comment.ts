@@ -1,5 +1,5 @@
 import { Image } from './Image'
-import { UserInComment, UserUsername } from './User'
+import { UserInComment } from './User'
 
 export interface Comment {
   id: string
@@ -7,8 +7,24 @@ export interface Comment {
   images: Image[]
   likes: Array<{ id: string }>
   comments: Array<{ id: string }>
-  comment?: UserUsername | null
-  post?: UserUsername | null
+  comment?: {
+    id: string
+    user: {
+      username: string
+    }
+    post: {
+      id: string
+    } | null
+    comment: {
+      id: string
+    } | null
+  } | null
+  post?: {
+    id: string,
+    user: {
+      username: string
+    }
+  } | null
   user: UserInComment
   createdAt: Date
 }
