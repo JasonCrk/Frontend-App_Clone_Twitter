@@ -98,7 +98,7 @@ export const CommentItem: FC<CommentItemProps> = ({
         <div className='absolute top-0 left-[2.45rem] w-[2px] h-3 bg-outline-layout' />
       )}
 
-      {!hideActions && <CommentMenu username={user.username} commentId={id} />}
+      {!hideActions && <CommentMenu commentData={commentData} />}
 
       <div className='flex flex-col items-center'>
         <Link to={`/${user.username}`} className='h-fit'>

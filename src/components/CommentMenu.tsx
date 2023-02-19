@@ -1,26 +1,34 @@
 import { FC, Fragment } from 'react'
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 import { shallow } from 'zustand/shallow'
 import { useAuthStore } from '../store/authStore'
 
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 
+import { Comment } from '../interfaces/Comment'
 import { deleteComment } from '../services/commentService'
 
-import { toast } from 'react-toastify'
 import { Menu, Transition } from '@headlessui/react'
+
 import MenuOption from './MenuOption'
+
+import { toast } from 'react-toastify'
+
 import { BsFillTrashFill } from 'react-icons/bs'
 import { SlOptions } from 'react-icons/sl'
 
 interface CommentMenuProps {
-  commentId: string
-  username: string
+  commentData: Comment
 }
 
-export const CommentMenu: FC<CommentMenuProps> = ({ commentId, username }) => {
+export const CommentMenu: FC<CommentMenuProps> = ({ commentData }) => {
+  const { id, user, post, comment } = commentData
+
+  const queryClient = useQueryClient()
+
+  const location = useLocation()
   const navigate = useNavigate()
 
   const { userAuth, isAuth, token } = useAuthStore(
@@ -32,10 +40,24 @@ export const CommentMenu: FC<CommentMenuProps> = ({ commentId, username }) => {
     shallow
   )
 
+  const pathNavigateIfDeleted = post?.id
+    ? `/tweets/${post.id}`
+    : comment?.comment?.id
+    ? `/comments/${comment?.comment?.id}/comments/${comment.id}`
+    : `/tweets/${comment?.post?.id}/comments/${comment?.id}`
+
   const { mutate: deleteCommentMutation } = useMutation({
     mutationFn: deleteComment,
     onSuccess: result => {
-      navigate(`/${userAuth?.username}`)
+      if (pathNavigateIfDeleted !== location.pathname) {
+        navigate(pathNavigateIfDeleted)
+        toast.success(result.message)
+        return
+      }
+
+      queryClient.invalidateQueries('tweetComments')
+      queryClient.invalidateQueries('commentComments')
+
       toast.success(result.message)
     },
     onError: error => {
@@ -44,7 +66,7 @@ export const CommentMenu: FC<CommentMenuProps> = ({ commentId, username }) => {
   })
 
   const handleDeleteComment = () => {
-    deleteCommentMutation({ commentId, accessToken: token })
+    deleteCommentMutation({ commentId: id, accessToken: token })
   }
 
   return (
@@ -65,7 +87,7 @@ export const CommentMenu: FC<CommentMenuProps> = ({ commentId, username }) => {
         >
           {isAuth && (
             <>
-              {username === userAuth?.username && (
+              {user.username === userAuth?.username && (
                 <MenuOption
                   Icon={BsFillTrashFill}
                   onClick={() => handleDeleteComment()}
