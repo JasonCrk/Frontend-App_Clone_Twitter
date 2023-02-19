@@ -14,8 +14,6 @@ import {
 } from 'react-icons/bs'
 
 import {
-  HiBell,
-  HiOutlineBell,
   HiHashtag,
   HiOutlineHashtag,
 } from 'react-icons/hi'
@@ -29,7 +27,7 @@ const VerticalNavbar: FC = () => {
   const isAuth = useAuthStore(state => state.isAuth)
   const loading = useAuthStore(state => state.loading)
 
-  const { handleOpen } = useContext(createTweetContext)
+  const { handleOpenCreateTweet } = useContext(createTweetContext)
 
   return (
     <div className='text-white h-screen flex flex-col items-baseline justify-between sticky top-0 md:pr-4 max-md:px-2'>
@@ -71,7 +69,7 @@ const VerticalNavbar: FC = () => {
 
                 <button
                   className='py-3 rounded-full lg:w-full bg-blue-500 text-lg font-bold max-lg:p-4'
-                  onClick={() => handleOpen(undefined)}
+                  onClick={() => handleOpenCreateTweet(undefined)}
                 >
                   <span className='max-lg:hidden'>Tweet</span>
                   <RiQuillPenLine className='lg:hidden text-3xl' />

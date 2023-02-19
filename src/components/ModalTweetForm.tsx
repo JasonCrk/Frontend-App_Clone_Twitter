@@ -12,7 +12,7 @@ import { TweetForm } from './TweetForm'
 import { AiOutlineClose } from 'react-icons/ai'
 
 export const ModalTweetForm: FC = () => {
-  const { isOpen, handleClose, mentionTweet } = useContext(createTweetContext)
+  const { isOpenCreateTweet, handleCloseCreateTweet, mentionTweet } = useContext(createTweetContext)
 
   const queryClient = useQueryClient()
 
@@ -22,11 +22,11 @@ export const ModalTweetForm: FC = () => {
     queryClient.invalidateQueries('userTweets')
     queryClient.invalidateQueries('mediaTweets')
 
-    handleClose()
+    handleCloseCreateTweet()
   }
 
   return (
-    <Modal isOpen={isOpen} closeModal={handleClose}>
+    <Modal isOpen={isOpenCreateTweet} closeModal={handleCloseCreateTweet}>
       <Dialog.Panel
         className={
           'w-full max-w-lg transform overflow-hidden rounded-2xl bg-black pt-10 pb-2 text-left align-middle transition-all shadow-neutral-800 shadow-border relative text-white'
@@ -34,7 +34,7 @@ export const ModalTweetForm: FC = () => {
       >
         <button
           className='absolute p-2 rounded-full top-2 left-2 text-xl hover:bg-neutral-800'
-          onClick={() => handleClose()}
+          onClick={() => handleCloseCreateTweet()}
         >
           <AiOutlineClose />
         </button>

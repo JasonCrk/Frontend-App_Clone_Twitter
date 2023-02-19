@@ -1,37 +1,38 @@
 import { FC, createContext, ReactNode, useState } from 'react'
 
-interface createTweetContextState {
-  isOpen: boolean
+interface CreateTweetContextState {
+  isOpenCreateTweet: boolean
   mentionTweet?: string
-  handleOpen: (tweetId?: string) => void
-  handleClose: () => void
+  handleOpenCreateTweet: (tweetId?: string) => void
+  handleCloseCreateTweet: () => void
 }
 
 interface CreateTweetProviderProps {
   children: ReactNode
 }
 
-export const createTweetContext = createContext<createTweetContextState>({
-  isOpen: false,
+export const createTweetContext = createContext<CreateTweetContextState>({
+  isOpenCreateTweet: false,
   mentionTweet: '',
-  handleOpen: () => {},
-  handleClose: () => {},
+  handleOpenCreateTweet: () => {},
+  handleCloseCreateTweet: () => {},
 })
 
 const CreateTweetProvider: FC<CreateTweetProviderProps> = ({ children }) => {
-  const [isOpen, setIsOpen] = useState<createTweetContextState['isOpen']>(false)
+  const [isOpen, setIsOpen] =
+    useState<CreateTweetContextState['isOpenCreateTweet']>(false)
 
   const [mentionTweet, setMentionTweet] =
-    useState<createTweetContextState['mentionTweet']>(undefined)
+    useState<CreateTweetContextState['mentionTweet']>(undefined)
 
-  const handleOpen: createTweetContextState['handleOpen'] = (
+  const handleOpen: CreateTweetContextState['handleOpenCreateTweet'] = (
     tweetId?: string
   ) => {
     setMentionTweet(tweetId)
     setIsOpen(true)
   }
 
-  const handleClose: createTweetContextState['handleClose'] = () => {
+  const handleClose: CreateTweetContextState['handleCloseCreateTweet'] = () => {
     setMentionTweet(undefined)
     setIsOpen(false)
   }
@@ -39,10 +40,10 @@ const CreateTweetProvider: FC<CreateTweetProviderProps> = ({ children }) => {
   return (
     <createTweetContext.Provider
       value={{
-        isOpen,
+        isOpenCreateTweet: isOpen,
         mentionTweet,
-        handleOpen,
-        handleClose,
+        handleOpenCreateTweet: handleOpen,
+        handleCloseCreateTweet: handleClose,
       }}
     >
       {children}
