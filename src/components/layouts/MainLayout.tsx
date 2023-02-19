@@ -20,7 +20,11 @@ export const MainLayout: FC = () => {
 
   return (
     <div className='bg-black'>
-      <div className='container mx-auto sm:px-0 md:px-0 lg:px-4 xl:px-30 2xl:px-40 w-full'>
+      <div
+        className={`container mx-auto sm:px-0 md:px-0 lg:px-4 xl:px-30 2xl:px-40 w-full ${
+          isAuth && 'mb-20'
+        }`}
+      >
         <CreateTweetProvider>
           <main className='grid max-sm:grid-cols-sm sm:grid-cols-sm md:grid-cols-md lg:grid-cols-md xl:grid-cols-xl 2xl:grid-cols-lg divide-x divide-outline-layout max-md:border-r max-md:border-outline-layout w-full'>
             <VerticalNavbar />
