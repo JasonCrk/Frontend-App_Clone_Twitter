@@ -94,27 +94,27 @@ export const DetailTweetPage: FC = () => {
         <>
           <div className='p-4 relative border-b border-b-outline-layout'>
             <TweetMenu
-              tweetId={tweet!.id}
-              username={tweet!.user.username}
+              tweetId={tweet.id}
+              username={tweet.user.username}
               actionDeleteTweet={handleDeleteTweet}
             />
 
             <Link
-              to={`/${tweet?.user.username}`}
+              to={`/${tweet.user.username}`}
               className='flex gap-3 mb-4 w-fit'
             >
               <img
-                src={tweet!.user.account.avatar}
-                alt={tweet!.user.username}
+                src={tweet.user.account.avatar}
+                alt={tweet.user.username}
                 className='rounded-full w-12 h-12 object-cover'
               />
               <div className='flex flex-col gap-1 justify-center'>
                 <div className='flex gap-1 text-lg leading-4'>
                   <span className='hover:underline font-bold'>
-                    {tweet?.user.username}
+                    {tweet.user.username}
                   </span>
 
-                  {tweet?.user.account.verify && (
+                  {tweet.user.account.verify && (
                     <BsFillPatchCheckFill className='text-blue-500' />
                   )}
                 </div>
@@ -124,34 +124,32 @@ export const DetailTweetPage: FC = () => {
             </Link>
 
             <div>
-              <p className='mb-2'>{tweet?.content}</p>
+              <p className='mb-2'>{tweet.content}</p>
 
-              {tweet!.images.length > 0 && (
-                <GridImages images={tweet!.images} />
-              )}
+              {tweet.images.length > 0 && <GridImages images={tweet.images} />}
 
-              {tweet?.mention && (
+              {tweet.mention && (
                 <TweetMentionItem tweet={tweet.mention} isLink />
               )}
 
               <div className='py-3 border-b border-neutral-600 flex gap-4 text-neutral-500'>
-                <span>{formatDateTime(tweet!.createdAt)}</span>
+                <span>{formatDateTime(tweet.createdAt)}</span>
 
                 <p>
-                  <span className='text-white'>{tweet?.comments.length}</span>{' '}
+                  <span className='text-white'>{tweet.comments.length}</span>{' '}
                   Quote Tweets
                 </p>
 
                 <p>
-                  <span className='text-white'>{tweet?.likes.length}</span>{' '}
-                  Likes
+                  <span className='text-white'>{tweet.likes.length}</span> Likes
                 </p>
               </div>
 
               <div className='flex justify-around py-1 items-center gap-6 border-b border-neutral-600 text-2xl'>
                 <button
-                  className={`${likeCheck() && 'text-pink-600'
-                    } hover:bg-pink-600 hover:bg-opacity-10 hover:text-pink-600 hover:transition-[background] p-2 rounded-full`}
+                  className={`${
+                    likeCheck() && 'text-pink-600'
+                  } hover:bg-pink-600 hover:bg-opacity-10 hover:text-pink-600 hover:transition-[background] p-2 rounded-full`}
                   onClick={() => handleLikeTweet()}
                 >
                   {likeCheck() ? <AiFillHeart /> : <AiOutlineHeart />}
@@ -162,11 +160,11 @@ export const DetailTweetPage: FC = () => {
                 </button>
               </div>
 
-              <CommentFormForTweet tweetId={tweet!.id} />
+              {isAuth && <CommentFormForTweet tweetId={tweet.id} />}
             </div>
           </div>
 
-          <CommentsListForTweet tweetId={tweet!.id} />
+          <CommentsListForTweet tweetId={tweet.id} />
         </>
       ) : null}
     </>

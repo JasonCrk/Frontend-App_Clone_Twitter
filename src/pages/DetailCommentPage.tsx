@@ -146,7 +146,9 @@ export const DetailCommentPage: FC = () => {
 
               <div className='flex justify-around py-1 items-center gap-6 border-b border-neutral-600 text-2xl'>
                 <button
-                  className={`${checkLiked() && 'text-pink-600'} hover:bg-pink-600 hover:bg-opacity-10 hover:text-pink-600 hover:transition-[background] p-2 rounded-full`}
+                  className={`${
+                    checkLiked() && 'text-pink-600'
+                  } hover:bg-pink-600 hover:bg-opacity-10 hover:text-pink-600 hover:transition-[background] p-2 rounded-full`}
                   onClick={() => handleLikeComment()}
                 >
                   {checkLiked() ? <AiFillHeart /> : <AiOutlineHeart />}
@@ -156,7 +158,7 @@ export const DetailCommentPage: FC = () => {
                 </button>
               </div>
 
-              <CommentFormForComment commentId={comment.id} />
+              {isAuth && <CommentFormForComment commentId={comment.id} />}
             </div>
           </div>
 
