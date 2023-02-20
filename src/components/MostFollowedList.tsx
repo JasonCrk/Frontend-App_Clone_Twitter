@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import type { FC } from 'react'
 
 import { useQuery } from 'react-query'
 import { getMostFollowedUsers } from '../services/accountService'
@@ -15,16 +15,18 @@ const MostFollowedList: FC = () => {
 
   if (isLoading)
     return (
-      <div className='flex justify-center mt-4'>
+      <div className='flex justify-center my-6'>
         <Spinner />
       </div>
     )
 
   if (error)
-    return <div className='text-lg text-center text-red-500'>Hubo un error</div>
+    return (
+      <div className='text-lg text-center text-red-500 my-6'>Hubo un error</div>
+    )
 
   if (accounts?.length === 0)
-    return <div className='text-center text-sky-500'>No users</div>
+    return <div className='text-center text-lg text-sky-500 my-6'>No users</div>
 
   return (
     <div>

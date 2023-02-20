@@ -24,13 +24,22 @@ export const MediaTweets: FC = () => {
 
   if (isLoading)
     return (
-      <div className='flex justify-center'>
+      <div className='flex justify-center mt-6'>
         <Spinner />
       </div>
     )
 
   if (error)
-    return <div className='text-center text-xl text-red-600'>Hubo un error</div>
+    return (
+      <div className='text-center text-lg text-red-600 py-6'>Hubo un error</div>
+    )
+
+  if (tweets?.length === 0)
+    return (
+      <div className='text-center mt-6 font-bold text-lg'>
+        No hay ningún Tweet
+      </div>
+    )
 
   return (
     <div className='divide-y divide-outline-layout'>

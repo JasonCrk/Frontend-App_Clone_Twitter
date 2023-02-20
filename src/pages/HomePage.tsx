@@ -35,7 +35,9 @@ export const HomePage: FC = () => {
           <Spinner />
         </div>
       ) : user && !isOpenCreateTweet ? (
-        <TweetForm onComplete={handleCreateTweet} />
+        <div className='border-b border-outline-layout'>
+          <TweetForm onComplete={handleCreateTweet} />
+        </div>
       ) : null}
 
       {isLoading ? (
@@ -45,7 +47,7 @@ export const HomePage: FC = () => {
       ) : error ? (
         <div>Error</div>
       ) : tweets ? (
-        <div className='divide-y divide-outline-layout border-t border-outline-layout'>
+        <div className='divide-y divide-outline-layout'>
           {tweets.map(tweet => (
             <TweetItem key={tweet.id} tweetData={tweet} />
           ))}

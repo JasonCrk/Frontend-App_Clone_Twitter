@@ -1,10 +1,10 @@
-import { FC } from 'react'
+import type { FC } from 'react'
 
 import { NavLink, useLoaderData, useLocation } from 'react-router-dom'
 
-import { AxiosError } from 'axios'
 import { useQuery } from 'react-query'
 
+import { AxiosError } from 'axios'
 import { AccountInItem } from '../interfaces/Account'
 import { ISearchTweetsParams, Tweet } from '../interfaces/Tweet'
 import { searchTweetsOrAccounts } from '../services/tweetService'
@@ -36,7 +36,9 @@ export const SearchPage: FC = () => {
     },
   ]
 
-  const locationSearch = `?q=${queries.query}${queries.find ? '&f=' + queries.find : ''}`
+  const locationSearch = `?q=${queries.query}${
+    queries.find ? '&f=' + queries.find : ''
+  }`
 
   const filterSelected = (path: string): boolean =>
     location.pathname + locationSearch === path
@@ -68,10 +70,11 @@ export const SearchPage: FC = () => {
                   className={`w-full hover:bg-neutral-700/40 hover:transition-[background] py-3 text-center`}
                 >
                   <span
-                    className={`${filterSelected(path)
-                      ? 'border-b-4 border-blue-500 font-bold'
-                      : 'text-neutral-500'
-                      } py-3 text-lg`}
+                    className={`${
+                      filterSelected(path)
+                        ? 'border-b-4 border-blue-500 font-bold'
+                        : 'text-neutral-500'
+                    } py-3 text-lg`}
                   >
                     {name}
                   </span>
@@ -87,20 +90,22 @@ export const SearchPage: FC = () => {
           <Spinner />
         </div>
       ) : error ? (
-        <div className='text-red-500 text-center mt-4'>Hubo un error</div>
+        <div className='text-red-500 text-center text-lg mt-6'>
+          Hubo un error
+        </div>
       ) : data?.length === 0 ? (
-        <div className='text-center text-lg font-bold pt-4'>
+        <div className='text-center text-lg font-bold pt-6'>
           No hay resultados
         </div>
       ) : (
         <div className='divide-y divide-neutral-500'>
           {queries.find === 'user'
             ? (data as AccountInItem[]).map(account => (
-              <AccountItem key={account.id} {...account} />
-            ))
+                <AccountItem key={account.id} {...account} />
+              ))
             : (data as Tweet[]).map(tweet => (
-              <TweetItem key={tweet.id} tweetData={tweet} />
-            ))}
+                <TweetItem key={tweet.id} tweetData={tweet} />
+              ))}
         </div>
       )}
     </>

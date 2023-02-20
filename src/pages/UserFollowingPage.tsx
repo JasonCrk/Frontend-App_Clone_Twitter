@@ -28,7 +28,7 @@ export const UserFollowingPage: FC = () => {
 
   if (isLoading)
     return (
-      <div className='flex justify-center pt-10'>
+      <div className='flex justify-center pt-6'>
         <Spinner />
       </div>
     )

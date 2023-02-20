@@ -8,9 +8,10 @@ import { AxiosError } from 'axios'
 import { TrendTweets } from '../interfaces/Tweet'
 import { getTrendTweetsLargeList } from '../services/tweetService'
 
+import { Bar } from '../components/Bar'
 import Spinner from '../components/Spinner'
 import TrendTweetsItem from '../components/TrendTweetItem'
-import { Bar } from '../components/Bar'
+
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 
 export const TrendsPage: FC = () => {
@@ -37,28 +38,29 @@ export const TrendsPage: FC = () => {
         <p className='font-bold'>Trends</p>
       </Bar>
 
-      {
-        isLoading ? (
-          <div className='flex justify-center pt-10'>
-            <Spinner />
+      {isLoading ? (
+        <div className='flex justify-center pt-6'>
+          <Spinner />
+        </div>
+      ) : error ? (
+        <div className='text-red-500 text-center text-xl pt-6'>
+          Hubo un error
+        </div>
+      ) : trends ? (
+        Object.keys(trends).length === 0 ? (
+          <div className='pt-3 pb-6 text-center text-lg text-blue-200'>
+            No trends :(
           </div>
-        ) : error ? (
-          <div className='text-red-500 text-center text-xl py-6'>Hubo un error</div>
-        ) : trends ? (
-          Object.keys(trends).length === 0 ? (
-            <div className='pt-3 pb-6 text-center text-lg text-blue-200'>
-              No trends :(
-            </div>
-          ) : (
-            Object.keys(trends!).map((hashtag, index) => (
-              <TrendTweetsItem
-                key={index}
-                hashtag={hashtag}
-                countTweets={trends![hashtag]}
-              />
-            )))
-        ) : null
-      }
+        ) : (
+          Object.keys(trends!).map((hashtag, index) => (
+            <TrendTweetsItem
+              key={index}
+              hashtag={hashtag}
+              countTweets={trends![hashtag]}
+            />
+          ))
+        )
+      ) : null}
     </>
   )
 }

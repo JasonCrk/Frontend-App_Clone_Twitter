@@ -20,36 +20,36 @@ const TrendTweetsList: FC = () => {
 
   if (isLoading)
     return (
-      <div className='flex justify-center'>
+      <div className='flex justify-center pt-3 pb-6'>
         <Spinner />
       </div>
     )
 
-  if (error) return <div className='text-red-500'>Hubo un error</div>
+  if (error)
+    return <div className='text-red-500 text-center text-lg'>Hubo un error</div>
+
+  if (trends && Object.keys(trends).length === 0)
+    return (
+      <div className='pt-3 pb-6 text-center text-lg text-blue-200'>
+        No trends :(
+      </div>
+    )
 
   return (
     <>
-      {trends && Object.keys(trends).length === 0 ? (
-        <div className='pt-3 pb-6 text-center text-lg text-blue-200'>
-          No trends :(
-        </div>
-      ) : (
-        <>
-          {Object.keys(trends!).map((hashtag, index) => (
-            <TrendTweetsItem
-              key={index}
-              hashtag={hashtag}
-              countTweets={trends![hashtag]}
-            />
-          ))}
+      {Object.keys(trends!).map((hashtag, index) => (
+        <TrendTweetsItem
+          key={index}
+          hashtag={hashtag}
+          countTweets={trends![hashtag]}
+        />
+      ))}
 
-          <Link to={'/trends'}>
-            <div className='py-3 px-4 w-full hover:bg-white/5 hover:transition-colors text-sky-500'>
-              Show More
-            </div>
-          </Link>
-        </>
-      )}
+      <Link to={'/trends'}>
+        <div className='py-3 px-4 w-full hover:bg-white/5 hover:transition-colors text-sky-500'>
+          Show More
+        </div>
+      </Link>
     </>
   )
 }
