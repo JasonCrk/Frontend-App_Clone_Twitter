@@ -15,7 +15,7 @@ import Spinner from '../components/Spinner'
 
 export const HomePage: FC = () => {
   const { user, isLoadingAuth } = useProtect()
-  const { isOpen } = useContext(createTweetContext)
+  const { isOpenCreateTweet } = useContext(createTweetContext)
 
   const queryClient = useQueryClient()
 
@@ -34,7 +34,7 @@ export const HomePage: FC = () => {
         <div className='flex justify-center pt-10'>
           <Spinner />
         </div>
-      ) : user && !isOpen ? (
+      ) : user && !isOpenCreateTweet ? (
         <TweetForm onComplete={handleCreateTweet} />
       ) : null}
 
