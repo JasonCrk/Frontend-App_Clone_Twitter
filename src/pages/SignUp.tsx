@@ -6,7 +6,7 @@ import { useMutation } from 'react-query'
 
 import { useAuthStore } from '../store/authStore'
 
-import { SignUpData } from '../interfaces/Auth'
+import { ISignUpResponse, SignUpData } from '../interfaces/Auth'
 import { signUp } from '../services/authService'
 
 import { CustomField } from '../components/form/CustomField'
@@ -16,6 +16,7 @@ import { Formik, Form, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
 
 import { toast } from 'react-toastify'
+import { AxiosError } from 'axios'
 
 const SignUpSchema = Yup.object().shape({
   firstName: Yup.string().min(3).max(100).required('Is required'),
@@ -42,7 +43,11 @@ export const SignUpPage: FC = () => {
     }
   }, [])
 
-  const { mutate: signInMutation } = useMutation({
+  const { mutate: signUpMutation } = useMutation<
+    ISignUpResponse,
+    AxiosError<{ message: string[] }>,
+    SignUpData
+  >({
     mutationKey: 'signUp',
     mutationFn: signUp,
   })
@@ -66,7 +71,7 @@ export const SignUpPage: FC = () => {
           signUpData: SignUpData,
           { setSubmitting }: FormikHelpers<SignUpData>
         ) => {
-          signInMutation(signUpData, {
+          signUpMutation(signUpData, {
             onSuccess: () => {
               setSubmitting(false)
               navigate('/auth/signIn')
@@ -75,9 +80,13 @@ export const SignUpPage: FC = () => {
               })
             },
             onError: error => {
-              console.log(error)
-              setSubmitting(false)
+              toast.error(error.response?.data.message[0], {
+                position: 'bottom-center',
+              })
             },
+            onSettled() {
+              setSubmitting(false)
+            }
           })
         }}
       >
