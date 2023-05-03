@@ -20,7 +20,7 @@ export interface Comment {
     } | null
   } | null
   post?: {
-    id: string,
+    id: string
     user: {
       username: string
     }

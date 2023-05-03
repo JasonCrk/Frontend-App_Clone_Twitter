@@ -1,6 +1,12 @@
 import type { FC } from 'react'
 
-import { Link, Outlet, useLocation, useParams, useNavigate } from 'react-router-dom'
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useParams,
+  useNavigate,
+} from 'react-router-dom'
 
 import { useAuthStore } from '../store/authStore'
 
@@ -183,10 +189,11 @@ export const ProfilePage: FC = () => {
                     className={`w-full hover:bg-neutral-700/40 hover:transition-[background] py-3 text-center`}
                   >
                     <span
-                      className={`${tabSelected(path)
+                      className={`${
+                        tabSelected(path)
                           ? 'border-b-4 border-blue-500 font-bold'
                           : 'text-neutral-500'
-                        } py-3 text-lg`}
+                      } py-3 text-lg`}
                     >
                       {name}
                     </span>

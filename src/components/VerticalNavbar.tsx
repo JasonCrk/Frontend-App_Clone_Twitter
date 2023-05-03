@@ -13,10 +13,7 @@ import {
   BsPerson as BsPersonOutline,
 } from 'react-icons/bs'
 
-import {
-  HiHashtag,
-  HiOutlineHashtag,
-} from 'react-icons/hi'
+import { HiHashtag, HiOutlineHashtag } from 'react-icons/hi'
 
 import { RiHome7Fill, RiHome7Line, RiQuillPenLine } from 'react-icons/ri'
 

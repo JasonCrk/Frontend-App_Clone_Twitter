@@ -15,7 +15,7 @@ export const PreviewSelectedImageItem: FC<PreviewSelectedImageItemProps> = ({
   index,
   stylesImage,
   stylesDiv,
-  handleDeleteImage
+  handleDeleteImage,
 }) => {
   return (
     <div className={`relative w-full ${stylesDiv}`}>
@@ -27,7 +27,11 @@ export const PreviewSelectedImageItem: FC<PreviewSelectedImageItemProps> = ({
         <AiOutlineClose />
       </button>
 
-      <img src={imageUrl} alt='' className={`w-full h-full rounded-xl ${stylesImage}`} />
+      <img
+        src={imageUrl}
+        alt=''
+        className={`w-full h-full rounded-xl ${stylesImage}`}
+      />
     </div>
   )
 }
