@@ -6,11 +6,14 @@ import { useMutation } from 'react-query'
 
 import { useAuthStore } from '../store/authStore'
 
-import { LoginData } from '../interfaces/Auth'
+import { ISignInResponse, LoginData } from '../interfaces/Auth'
 import { signIn } from '../services/authService'
+import { AxiosError } from 'axios'
 
 import { Formik, Form, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
+
+import { toast } from 'react-toastify'
 
 import { CustomField } from '../components/form/CustomField'
 import { PasswordField } from '../components/form/PasswordField'
@@ -26,7 +29,7 @@ export const SignInPage: FC = () => {
   const isAuth = useAuthStore(state => state.isAuth)
   const token = useAuthStore(state => state.token)
 
-  const { mutate: signInMutation } = useMutation({
+  const { mutate: signInMutation } = useMutation<ISignInResponse, AxiosError<{ error: string }>, LoginData>({
     mutationKey: 'signIn',
     mutationFn: signIn,
   })
@@ -55,13 +58,17 @@ export const SignInPage: FC = () => {
           signInMutation(signInData, {
             onSuccess({ accessToken }) {
               localStorage.setItem('accessToken_twitter', accessToken)
-              setSubmitting(false)
               navigate('/home')
             },
             onError(error) {
-              console.log(error)
-              setSubmitting(false)
+              toast.error(error.response?.data.error, {
+                  position: 'bottom-center'
+              })
             },
+            onSettled() {
+              setSubmitting(false)
+              console.clear()
+            }
           })
         }}
       >
