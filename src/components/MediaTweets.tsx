@@ -36,7 +36,7 @@ export const MediaTweets: FC = () => {
 
   if (tweets?.length === 0)
     return (
-      <div className='text-center mt-6 font-bold text-lg'>
+      <div className='text-center mt-4 font-bold text-lg'>
         No hay ningún Tweet
       </div>
     )
