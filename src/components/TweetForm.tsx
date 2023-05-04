@@ -136,13 +136,20 @@ export const TweetForm: FC<TweetFormProps> = ({
       {
         onSuccess: () => {
           onComplete()
-          resetForm()
-          setSubmitting(false)
         },
         onError: () => {
           toast.error('There was an error trying to create the tweet')
-          setSubmitting(false)
         },
+        onSettled: () => {
+          setSubmitting(false)
+          resetForm({
+            values: {
+              content: '',
+              images: null,
+              hashtags: ''
+            }
+          })
+        }
       }
     )
   }
@@ -166,6 +173,7 @@ export const TweetForm: FC<TweetFormProps> = ({
           handleSubmit,
           handleBlur,
           errors,
+          values
         }) => (
           <form
             onSubmit={handleSubmit}
@@ -181,6 +189,7 @@ export const TweetForm: FC<TweetFormProps> = ({
               <textarea
                 name='content'
                 placeholder="What's happening?"
+                value={values.content}
                 className={`commentScroll w-full focus:outline-none bg-transparent placeholder:text-neutral-600 resize-none transition-colors ${
                   isFocusContent || mention ? 'text-xl' : 'text-2xl'
                 } ${errors.content && 'placeholder:text-neutral-700'}`}
